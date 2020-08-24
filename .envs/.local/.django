@@ -5,6 +5,7 @@ IPYTHONDIR=/app/.ipython
 # Redis
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
+CELERY_BROKER_URL=redis://localhost:6379/0
 
 # Celery
 # ------------------------------------------------------------------------------
@@ -12,4 +13,3 @@ REDIS_URL=redis://redis:6379/0
 # Flower
 CELERY_FLOWER_USER=ibvHxfPOpbLtNCixbNBriJoqjTxbhGye
 CELERY_FLOWER_PASSWORD=y2MgVbU8XEAPsd5SXYAnHizLuVUxfNSMEYhHZu9sWiizbAV1ordlnV37jvJcGSfQ
-

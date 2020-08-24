@@ -3,11 +3,11 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?= 
+SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build -c .
 SOURCEDIR     = ./_source
 BUILDDIR      = ./_build
-APP = /app
+APP = .
 
 .PHONY: help livehtml apidocs Makefile
 
