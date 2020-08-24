@@ -6,6 +6,11 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
@@ -16,6 +21,7 @@ urlpatterns = [
     # User management
     path("users/", include("afi_backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    path("sentry-debug/", trigger_error),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
