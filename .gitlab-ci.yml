@@ -40,6 +40,6 @@ development:
   - apt-get update -qy
   - apt-get install -y ruby-dev
   - gem install dpl
-  - dpl --provider=heroku --app=fierce-dawn-98824 --api-key=$HEROKU_PRODUCTION_API_KEY
+  - dpl --provider=heroku --app=afi-backend --api-key=$HEROKU_PRODUCTION_API_KEY
   only:
     - master
