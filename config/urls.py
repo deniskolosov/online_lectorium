@@ -32,8 +32,8 @@ schema_view = get_schema_view(
       description="Art For Introvert API docs",
       contact=openapi.Contact(email="developer@artforintrovert.ru"),
    ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+   public=False,
+   permission_classes=(permissions.IsAdminUser,),
 )
 
 
