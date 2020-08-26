@@ -1,10 +1,15 @@
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 from rest_framework.authtoken.views import obtain_auth_token
+
+from django.urls import include, path
 
 
 urlpatterns = [
@@ -20,6 +25,18 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Art For Introvert backend API",
+      default_version='v1',
+      description="Art For Introvert API docs",
+      contact=openapi.Contact(email="developer@artforintrovert.ru"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
+
 # API URLS
 urlpatterns += [
     # API base url
@@ -27,6 +44,14 @@ urlpatterns += [
     # DRF auth token
     path("auth-token/", obtain_auth_token),
 ]
+
+# SWAGGER URLS
+urlpatterns += [
+   url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+   url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+]
+
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
