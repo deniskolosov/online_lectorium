@@ -311,3 +311,7 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+# Yandex Checkout credentials
+YANDEX_CHECKOUT_ACCOUNT_ID = ''
+YANDEX_CHECKOUT_SECRET_KEY = ''
+YANDEX_CHECKOUT_RETURN_URL = ''
