@@ -1,0 +1,4 @@
+
+
+class PaypalAdaptor:
+    pass

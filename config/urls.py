@@ -23,6 +23,7 @@ urlpatterns = [
     path("users/", include("afi_backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    # path("payments/", include("afi_backend.payments.urls", namespace="payments")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 schema_view = get_schema_view(

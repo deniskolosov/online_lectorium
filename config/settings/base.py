@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "afi_backend.users.apps.UsersConfig",
     # Your stuff: custom apps go here
+    "afi_backend.payments.apps.PaymentsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -312,6 +313,6 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
 # Yandex Checkout credentials
-YANDEX_CHECKOUT_ACCOUNT_ID = ''
-YANDEX_CHECKOUT_SECRET_KEY = ''
-YANDEX_CHECKOUT_RETURN_URL = ''
+YANDEX_CHECKOUT_ACCOUNT_ID = env("YANDEX_CHECKOUT_ACCOUNT_ID", default="")
+YANDEX_CHECKOUT_SECRET_KEY = env("YANDEX_CHECKOUT_SECRET_KEY", default="")
+YANDEX_CHECKOUT_RETURN_URL = '127.0.0.1'
