@@ -280,3 +280,4 @@ afi_backend/media/
 
 # spacemacs
 *.\#*
+*.org
