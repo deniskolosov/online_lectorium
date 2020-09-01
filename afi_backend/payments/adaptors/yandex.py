@@ -1,4 +1,5 @@
 import json
+from .. import models as payments_models
 
 from django.conf import settings
 from yandex_checkout import Configuration, Payment
@@ -29,7 +30,8 @@ class YandexCheckoutAdaptor(BasePaymentAdaptor):
                                            "description": description
                                            }, str(internal_payment_id))
         payment_response = json.loads(payment_response.json())
-        payment = Payment.objects.get(id=internal_payment_id)
+        payment = payments_models.Payment.objects.get(id=internal_payment_id)
+
         # TODO: exception handling
         payment.external_id = payment_response.get('id')
         payment.save()
