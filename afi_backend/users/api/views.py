@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from .serializers import UserSerializer
 
@@ -16,6 +16,7 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     lookup_field = "username"
 
+    #todo: delete
     def get_queryset(self, *args, **kwargs):
         return self.queryset.filter(id=self.request.user.id)
 
@@ -32,5 +33,5 @@ class UserViewSet(ModelViewSet):
         if self.action == 'create':
             permission_classes = []
         else:
-            permission_classes = [IsAdminUser]
+            permission_classes = [IsAdminUser, IsAuthenticated]
         return [permission() for permission in permission_classes]
