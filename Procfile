@@ -1,4 +1,4 @@
-release: python manage.py migrate
+release: ./release-tasks.sh
 
 web: gunicorn config.wsgi:application
 worker: celery worker --app=config.celery_app --loglevel=info
