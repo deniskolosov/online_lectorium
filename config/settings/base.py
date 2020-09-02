@@ -316,3 +316,15 @@ CORS_URLS_REGEX = r"^/api/.*$"
 YANDEX_CHECKOUT_ACCOUNT_ID = env("YANDEX_CHECKOUT_ACCOUNT_ID", default="")
 YANDEX_CHECKOUT_SECRET_KEY = env("YANDEX_CHECKOUT_SECRET_KEY", default="")
 YANDEX_CHECKOUT_RETURN_URL = '127.0.0.1'
+
+
+# Swagger settings
+SWAGGER_SETTINGS = {
+      'SECURITY_DEFINITIONS': {
+         'Token': {
+               'type': 'apiKey',
+               'name': 'Authorization',
+               'in': 'header'
+         }
+      }
+   }
