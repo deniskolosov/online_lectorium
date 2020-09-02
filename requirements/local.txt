@@ -37,4 +37,3 @@ pytest-django==3.9.0  # https://github.com/pytest-dev/pytest-django
 
 importmagic
 epc
-'python-language-server[all]'
