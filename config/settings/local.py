@@ -1,5 +1,6 @@
 from .base import *  # noqa
 from .base import env
+import os
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -66,3 +67,7 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '../../frontend/dist/introverted-right-brain/')
+]
