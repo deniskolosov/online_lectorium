@@ -15,15 +15,15 @@ from django.urls import include, path
 
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
-    # Django Admin, use {% url 'admin:index' %}
-    path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path("users/", include("afi_backend.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
+    path("", TemplateView.as_view(template_name="pages/index.html"), name="home"),
+    # path(
+    #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+    # ),
+    # # Django Admin, use {% url 'admin:index' %}
+    # path(settings.ADMIN_URL, admin.site.urls),
+    # # User management
+    # path("users/", include("afi_backend.users.urls", namespace="users")),
+    # path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     # path("payments/", include("afi_backend.payments.urls", namespace="payments")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
