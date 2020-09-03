@@ -311,6 +311,7 @@ REST_FRAMEWORK = {
 # CORS_URLS_REGEX = r"^/api/.*$"
 CORS_ALLOW_ALL_ORIGINS = env("CORS_ALLOW_ALL_ORIGINS", default=False)
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[])
 # Your stuff...
 # ------------------------------------------------------------------------------
