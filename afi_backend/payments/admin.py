@@ -6,7 +6,7 @@ from django.contrib import admin
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'payment_method']
+    list_display = ['id', 'user', 'payment_method', 'created_at', 'status']
     search_fields = ['id']
     readonly_fields = ['payment_method']
 

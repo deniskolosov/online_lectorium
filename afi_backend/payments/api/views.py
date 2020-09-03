@@ -53,9 +53,13 @@ class YandexWebhook(APIView):
         external_id = payment_object.get('id')
 
         # We want to blow up here if payment not found, to get error seen.
-        afi_payment = Payment.objects.get(external_id=external_id)
-        afi_payment.status = Payment.PAID
-        afi_payment.save()
+        try:
+            afi_payment = Payment.objects.get(external_id=external_id)
+            afi_payment.status = Payment.PAID
+            afi_payment.save()
+        except Payment.DoesNotExist:
+            return Response({"msg": "No such payment"}, status=status.HTTP_400_BAD_REQUEST)
+
         return Response({"msg": "Got it!"}, status=status.HTTP_200_OK)
 
 

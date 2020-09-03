@@ -318,7 +318,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Yandex Checkout credentials
 YANDEX_CHECKOUT_ACCOUNT_ID = env("YANDEX_CHECKOUT_ACCOUNT_ID", default="")
 YANDEX_CHECKOUT_SECRET_KEY = env("YANDEX_CHECKOUT_SECRET_KEY", default="")
-YANDEX_CHECKOUT_RETURN_URL = '127.0.0.1'
+YANDEX_CHECKOUT_RETURN_URL = env("YANDEX_CHECKOUT_RETURN_URL", default="https://afi-backend.herokuapp.com")
 
 
 # Swagger settings

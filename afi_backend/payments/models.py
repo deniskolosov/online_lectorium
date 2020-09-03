@@ -25,6 +25,9 @@ class PaymentMethod(models.Model):
         from .adaptors import ADAPTORS_MAP
         return ADAPTORS_MAP.get(self.payment_type)
 
+    def __str__(self):
+        return f"{self.get_payment_type_display()}"
+
 
 
 class Payment(models.Model):
@@ -40,6 +43,7 @@ class Payment(models.Model):
     user =  models.ForeignKey(user_models.User, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE, default=PaymentMethod.TYPE_YANDEX_CHECKOUT)
     external_id = models.CharField(max_length=256, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(
         choices=PAYMENT_STATUSES,
         default=PENDING)
