@@ -9,7 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.views import ObtainAuthToken
 
 from django.urls import include, path
 
@@ -25,7 +25,7 @@ urlpatterns = [
     path("users/", include("afi_backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
-    # path("payments/", include("afi_backend.payments.urls", namespace="payments")),
+    path("payments/", include("afi_backend.payments.urls", namespace="payments")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 schema_view = get_schema_view(
@@ -43,7 +43,7 @@ schema_view = get_schema_view(
 decorated_auth_view = swagger_auto_schema(
     method='post',
     request_body=AuthTokenSerializer
-)(obtain_auth_token)
+)(ObtainAuthToken.as_view())
 
 
 # API URLS

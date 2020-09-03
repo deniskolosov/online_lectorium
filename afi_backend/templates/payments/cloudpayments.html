@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>IntrovertedRightBrain</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="https://widget.cloudpayments.ru/bundles/cloudpayments"></script>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+  <script>
+    this.pay = function () {
+      var widget = new cp.CloudPayments();
+      widget.charge({ // options
+        publicId: 'test_api_00000000000000000000001',  //id из личного кабинета
+                      description: "hello", //назначение
+                      amount:100 , //сумма
+                      currency: 'RUB', //валюта
+                      invoiceId: '1234567', //номер заказа  (необязательно)
+                      accountId: 'user@example.com', //идентификатор плательщика (необязательно)
+                      skin: "mini", //дизайн виджета
+                      data: {
+                        myProp: 'myProp value' //произвольный набор параметров - прописать internal payment id для webhook'a
+                      }
+      },
+                    function (options) { // success
+                      //действие при успешной оплате TODO: redirect to homepage
+                    },
+                    function (reason, options) { // fail
+                      //действие при неуспешной оплате
+      });
+    }();
+
+  </script>
+</body>
+description : {{view.kwargs.description}}
+</html>
