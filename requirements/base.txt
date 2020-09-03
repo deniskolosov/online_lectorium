@@ -24,3 +24,4 @@ django-redis==4.12.1  # https://github.com/jazzband/django-redis
 djangorestframework==3.11.1  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.5.0 # https://github.com/adamchainz/django-cors-headers
 drf-yasg==1.17.1 # https://github.com/axnsan12/drf-yasg#validation
+djangorestframework-simplejwt==4.4.0 # https://django-rest-framework-simplejwt.readthedocs.io/

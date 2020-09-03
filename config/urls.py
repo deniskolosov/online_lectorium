@@ -9,7 +9,11 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 from django.urls import include, path
 
@@ -39,19 +43,14 @@ schema_view = get_schema_view(
    permission_classes=(permissions.IsAdminUser,),
 )
 
-# Add post parameters to obtain_auth_token
-decorated_auth_view = swagger_auto_schema(
-    method='post',
-    request_body=AuthTokenSerializer
-)(ObtainAuthToken.as_view())
-
 
 # API URLS
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # DRF auth token
-    path("api/auth-token/", decorated_auth_view),
+    path('api/auth-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth-token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # SWAGGER URLS
