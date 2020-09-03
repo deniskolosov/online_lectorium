@@ -38,6 +38,7 @@ class PaymentCreateView(APIView):
 
 class YandexWebhook(APIView):
     payment_model = Payment
+    permission_classes = []
 
     def post(self, request, *args, **kwargs):
         """
