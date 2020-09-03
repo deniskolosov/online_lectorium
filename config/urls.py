@@ -51,7 +51,7 @@ urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # DRF auth token
-    path("auth-token/", decorated_auth_view),
+    path("api/auth-token/", decorated_auth_view),
 ]
 
 # SWAGGER URLS
