@@ -14,11 +14,11 @@
     this.pay = function () {
       var widget = new cp.CloudPayments();
       widget.charge({ // options
-        publicId: 'test_api_00000000000000000000001',  //id из личного кабинета
-                      description: "hello", //назначение
-                      amount:100 , //сумма
-                      currency: 'RUB', //валюта
-                      invoiceId: '1234567', //номер заказа  (необязательно)
+        publicId: '{{account_id}}',  //id из личного кабинета
+                      description: '{{view.kwargs.description}}', //назначение
+                      amount: {{ view.kwargs.amount }} , //сумма
+                      currency: '{{view.kwargs.currency}}', //валюта
+                      invoiceId: '{{view.kwargs.payment_id}}', //номер заказа  (необязательно)
                       accountId: 'user@example.com', //идентификатор плательщика (необязательно)
                       skin: "mini", //дизайн виджета
                       data: {
@@ -35,5 +35,4 @@
 
   </script>
 </body>
-description : {{view.kwargs.description}}
 </html>

@@ -1,7 +1,7 @@
-import uuid
-
+from django.conf import settings
 from django.urls import reverse
 
+import uuid
 from .base import BasePaymentAdaptor
 
 
@@ -19,8 +19,9 @@ class CloudpaymentsAdaptor(BasePaymentAdaptor):
         """
         Return link to template view containing Cloudpayments form with all necessary data
         """
-        return reverse('payments:cloudpayments-payment-form', kwargs={
-            'amount':int(value),
+        return settings.SITE_URL + reverse('payments:cloudpayments-payment-form', kwargs={
+            'amount':value,
             'description': description,
             'currency': currency,
+            'payment_id': internal_payment_id,
         })

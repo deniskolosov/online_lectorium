@@ -321,7 +321,9 @@ YANDEX_CHECKOUT_SECRET_KEY = env("YANDEX_CHECKOUT_SECRET_KEY", default="")
 YANDEX_CHECKOUT_RETURN_URL = env("YANDEX_CHECKOUT_RETURN_URL", default="https://afi-backend.herokuapp.com")
 
 # Cloudpayments credentials
-CLOUDPAYMENTS_ACCOUNT_ID = env("CLOUDPAYMENTS_ACCOUNT_ID", default="123")
+CLOUDPAYMENTS_ACCOUNT_ID = env("CLOUDPAYMENTS_ACCOUNT_ID", default="")
+
+SITE_URL = env("SITE_URL", default="https://afi-backend.herokuapp.com")
 
 
 # Swagger settings

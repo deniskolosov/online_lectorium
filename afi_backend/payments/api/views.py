@@ -44,8 +44,6 @@ class YandexWebhook(APIView):
         """
         Endpoint for getting payment notifications from Yandex Checkout.
         """
-        #TODO: using id from request, get Payment by external id,
-        # update its' status if it's succesful
         logger.info(f"Got notification from Yandex.Checkout, payload: {request.data}")
 
         payment_object = request.data.get('object')
@@ -53,7 +51,6 @@ class YandexWebhook(APIView):
             return Response({"msg": "No object data passed"}, status=status.HTTP_400_BAD_REQUEST)
         external_id = payment_object.get('id')
 
-        # We want to blow up here if payment not found, to get error seen.
         try:
             afi_payment = Payment.objects.get(external_id=external_id)
             afi_payment.status = Payment.PAID
@@ -63,6 +60,29 @@ class YandexWebhook(APIView):
 
         return Response({"msg": "Got it!"}, status=status.HTTP_200_OK)
 
+class CloudpaymentsWebhook(APIView):
+    payment_model = Payment
+    permission_classes = []
+
+    def post(self, request, *args, **kwargs):
+        """
+        Endpoint for getting payment notifications from Cloudpayments.
+        """
+        logger.info(f"Got payment notification from Cloudpayments, payload: {request.data}")
+
+        data = request.data
+        if not data:
+            return Response({"msg": "No data passed"}, status=status.HTTP_400_BAD_REQUEST)
+        payment_id = data.get('InvoiceId')
+
+        try:
+            afi_payment = Payment.objects.get(id=payment_id)
+            afi_payment.status = Payment.PAID
+            afi_payment.save()
+        except Payment.DoesNotExist:
+            return Response({"msg": "No such payment"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"code": 0}, status=status.HTTP_200_OK)
 
 class PaymentMethodViewset(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet):
     serializer_class = PaymentMethodSerializer
