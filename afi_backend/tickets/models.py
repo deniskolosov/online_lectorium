@@ -25,6 +25,14 @@ class Ticket(models.Model):
     def get_qr_code(self):
         return self.qrcode.code
 
+    @property
+    def scanned(self):
+        if hasattr(self, 'qrcode'):
+            return self.qrcode.scanned
+        return False
+
+
+
 class QRCode(models.Model):
     code = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     scanned = models.BooleanField(default=False)
@@ -37,7 +45,3 @@ class QRCode(models.Model):
     def activate(self):
         self.scanned = True
         self.save()
-
-
-class Event(models.Model):
-    description = models.TextField()

@@ -14,7 +14,8 @@ else:
 
 router.register("users", UserViewSet)
 router.register("payment_methods", PaymentMethodViewset)
-router.register("tickets", TicketViewSet)
+router.register("tickets", TicketViewSet, basename='tickets')
+# router.register("events", EventViewSet, basename='events')
 
 urlpatterns = [
     path("payments/", view=PaymentCreateView.as_view(), name="payment-create-view"),

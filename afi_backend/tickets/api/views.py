@@ -2,18 +2,18 @@ from django.conf import settings
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from ..models import Event, QRCode, Ticket
-from .serializers import EventSerializer, QRCodeSerializer, TicketSerializer
+from ..models import QRCode, Ticket
+from .serializers import QRCodeSerializer, TicketSerializer
 
 
 class TicketViewSet(viewsets.ModelViewSet):
     """
     A simple ViewSet for viewing and editing tickets.
     """
-    queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'], permission_classes=[], url_path='activate/(?P<qr_code>[^/.]+)')
     def activate(self, request, qr_code, pk=None):
@@ -28,15 +28,21 @@ class TicketViewSet(viewsets.ModelViewSet):
         else:
             return Response({"error": "Invalid Code"}, status=status.HTTP_400_BAD_REQUEST)
 
+    def get_queryset(self):
+        user = self.request.user
+        tickets = Ticket.objects.filter(customer=user)
+        return tickets
 
 
-class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    permission_classes = []
+# TODO: move to events app
+
+# class EventViewSet(viewsets.ModelViewSet):
+#     queryset = Event.objects.all()
+#     serializer_class = EventSerializer
+#     permission_classes = [IsAuthenticated]
 
 
 class QRCodeViewSet(viewsets.ModelViewSet):
     queryset = QRCode.objects.all()
     serializer_class = QRCodeSerializer
-    permission_classes = []
+    permission_classes = [IsAdminUser]
