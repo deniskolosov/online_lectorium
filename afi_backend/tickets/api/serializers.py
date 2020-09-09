@@ -8,7 +8,6 @@ from rest_framework import serializers
 class TicketSerializer(serializers.ModelSerializer):
     activation_link = serializers.SerializerMethodField()
     scanned = serializers.BooleanField()
-    customer = UserSerializer()
     class Meta:
         model = Ticket
         fields = [
