@@ -24,21 +24,6 @@ class TicketSerializer(serializers.ModelSerializer):
         else:
             return ""
 
-
-
-# TODO: move to events app
-# class EventSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Event
-#         fields = [
-#             'name',
-#             'category',
-#             'description',
-#         ]
-#         filterset_fields = ['category']
-#         search_fields = ['name']
-
-
 class QRCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = QRCode

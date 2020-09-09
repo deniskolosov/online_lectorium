@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.tickets.api.views import TicketViewSet
+from afi_backend.events.api.views import EventViewSet
 from afi_backend.payments.api.views import PaymentMethodViewset, PaymentCreateView, YandexWebhook, CloudpaymentsWebhook
 from django.urls import path
 
@@ -15,7 +16,7 @@ else:
 router.register("users", UserViewSet)
 router.register("payment_methods", PaymentMethodViewset)
 router.register("tickets", TicketViewSet, basename='tickets')
-# router.register("events", EventViewSet, basename='events')
+router.register("events", EventViewSet, basename='events')
 
 urlpatterns = [
     path("payments/", view=PaymentCreateView.as_view(), name="payment-create-view"),
