@@ -15,11 +15,14 @@ class Event(models.Model):
 
 class Lecturer(models.Model):
     name = models.CharField(max_length=256)
-    userpic = models.ImageField(upload_to='lecturer_userpics/')
+    userpic = models.ImageField(upload_to='lecturer_userpics/', blank=True, null=True)
 
 
 class LectureBase(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
-    lecture_summary_file = models.FileField(upload_to='lecture_summaries/')
+    lecture_summary_file = models.FileField(upload_to='lecture_summaries/', blank=True, null=True)
+
+class OfflineLecture(LectureBase):
+    address = models.TextField()

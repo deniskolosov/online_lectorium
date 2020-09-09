@@ -1,3 +1,19 @@
 from django.contrib import admin
+from .models import Event, Lecturer, OfflineLecture
 
-# Register your models here.
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description', 'category']
+    search_fields = ['id']
+
+
+
+@admin.register(OfflineLecture)
+class LectureAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+
+
+
+@admin.register(Lecturer)
+class LecturerAdmin(admin.ModelAdmin):
+    list_display = ['name']
