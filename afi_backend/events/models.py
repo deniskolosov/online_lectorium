@@ -7,10 +7,10 @@ from django.contrib.contenttypes.models import ContentType
 class Event(models.Model):
     name = models.CharField(max_length=256, null=True, blank=True)
     description = models.TextField()
-    category = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    event_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
 
     object_id = models.PositiveIntegerField(blank=True, null=True)
-    content_object = GenericForeignKey('category', 'object_id')
+    content_object = GenericForeignKey('event_type', 'object_id')
 
 
 class Lecturer(models.Model):
@@ -23,6 +23,7 @@ class LectureBase(models.Model):
     description = models.TextField()
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
     lecture_summary_file = models.FileField(upload_to='lecture_summaries/', blank=True, null=True)
+
 
 class OfflineLecture(LectureBase):
     address = models.TextField()

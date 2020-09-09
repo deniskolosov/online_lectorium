@@ -3,7 +3,7 @@ from .models import Event, Lecturer, OfflineLecture
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description', 'category']
+    list_display = ['name', 'description', 'event_type']
     search_fields = ['id']
 
 
