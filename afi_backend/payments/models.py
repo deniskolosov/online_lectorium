@@ -36,17 +36,13 @@ class PaymentMethod(models.Model):
 
 
 class Payment(models.Model):
-    # PAYMENT_STATUSES = (
-    #     (PENDING, "Pending"),
-    #     (PAID, "Paid"),
-    # )
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
 
     payment_for = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
+        null=True,
     )
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('payment_for', 'object_id')
