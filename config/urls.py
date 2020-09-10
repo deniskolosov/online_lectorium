@@ -45,11 +45,14 @@ schema_view = get_schema_view(
 
 
 # API URLS
+class MyTokenObtainPairView(TokenObtainPairView):
+    queryset = ''
+
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # DRF auth token
-    path('api/auth-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth-token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth-token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
