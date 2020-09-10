@@ -34,14 +34,6 @@ class TicketViewSet(viewsets.ModelViewSet):
         return tickets
 
 
-# TODO: move to events app
-
-# class EventViewSet(viewsets.ModelViewSet):
-#     queryset = Event.objects.all()
-#     serializer_class = EventSerializer
-#     permission_classes = [IsAuthenticated]
-
-
 class QRCodeViewSet(viewsets.ModelViewSet):
     queryset = QRCode.objects.all()
     serializer_class = QRCodeSerializer

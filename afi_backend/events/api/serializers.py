@@ -1,35 +1,17 @@
 
-from rest_framework import serializers
-
 from ..models import Event, OfflineLecture
+from rest_framework_json_api import relations, serializers, filters, django_filters
+from rest_framework.filters import SearchFilter
 
 
-
-class OfflineLectureSerializer(serializers.ModelSerializer):
+class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfflineLecture
-        fields = ['address', 'description']
-
-class CategoryEventField(serializers.RelatedField):
-    """
-    Field to use for representing generic relationship to Event Categories,
-    """
-
-    def to_representation(self, value):
-        """
-        Serialize Event Categories to text
-        """
-        if isinstance(value, OfflineLecture):
-            serializer = OfflineLectureSerializer(value)
-        # add more checks here
-        # elif isinstance(value, )
-        else:
-            raise Exception("Unexpected type of Event")
-        return serializer.data
+        fields = ['address']
 
 
 class EventSerializer(serializers.ModelSerializer):
-    category = CategoryEventField(source='content_object', read_only=True)
+    category = EventTypeSerializer(source='content_object', read_only=True)
 
     class Meta:
         model = Event
@@ -38,5 +20,3 @@ class EventSerializer(serializers.ModelSerializer):
             'description',
             'category',
         ]
-        filterset_fields = ['category']
-        search_fields = ['name']

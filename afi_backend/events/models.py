@@ -1,6 +1,7 @@
 from django.db import models
 
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import (GenericForeignKey,
+    GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -27,3 +28,4 @@ class LectureBase(models.Model):
 
 class OfflineLecture(LectureBase):
     address = models.TextField()
+    events = GenericRelation(Event, related_query_name='offline_lecture')
