@@ -2,10 +2,10 @@ import logging
 
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
@@ -60,6 +60,7 @@ class PaymentCreateView(APIView):
 class YandexWebhook(APIView):
     payment_model = Payment
     permission_classes = []
+    parser_classes = [JSONParser]
 
     def post(self, request, *args, **kwargs):
         """
