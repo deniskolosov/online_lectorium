@@ -14,7 +14,7 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet)
-router.register("payment_methods", PaymentMethodViewset)
+router.register("payment_methods", PaymentMethodViewset, basename='payment-methods')
 router.register("tickets", TicketViewSet, basename='tickets')
 router.register("events", EventViewSet, basename='events')
 router.register("offline-lectures", OfflineLectureViewset, basename='offline-lectures')
