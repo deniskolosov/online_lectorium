@@ -1,7 +1,6 @@
+from rest_framework_json_api import serializers
 
-from ..models import Event, OfflineLecture
-from rest_framework_json_api import relations, serializers, filters, django_filters
-from rest_framework.filters import SearchFilter
+from afi_backend.events.models import Event, OfflineLecture
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -19,4 +18,18 @@ class EventSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'category',
+        ]
+
+
+class OfflineLectureSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+
+    class Meta:
+        model = OfflineLecture
+        fields = [
+            'name',
+            'lecture_date',
+            'lecture_date_ts',
+            'lecturer',
+            'lecture_summary_file',
         ]
