@@ -106,7 +106,7 @@ class CloudpaymentsWebhook(APIView):
 
         try:
             afi_payment = Payment.objects.get(id=payment_id)
-            afi_payment.status = Payment.PAID
+            afi_payment.status = Payment.STATUS.PAID
             afi_payment.save()
         except Payment.DoesNotExist:
             return Response({"msg": "No such payment"},
