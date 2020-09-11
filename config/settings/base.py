@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_yasg",
     "django_filters",
+    'djmoney',
 ]
 
 LOCAL_APPS = [

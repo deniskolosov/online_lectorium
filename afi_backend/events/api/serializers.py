@@ -32,4 +32,6 @@ class OfflineLectureSerializer(serializers.ModelSerializer):
             'lecture_date_ts',
             'lecturer',
             'lecture_summary_file',
+            'price',
+            'price_currency',
         ]
