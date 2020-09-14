@@ -17,9 +17,10 @@ from rest_framework_simplejwt.views import (
 
 from django.urls import include, path
 
-
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/index.html"), name="home"),
+    path("",
+         TemplateView.as_view(template_name="pages/index.html"),
+         name="home"),
     # path(
     #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     # ),
@@ -29,18 +30,19 @@ urlpatterns = [
     path("users/", include("afi_backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
-    path("payments/", include("afi_backend.payments.urls", namespace="payments")),
+    path("payments/", include("afi_backend.payments.urls",
+                              namespace="payments")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Art For Introvert backend API",
-      default_version='v1',
-      description="Art For Introvert API docs",
-      contact=openapi.Contact(email="developer@artforintrovert.ru"),
-   ),
-   public=False,
-   permission_classes=(permissions.IsAdminUser,),
+    openapi.Info(
+        title="Art For Introvert backend API",
+        default_version='v1',
+        description="Art For Introvert API docs",
+        contact=openapi.Contact(email="developer@artforintrovert.ru"),
+    ),
+    public=False,
+    permission_classes=(permissions.IsAdminUser, ),
 )
 
 
@@ -48,21 +50,35 @@ schema_view = get_schema_view(
 class MyTokenObtainPairView(TokenObtainPairView):
     queryset = ''
 
+
+class MyTokenRefreshView(TokenRefreshView):
+    queryset = ''
+
+
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # DRF auth token
-    path('api/auth-token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/auth-token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth-token/',
+         MyTokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('api/auth-token/refresh/',
+         MyTokenRefreshView.as_view(),
+         name='token_refresh'),
 ]
 
 # SWAGGER URLS
 urlpatterns += [
-   url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-   url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-   url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    url(r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=0),
+        name='schema-json'),
+    url(r'^swagger/$',
+        schema_view.with_ui('swagger', cache_timeout=0),
+        name='schema-swagger-ui'),
+    url(r'^redoc/$',
+        schema_view.with_ui('redoc', cache_timeout=0),
+        name='schema-redoc'),
 ]
-
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
@@ -88,4 +104,5 @@ if settings.DEBUG:
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))
+                       ] + urlpatterns
