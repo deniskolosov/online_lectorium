@@ -43,7 +43,6 @@ class LectureBase(models.Model):
 
 class OfflineLecture(LectureBase):
     address = models.TextField()
-    events = GenericRelation(Event, related_query_name='offline_lecture')
     lecture_date = models.DateTimeField()
 
     def lecture_date_ts(self):
