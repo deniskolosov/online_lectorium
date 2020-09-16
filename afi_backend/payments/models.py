@@ -12,7 +12,6 @@ from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -56,8 +55,6 @@ class PaymentMethod(models.Model):
         return f"{self.get_payment_type_display()}"
 
 
-
-
 class Payment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
@@ -86,27 +83,30 @@ class Payment(models.Model):
         # If payment is completed for item, do afterpayment logic
         if self.tracker.has_changed('status') and self.tracker.previous(
                 'status') == self.STATUS.PENDING:
-            logger.info(f"Calling afterpayment logic for {self.content_object}")
+            logger.info(
+                f"Calling afterpayment logic for {self.content_object}")
 
             self.content_object.do_afterpayment_logic()
 
 
-def create_content_type_obj_for_payment(model_type: str, user: User) -> Payable:
+def create_content_type_obj_for_payment(model_type: str,
+                                        user: User) -> Payable:
     # Using model type as string and user, create object, for which Payment is created.
     model_class = ContentType.objects.get(model=model_type).model_class()
     return model_class.objects.create(customer=user)
 
 
-def create_payment_with_paid_object(payment_type: int, user: User, payment_for: str) -> Payment:
+def create_payment_with_paid_object(payment_type: int, user: User,
+                                    payment_for: str) -> Payment:
     # Payment provider(Yandex Checkout, Cloudpayments, etc.)
-    payment_method = PaymentMethod.objects.get(
-        payment_type=payment_type)
+    # check why get returns 4
+    payment_method = PaymentMethod.objects.get(payment_type=payment_type)
 
-    object_to_pay_for = create_content_type_obj_for_payment(model_type=payment_for, user=user)
+    object_to_pay_for = create_content_type_obj_for_payment(
+        model_type=payment_for, user=user)
 
-    payment = Payment.objects.create(
-        user=user,
-        payment_method=payment_method,
-        content_object=object_to_pay_for)
+    payment = Payment.objects.create(user=user,
+                                     payment_method=payment_method,
+                                     content_object=object_to_pay_for)
 
     return payment

@@ -1,11 +1,15 @@
 import json
-from .. import models as payments_models
+import logging
 
 from django.conf import settings
 from yandex_checkout import Configuration, Payment
+from yandex_checkout.client import UnauthorizedError
 
 import uuid
+from .. import models as payments_models
 from .base import BasePaymentAdaptor
+
+logger = logging.getLogger(__name__)
 
 
 class YandexCheckoutAdaptor(BasePaymentAdaptor):
@@ -19,21 +23,25 @@ class YandexCheckoutAdaptor(BasePaymentAdaptor):
         Make a payment request to Yandex Checkout.
         """
         # todo: correct error handling
-        payment_response = Payment.create(
-            {
-                "amount": {
-                    "value": value,
-                    "currency": currency,
+        try:
+            payment_response = Payment.create(
+                {
+                    "amount": {
+                        "value": value,
+                        "currency": currency,
+                    },
+                    "confirmation": {
+                        "type": "redirect",
+                        "return_url": settings.
+                        YANDEX_CHECKOUT_RETURN_URL  # replace with user's orders page
+                    },
+                    "capture": True,
+                    "description": description
                 },
-                "confirmation": {
-                    "type": "redirect",
-                    "return_url": settings.
-                    YANDEX_CHECKOUT_RETURN_URL  # replace with user's orders page
-                },
-                "capture": True,
-                "description": description
-            },
-            str(internal_payment_id))
+                str(internal_payment_id))
+        except UnauthorizedError:
+            raise UnauthorizedError("Set Yandex Checkout keys in env vars.")
+
         payment_response = json.loads(payment_response.json())
         payment = payments_models.Payment.objects.get(id=internal_payment_id)
 
