@@ -1,15 +1,36 @@
 import logging
+from builtins import NotImplementedError
+from typing import Union
+
 from django.db import models
 from model_utils import Choices, FieldTracker
 from model_utils.fields import StatusField
 
 import uuid
 from afi_backend.users import models as user_models
+from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 
 logger = logging.getLogger(__name__)
+
+
+class Payable(models.Model):
+    """
+    Inherit from this if you want the model to be 'buyable'.
+    """
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        abstract = True
+
+    def do_afterpayment_logic(self):
+        """
+        Logic which should be done after Payment is paid
+        """
+        raise NotImplementedError()
+
 
 class PaymentMethod(models.Model):
     TYPE_YANDEX_CHECKOUT = 0
@@ -35,6 +56,8 @@ class PaymentMethod(models.Model):
         return f"{self.get_payment_type_display()}"
 
 
+
+
 class Payment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
@@ -53,8 +76,6 @@ class Payment(models.Model):
         default=PaymentMethod.TYPE_YANDEX_CHECKOUT)
     external_id = models.CharField(max_length=256, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # status = models.PositiveSmallIntegerField(choices=PAYMENT_STATUSES,
-    #                                           default=PENDING)
     STATUS = Choices((0, 'PENDING', 'pending'), (1, 'PAID', 'paid'))
     status = models.IntegerField(choices=STATUS, default=STATUS.PENDING)
 
@@ -63,9 +84,29 @@ class Payment(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # If payment is completed for item, do afterpayment logic
-        logger.info(f"Hello test")
         if self.tracker.has_changed('status') and self.tracker.previous(
                 'status') == self.STATUS.PENDING:
             logger.info(f"Calling afterpayment logic for {self.content_object}")
 
             self.content_object.do_afterpayment_logic()
+
+
+def create_content_type_obj_for_payment(model_type: str, user: User) -> Payable:
+    # Using model type as string and user, create object, for which Payment is created.
+    model_class = ContentType.objects.get(model=model_type).model_class()
+    return model_class.objects.create(customer=user)
+
+
+def create_payment_with_paid_object(payment_type: int, user: User, payment_for: str) -> Payment:
+    # Payment provider(Yandex Checkout, Cloudpayments, etc.)
+    payment_method = PaymentMethod.objects.get(
+        payment_type=payment_type)
+
+    object_to_pay_for = create_content_type_obj_for_payment(model_type=payment_for, user=user)
+
+    payment = Payment.objects.create(
+        user=user,
+        payment_method=payment_method,
+        content_object=object_to_pay_for)
+
+    return payment

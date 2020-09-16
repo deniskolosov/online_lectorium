@@ -1,21 +1,23 @@
-import uuid
-from django.db import models
 import logging
 
+from django.db import models
+
+import uuid
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from afi_backend.payments.models import Payable
+from afi_backend.events.models import OfflineLecture
+
 
 logger = logging.getLogger(__name__)
 
-class Ticket(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField(blank=True, null=True)
-    content_object = GenericForeignKey()
+
+class Ticket(Payable):
+    offline_lecture = models.ForeignKey(OfflineLecture, on_delete=models.CASCADE, null=True, blank=True)
 
     def generate_qr_code(self):
-        logger.info(f"Generating qr code for {self}")
+        logger.info("Generating qr code for {self}")
         return QRCode.objects.create(ticket=self, scanned=False)
 
     def do_afterpayment_logic(self):
@@ -30,6 +32,7 @@ class Ticket(models.Model):
         if hasattr(self, 'qrcode'):
             return self.qrcode.scanned
         return False
+
 
 
 

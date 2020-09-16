@@ -386,3 +386,5 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+ALLOWED_HOSTS = ['testserver']

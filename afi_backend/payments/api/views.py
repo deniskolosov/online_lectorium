@@ -4,13 +4,14 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
-from ..models import Payment, PaymentMethod
+from afi_backend.payments.models import Payment, PaymentMethod, create_payment_with_paid_object
+
 from .serializers import PaymentMethodSerializer
 
 logger = logging.getLogger(__name__)
@@ -30,28 +31,19 @@ class PaymentCreateView(APIView):
         if 'payment_for' not in request.data:
             raise ValidationError("'payment for' field is required.")
 
-        payment_method = PaymentMethod.objects.get(
-            payment_type=request.data['payment_type_value'])
-
-        payment_for = ContentType.objects.get(
-            model=request.data['payment_for'])
-
-        adaptor = payment_method.get_adaptor()
-
-        # TODO: Raise validation error if any of this is not present.
-        # TODO create variable for request data
+        payment_type_value = request.data['payment_type_value']
         amount = request.data['amount']
         currency = request.data['currency']
-
-        payment = self.payment_model.objects.create(
-            user=self.request.user,
-            payment_method=payment_method,
-            payment_for=payment_for,
-            object_id=request.data['object_id'])
+        payment_for = request.data['payment_for']
+        payment = create_payment_with_paid_object(
+            payment_type=payment_type_value,
+            user=request.user,
+            payment_for=payment_for)
+        adaptor = payment.payment_method.get_adaptor()
 
         payment_url = adaptor.charge(value=amount,
                                      currency=currency,
-                                     description='Change me',
+                                     description=f'Payment #{payment.id}',
                                      internal_payment_id=payment.id)
 
         return Response({'payment_url': payment_url})

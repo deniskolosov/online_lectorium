@@ -1,12 +1,10 @@
 import time
 
-from django.db import models
-
-from afi_backend.tickets.models import Ticket
-from django.contrib.contenttypes.fields import (GenericForeignKey,
-    GenericRelation)
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from djmoney.models.fields import MoneyField
+
 from afi_backend.users.models import User
 
 
@@ -48,7 +46,6 @@ class LectureBase(models.Model):
     lecture_summary_file = models.FileField(upload_to='lecture_summaries/',
                                             blank=True,
                                             null=True)
-    tickets = GenericRelation(Ticket)
     price = MoneyField(max_digits=10,
                        decimal_places=2,
                        null=True,
