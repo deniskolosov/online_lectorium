@@ -9,11 +9,6 @@ from afi_backend.tickets.models import QRCode, Ticket
 class TicketSerializer(serializers.ModelSerializer):
     activation_link = serializers.SerializerMethodField()
     scanned = serializers.BooleanField(read_only=True)
-    event_type = EventTypeSerializer(source='content_object', read_only=True)
-    content_type = serializers.SlugRelatedField(
-        queryset=ContentType.objects.all(),
-        slug_field='id',
-    )
 
     class Meta:
         model = Ticket
@@ -21,8 +16,7 @@ class TicketSerializer(serializers.ModelSerializer):
             'customer',
             'activation_link',
             'scanned',
-            'event_type',
-            'content_type',
+            'offline_lecture',
         ]
 
     def get_activation_link(self, obj):

@@ -1,5 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
+from rest_framework import filters as drf_filters
 from rest_framework_json_api import relations, serializers, filters, django_filters
 from rest_framework.filters import SearchFilter
 
@@ -11,9 +12,7 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = (
-        django_filters.DjangoFilterBackend,
-    )
+    filter_backends = (django_filters.DjangoFilterBackend, )
     filterset_fields = {'event_type': ('exact', )}
 
 
@@ -24,8 +23,16 @@ class OfflineLectureViewset(viewsets.ModelViewSet):
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,
+        drf_filters.SearchFilter,
     )
-    filterset_fields = {'lecture_date': ('exact', )}
+    filterset_fields = {
+        'lecture_date': (
+            'exact',
+            'gt',
+            'lt',
+        )
+    }
+    search_fields = ['name']
 
 
 class LecturersViewset(viewsets.ModelViewSet):
