@@ -27,6 +27,9 @@ class Lecturer(models.Model):
                                 null=True)
     bio = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class LectureCategory(models.Model):
     name = models.CharField(max_length=256)
@@ -53,7 +56,7 @@ class LectureBase(models.Model):
                        decimal_places=2,
                        null=True,
                        default_currency='RUB')
-    category = models.ForeignKey(LectureCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(LectureCategory, on_delete=models.CASCADE, null=True)
     rating = models.ForeignKey(LectureRating, on_delete=models.CASCADE, null=True, blank=True)
 
 

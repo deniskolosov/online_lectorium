@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='lecturebase',
             name='category',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='events.LectureCategory'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.LectureCategory'),
             preserve_default=False,
         ),
     ]
