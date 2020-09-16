@@ -11,23 +11,22 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = (filters.QueryParameterValidationFilter,
-                       django_filters.DjangoFilterBackend,
-                       )
-    filterset_fields = {
-        'event_type': ('exact',)
-    }
+    filter_backends = (
+        django_filters.DjangoFilterBackend,
+    )
+    filterset_fields = {'event_type': ('exact', )}
+
 
 class OfflineLectureViewset(viewsets.ModelViewSet):
     queryset = OfflineLecture.objects.all()
     serializer_class = OfflineLectureSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = (filters.QueryParameterValidationFilter,
-                       django_filters.DjangoFilterBackend,
-                       )
-    filterset_fields = {
-        'lecture_date': ('exact',)
-    }
+    filter_backends = (
+        filters.QueryParameterValidationFilter,
+        django_filters.DjangoFilterBackend,
+    )
+    filterset_fields = {'lecture_date': ('exact', )}
+
 
 class LecturersViewset(viewsets.ModelViewSet):
     queryset = Lecturer.objects.all()
