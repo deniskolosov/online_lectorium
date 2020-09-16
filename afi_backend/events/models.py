@@ -32,6 +32,9 @@ class LectureCategory(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
 
+    class Meta:
+        verbose_name_plural = "Lecture categories"
+
 
 class LectureRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
