@@ -1,6 +1,6 @@
 from rest_framework_json_api import serializers
 
-from afi_backend.events.models import Event, OfflineLecture, Lecturer
+from afi_backend.events.models import Event, OfflineLecture, Lecturer, LectureCategory
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -31,10 +31,19 @@ class LecturerSerializer(serializers.ModelSerializer):
         ]
 
 
+class LectureCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LectureCategory
+        fields = [
+            'name',
+        ]
+
+
 class OfflineLectureSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     included_serializers = {
-        'lecturer': LecturerSerializer
+        'lecturer': LecturerSerializer,
+        'category': LectureCategorySerializer
     }
 
     class Meta:
@@ -44,6 +53,7 @@ class OfflineLectureSerializer(serializers.ModelSerializer):
             'lecture_date',
             'lecture_date_ts',
             'lecturer',
+            'category',
             'lecture_summary_file',
             'price',
             'price_currency',
