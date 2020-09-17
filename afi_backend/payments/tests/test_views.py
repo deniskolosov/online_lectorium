@@ -1,13 +1,17 @@
-import pytest
-from unittest.mock import ANY
 from django.test import Client
 from rest_framework.test import APIRequestFactory, force_authenticate
+from unittest.mock import ANY
 
+import pytest
+from rest_framework.exceptions import ErrorDetail
+
+from afi_backend.events.tests.factories import OfflineLectureFactory
 from afi_backend.payments.adaptors.yandex import YandexCheckoutAdaptor as adaptor
 from afi_backend.payments.api.views import PaymentCreateView
-from afi_backend.payments.models import PaymentMethod, Payment
+from afi_backend.payments.models import Payment, PaymentMethod
 from afi_backend.payments.tests.factories import PaymentMethodFactory
 from afi_backend.users.tests.factories import UserFactory
+
 
 pytestmark = pytest.mark.django_db
 
@@ -17,8 +21,12 @@ class TestPaymentViewSet:
         payment_method = PaymentMethodFactory(
             payment_type=PaymentMethod.TYPE_YANDEX_CHECKOUT)
         test_user = UserFactory()
+        offline_lecture = OfflineLectureFactory()
         test_url = "https://foo.bar"
-        mocked_adaptor = mocker.patch.object(adaptor, 'charge', autospec=True, return_value=test_url)
+        mocked_adaptor = mocker.patch.object(adaptor,
+                                             'charge',
+                                             autospec=True,
+                                             return_value=test_url)
 
         test_payment_type_value = payment_method.payment_type
         test_payment_for = "ticket"
@@ -34,6 +42,7 @@ class TestPaymentViewSet:
                     "payment_for": test_payment_for,
                     "amount": test_amount,
                     "currency": test_currency,
+                    "related_object_id": offline_lecture.id,
                 }
             }
         }
@@ -44,10 +53,33 @@ class TestPaymentViewSet:
         assert response.data == {"payment_url": test_url}
 
         payment = Payment.objects.first()
+        ticket = payment.content_object
 
-        mocked_adaptor.assert_called_with(
-            ANY,
-            value=test_amount,
-            currency=test_currency,
-            description=f"Payment #{payment.id}",
-            internal_payment_id=payment.id)
+        assert ticket.offline_lecture == offline_lecture
+
+        mocked_adaptor.assert_called_with(ANY,
+                                          value=test_amount,
+                                          currency=test_currency,
+                                          description=f"Payment #{payment.id}",
+                                          internal_payment_id=payment.id)
+
+    def test_raises_validation_error(self):
+        factory = APIRequestFactory()
+        view = PaymentCreateView.as_view()
+        test_user = UserFactory()
+        test_data = {"data": {"type": "PaymentCreateView", "attributes": {}}}
+
+        request = factory.post('/api/payments/', data=test_data)
+        force_authenticate(request, test_user)
+        response = view(request)
+        assert response.data == [{
+            'detail':
+            ErrorDetail(string='payment_type_value field is  required',
+                        code='invalid'),
+            'status':
+            '400',
+            'source': {
+                'pointer': '/data'
+            },
+            'code': 'invalid'
+        }]

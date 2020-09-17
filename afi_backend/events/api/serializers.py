@@ -21,8 +21,21 @@ class EventSerializer(serializers.ModelSerializer):
         ]
 
 
+class LecturerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecturer
+        fields = [
+            'name',
+            'userpic',
+            'bio',
+        ]
+
+
 class OfflineLectureSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
+    included_serializers = {
+        'lecturer': LecturerSerializer
+    }
 
     class Meta:
         model = OfflineLecture
@@ -34,14 +47,4 @@ class OfflineLectureSerializer(serializers.ModelSerializer):
             'lecture_summary_file',
             'price',
             'price_currency',
-        ]
-
-
-class LecturerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lecturer
-        fields = [
-            'name',
-            'userpic',
-            'bio',
         ]

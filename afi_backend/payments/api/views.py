@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
-from afi_backend.payments.models import Payment, PaymentMethod, create_payment_with_paid_object
+from afi_backend.payments.models import Payment, PaymentMethod, create_payment_with_paid_object_and_link
 
 from .serializers import PaymentMethodSerializer
 
@@ -25,20 +25,22 @@ class PaymentCreateView(APIView):
         """
         Create Payment object for user for given item type, "Pending" status, currency and Payment Method
         """
-        if 'payment_type_value' not in request.data:
-            raise ValidationError("'payment_type_value' field is required.")
-
-        if 'payment_for' not in request.data:
-            raise ValidationError("'payment for' field is required.")
+        required_fields = ('payment_type_value', 'amount', 'currency', 'payment_for', 'related_object_id',)
+        for val in required_fields:
+            if val not in request.data:
+                raise ValidationError(f"{val} field is  required")
 
         payment_type_value = request.data['payment_type_value']
         amount = request.data['amount']
         currency = request.data['currency']
         payment_for = request.data['payment_for']
-        payment = create_payment_with_paid_object(
+        related_object_id = request.data['related_object_id']
+
+        payment = create_payment_with_paid_object_and_link(
             payment_type=payment_type_value,
             user=request.user,
-            payment_for=payment_for)
+            payment_for=payment_for,
+            related_object_id=related_object_id)
         adaptor = payment.payment_method.get_adaptor()
 
         payment_url = adaptor.charge(value=amount,

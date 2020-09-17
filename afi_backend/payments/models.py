@@ -11,6 +11,8 @@ from afi_backend.users import models as user_models
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from afi_backend.events.models import OfflineLecture
+
 
 logger = logging.getLogger(__name__)
 
@@ -89,21 +91,27 @@ class Payment(models.Model):
             self.content_object.do_afterpayment_logic()
 
 
-def create_content_type_obj_for_payment(model_type: str,
-                                        user: User) -> Payable:
+def create_content_type_obj_for_payment(model_type: str, user: User,
+                                        related_object_id: int) -> Payable:
     # Using model type as string and user, create object, for which Payment is created.
     model_class = ContentType.objects.get(model=model_type).model_class()
+
+    if model_type == 'ticket':
+        offline_lecture = OfflineLecture.objects.get(id=related_object_id)
+
+        return model_class.objects.create(customer=user,
+                                          offline_lecture=offline_lecture)
     return model_class.objects.create(customer=user)
 
 
-def create_payment_with_paid_object(payment_type: int, user: User,
-                                    payment_for: str) -> Payment:
+def create_payment_with_paid_object_and_link(
+        payment_type: int, user: User, payment_for: str,
+        related_object_id: int) -> Payment:
     # Payment provider(Yandex Checkout, Cloudpayments, etc.)
-    # check why get returns 4
     payment_method = PaymentMethod.objects.get(payment_type=payment_type)
 
     object_to_pay_for = create_content_type_obj_for_payment(
-        model_type=payment_for, user=user)
+        model_type=payment_for, user=user, related_object_id=related_object_id)
 
     payment = Payment.objects.create(user=user,
                                      payment_method=payment_method,
