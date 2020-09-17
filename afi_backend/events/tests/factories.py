@@ -28,6 +28,7 @@ class LectureRatingFactory(factory.django.DjangoModelFactory):
 
 
 class OfflineLectureFactory(factory.django.DjangoModelFactory):
+    name = factory.Sequence(lambda n: f"Offline lecture {n}")
     lecturer = factory.SubFactory(LecturerFactory)
     category = factory.SubFactory(LectureCategoryFactory)
     rating = factory.SubFactory(LectureRatingFactory)
