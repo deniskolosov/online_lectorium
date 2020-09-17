@@ -36,6 +36,7 @@ class LectureCategorySerializer(serializers.ModelSerializer):
         model = LectureCategory
         fields = [
             'name',
+            'color',
         ]
 
 

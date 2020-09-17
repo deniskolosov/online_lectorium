@@ -3,6 +3,7 @@ import time
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from colorfield.fields import ColorField
 from djmoney.models.fields import MoneyField
 
 from afi_backend.users.models import User
@@ -34,6 +35,7 @@ class Lecturer(models.Model):
 class LectureCategory(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
+    color = ColorField(null=True)
 
     class Meta:
         verbose_name_plural = "Lecture categories"
