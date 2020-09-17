@@ -9,12 +9,15 @@ from django.contrib.contenttypes.models import ContentType
 from afi_backend.payments.models import Payable
 from afi_backend.events.models import OfflineLecture
 
-
 logger = logging.getLogger(__name__)
 
 
 class Ticket(Payable):
-    offline_lecture = models.ForeignKey(OfflineLecture, on_delete=models.CASCADE, null=True, blank=True)
+    offline_lecture = models.ForeignKey(OfflineLecture,
+                                        on_delete=models.CASCADE,
+                                        null=True,
+                                        blank=True,
+                                        related_name='tickets')
 
     def generate_qr_code(self):
         logger.info("Generating qr code for {self}")
@@ -34,14 +37,13 @@ class Ticket(Payable):
         return False
 
 
-
-
 class QRCode(models.Model):
-    code = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+    code = models.UUIDField(default=uuid.uuid4,
+                            editable=False,
+                            primary_key=True)
     scanned = models.BooleanField(default=False)
-    ticket = models.OneToOneField(Ticket,
-                                  on_delete=models.CASCADE,
-                                  blank=True)
+    ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE, blank=True)
+
     def is_valid(self):
         return not self.scanned
 

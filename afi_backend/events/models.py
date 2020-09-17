@@ -1,12 +1,14 @@
 import time
 
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
-from django.contrib.contenttypes.models import ContentType
-from django.db import models
 from colorfield.fields import ColorField
-from djmoney.models.fields import MoneyField
+from django.db import models
+from rest_framework.exceptions import ValidationError
 
 from afi_backend.users.models import User
+from django.contrib.contenttypes.fields import (GenericForeignKey,
+    GenericRelation)
+from django.contrib.contenttypes.models import ContentType
+from djmoney.models.fields import MoneyField
 
 
 class Event(models.Model):
@@ -65,8 +67,22 @@ class LectureBase(models.Model):
 class OfflineLecture(LectureBase):
     address = models.TextField()
     lecture_date = models.DateTimeField()
+    capacity = models.PositiveSmallIntegerField(null=True)
 
     def lecture_date_ts(self):
         # Return lecture date as timestamp.
         ts = int(time.mktime(self.lecture_date.timetuple()))
         return ts
+
+    @property
+    def is_enough_space(self) -> bool:
+        """
+        Returns whether capacity allows to buy another ticket.
+        """
+        if self.capacity:
+            # TODO :add filtering by paid tickets
+            return self.tickets.count() < self.capacity
+        raise ValidationError(f"Capacity is not set for Lecture {self}")
+
+    def __str__(self):
+        return f"Lecture {self.name}"
