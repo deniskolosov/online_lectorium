@@ -81,8 +81,15 @@ class OfflineLecture(LectureBase):
         Returns whether capacity allows to buy another ticket.
         """
         if self.capacity:
-            return self.tickets.filter(payments__status=Payment.STATUS.PAID).count() < self.capacity
+            return self.tickets_sold < self.capacity
         raise ValidationError(f"Capacity is not set for Lecture {self}")
+
+    @property
+    def tickets_sold(self) -> int:
+        """
+        Get number of tickets sold for this lecture
+        """
+        return self.tickets.filter(payments__status=Payment.STATUS.PAID).count()
 
     def __str__(self):
         return f"Lecture {self.name}"

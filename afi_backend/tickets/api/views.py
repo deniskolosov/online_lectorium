@@ -3,6 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from afi_backend.payments.models import Payment
 
 from ..models import QRCode, Ticket
 from .serializers import QRCodeSerializer, TicketSerializer
@@ -30,7 +31,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        tickets = Ticket.objects.filter(customer=user)
+        tickets = Ticket.objects.filter(customer=user, payments__status=Payment.STATUS.PAID)
         return tickets
 
 
