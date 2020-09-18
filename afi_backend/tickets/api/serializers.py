@@ -4,11 +4,15 @@ from rest_framework_json_api import serializers
 
 from afi_backend.events.api.serializers import EventTypeSerializer
 from afi_backend.tickets.models import QRCode, Ticket
+from afi_backend.events.api.serializers import OfflineLectureSerializer
 
 
 class TicketSerializer(serializers.ModelSerializer):
     activation_link = serializers.SerializerMethodField()
     scanned = serializers.BooleanField(read_only=True)
+    included_serializers = {
+        'offline_lecture': OfflineLectureSerializer,
+    }
 
     class Meta:
         model = Ticket

@@ -51,11 +51,14 @@ class OfflineLectureSerializer(serializers.ModelSerializer):
         model = OfflineLecture
         fields = [
             'name',
+            'address',
+            'picture',
             'lecture_date',
             'lecture_date_ts',
             'lecturer',
             'category',
             'capacity',
+            'description',
             'tickets_sold',
             'lecture_summary_file',
             'price',
