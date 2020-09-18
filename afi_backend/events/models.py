@@ -35,13 +35,13 @@ class Lecturer(models.Model):
         return f"{self.name}"
 
 
-class LectureCategory(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     color = ColorField(null=True)
 
     class Meta:
-        verbose_name_plural = "Lecture categories"
+        verbose_name_plural = "Categories"
 
 
 class LectureRating(models.Model):
@@ -61,7 +61,7 @@ class LectureBase(models.Model):
                        decimal_places=2,
                        null=True,
                        default_currency='RUB')
-    category = models.ForeignKey(LectureCategory, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     rating = models.ForeignKey(LectureRating, on_delete=models.CASCADE, null=True, blank=True)
 
 

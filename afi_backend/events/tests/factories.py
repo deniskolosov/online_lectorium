@@ -2,7 +2,7 @@ import factory
 from django.core.files.base import ContentFile
 
 from afi_backend.events.models import (
-    LectureCategory,
+    Category,
     Lecturer,
     LectureRating,
     OfflineLecture,
@@ -18,9 +18,9 @@ class LecturerFactory(factory.django.DjangoModelFactory):
         model = Lecturer
 
 
-class LectureCategoryFactory(factory.django.DjangoModelFactory):
+class CategoryFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = LectureCategory
+        model = Category
 
 
 class LectureRatingFactory(factory.django.DjangoModelFactory):
@@ -34,7 +34,7 @@ class LectureRatingFactory(factory.django.DjangoModelFactory):
 class OfflineLectureFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Offline lecture {n}")
     lecturer = factory.SubFactory(LecturerFactory)
-    category = factory.SubFactory(LectureCategoryFactory)
+    category = factory.SubFactory(CategoryFactory)
     rating = factory.SubFactory(LectureRatingFactory)
     lecture_date = factory.Faker("date_time")
     picture = factory.LazyAttribute(lambda _: ContentFile(

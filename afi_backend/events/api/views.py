@@ -4,10 +4,10 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_json_api import django_filters, filters, relations, serializers
 
-from ..models import Event, LectureCategory, Lecturer, OfflineLecture
+from ..models import Event, Category, Lecturer, OfflineLecture
 from .serializers import (
     EventSerializer,
-    LectureCategorySerializer,
+    CategorySerializer,
     LecturerSerializer,
     OfflineLectureSerializer,
 )
@@ -43,9 +43,9 @@ class OfflineLectureViewset(viewsets.ModelViewSet):
     search_fields = ['name']
 
 
-class LectureCategoriesViewSet(viewsets.ModelViewSet):
-    queryset = LectureCategory.objects.all()
-    serializer_class = LectureCategorySerializer
+class CategoriesViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,

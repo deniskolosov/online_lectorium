@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Lecturer, OfflineLecture, LectureCategory, LectureRating
+from .models import Event, Lecturer, OfflineLecture, Category, LectureRating
 
 
 @admin.register(Event)
@@ -18,8 +18,8 @@ class LecturerAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
-@admin.register(LectureCategory)
-class LectureCategoryAdmin(admin.ModelAdmin):
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'description',
