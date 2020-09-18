@@ -9,6 +9,7 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
     GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from djmoney.models.fields import MoneyField
+from afi_backend.payments.models import Payment
 
 
 class Event(models.Model):
@@ -80,8 +81,7 @@ class OfflineLecture(LectureBase):
         Returns whether capacity allows to buy another ticket.
         """
         if self.capacity:
-            # TODO :add filtering by paid tickets
-            return self.tickets.count() < self.capacity
+            return self.tickets.filter(payments__status=Payment.STATUS.PAID).count() < self.capacity
         raise ValidationError(f"Capacity is not set for Lecture {self}")
 
     def __str__(self):

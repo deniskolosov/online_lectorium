@@ -11,7 +11,6 @@ from afi_backend.users import models as user_models
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from afi_backend.events.models import OfflineLecture
 
 
 logger = logging.getLogger(__name__)
@@ -93,6 +92,7 @@ class Payment(models.Model):
 
 def create_content_type_obj_for_payment(model_type: str, user: User,
                                         related_object_id: int) -> Payable:
+    from afi_backend.events.models import OfflineLecture
     # Using model type as string and user, create object, for which Payment is created.
     model_class = ContentType.objects.get(model=model_type).model_class()
 
