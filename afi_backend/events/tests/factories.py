@@ -1,4 +1,5 @@
 import factory
+import factory.fuzzy
 from django.core.files.base import ContentFile
 
 from afi_backend.events.models import (
@@ -19,6 +20,10 @@ class LecturerFactory(factory.django.DjangoModelFactory):
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):
+    name = factory.fuzzy.FuzzyChoice(["Архитектура", "Искусство", "Психология", "Кино", "Аниме"])
+    description = "Описание категории"
+    color = factory.fuzzy.FuzzyChoice(["#ae78be", "#be78be", "#ad78be", "#ce78be", "#df78be"])
+
     class Meta:
         model = Category
 
@@ -37,11 +42,7 @@ class OfflineLectureFactory(factory.django.DjangoModelFactory):
     category = factory.SubFactory(CategoryFactory)
     rating = factory.SubFactory(LectureRatingFactory)
     lecture_date = factory.Faker("date_time")
-    picture = factory.LazyAttribute(lambda _: ContentFile(
-        factory.django.ImageField()._make_data({
-            'width': 1024,
-            'height': 768
-        }), 'example.jpg'))
+    picture = factory.Faker("image_url")
 
     class Meta:
         model = OfflineLecture
