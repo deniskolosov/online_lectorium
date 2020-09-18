@@ -357,8 +357,8 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", default=5)),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=env("JWT_REFRESH_TOKEN_LIFETIME_MINUTES", default=365*5)),  # 5 years
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env.int("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", default=5)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=env.int("JWT_REFRESH_TOKEN_LIFETIME_DAYS", default=1825)),  # 5 years
 }
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 # CORS_URLS_REGEX = r"^/api/.*$"
