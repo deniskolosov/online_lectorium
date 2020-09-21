@@ -359,6 +359,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env.int("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", default=5)),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=env.int("JWT_REFRESH_TOKEN_LIFETIME_DAYS", default=1825)),  # 5 years
+    'USER_ID_FIELD': 'email',  # model property to attempt claims for
+    'USER_ID_CLAIM': 'user_email',  # actual keyword in token data
 }
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 # CORS_URLS_REGEX = r"^/api/.*$"
