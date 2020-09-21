@@ -45,6 +45,9 @@ class OfflineLectureViewset(viewsets.ModelViewSet):
         'category__name': (
             'icontains',
         ),
+        'category__id': (
+            'exact',
+        ),
     }
     search_fields = ['name']
 
