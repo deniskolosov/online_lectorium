@@ -36,6 +36,12 @@ class OfflineLectureViewset(viewsets.ModelViewSet):
             'gt',
             'lt',
         ),
+        'lecturer__id': (
+            'exact',
+        ),
+        'lecturer__name': (
+            'exact',
+        ),
         'category__name': (
             'icontains',
         ),
