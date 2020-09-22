@@ -33,6 +33,7 @@ class OfflineLectureViewset(viewsets.ModelViewSet):
     filterset_fields = {
         'lecture_date': (
             'exact',
+            'week_day',
             'gt',
             'lt',
         ),
