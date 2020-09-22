@@ -1,13 +1,36 @@
+import io
+from django.test import RequestFactory, modify_settings
+from rest_framework.test import APIClient, force_authenticate
+from typing import Dict, BinaryIO
+
 import pytest
-from django.test import RequestFactory
+from PIL import Image
 
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.users.models import User
+
 
 pytestmark = pytest.mark.django_db
 
 
 class TestUserViewSet:
+    client = APIClient()
+    test_username = 'test_test'
+    test_name = 'Test Test'
+    test_email = 'test@test.com'
+    test_password = '123456'
+    test_data = {
+        "data": {
+            "type": "User",
+            "attributes": {
+                "username": test_username,
+                "name": test_name,
+                "email": test_email,
+                "password": test_password,
+            }
+        }
+    }
+
     def test_get_queryset(self, user: User, rf: RequestFactory):
         view = UserViewSet()
         request = rf.get("/fake-url/")
@@ -32,3 +55,34 @@ class TestUserViewSet:
             "name": user.name,
             "url": f"http://testserver/api/users/{user.username}/",
         }
+
+    def _generate_photo_file(self) -> BinaryIO:
+        file = io.BytesIO()
+        image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
+        image.save(file, 'png')
+        file.name = 'test.png'
+        file.seek(0)
+        return file
+
+    def _post_create_user(self) -> Dict:
+        response = self.client.post('/api/users/', self.test_data)
+        return response.data
+
+    def test_create_user_upload_picture(self):
+        # TODO: test for uploading a userpic
+        user_data = self._post_create_user()
+        assert self.test_username == user_data['username']
+        assert self.test_email == user_data['email']
+        assert f'http://testserver/api/users/{self.test_username}/' == user_data['url']
+        user = User.objects.get(email=user_data['email'])
+        assert user.name == self.test_name
+
+    #     self.client.force_authenticate(user=user)
+    #     pic = self._generate_photo_file()
+    #     data = {'userpic': pic}
+    #     from rest_framework.test import RequestsClient
+    #     client = RequestsClient()
+    #     resp = client.post('http://testserver/api/auth-token/', data={"email": "a@a.ru", "password": "123456"})
+
+    #     # response = self.client.put('/api/users/{user.username}/upload-userpic/', data, format='multipart')
+    #     assert False

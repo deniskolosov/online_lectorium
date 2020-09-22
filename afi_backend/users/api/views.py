@@ -1,12 +1,12 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status
-from rest_framework.decorators import action
+from rest_framework import status, parsers, response
+from rest_framework.decorators import action, parser_classes
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserpicSerializer
 
 User = get_user_model()
 
@@ -31,3 +31,14 @@ class UserViewSet(ModelViewSet):
         else:
             permission_classes = [IsAdminUser, IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+    @action(detail=True, methods=["PUT"], serializer_class=UserpicSerializer,
+            url_path='upload-userpic', url_name='upload_userpic', permission_classes=[IsAuthenticated])
+    @parser_classes([parsers.MultiPartParser])
+    def upload_userpic(self, request, username=None):
+        obj = self.get_object()
+        serializer = self.serializer_class(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(serializer.data)
+        return response.Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

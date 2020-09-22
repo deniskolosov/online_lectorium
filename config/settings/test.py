@@ -49,3 +49,7 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+REST_FRAMEWORK['TEST_REQUEST_RENDERER_CLASSES'] += (
+    'rest_framework.renderers.MultiPartRenderer',
+)
+COMPRESS_ENABLED = False
