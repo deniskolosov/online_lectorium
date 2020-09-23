@@ -47,7 +47,11 @@ LANGUAGES = (
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {"default": env.db("DATABASE_URL", default="postgres://postgres:postgres@127.0.0.1:5432/afi_backend")}
+DATABASES = {
+    "default":
+    env.db("DATABASE_URL",
+           default="postgres://postgres:postgres@127.0.0.1:5432/afi_backend")
+}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # URLS
@@ -77,6 +81,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    'allauth.socialaccount.providers.google',
     'colorfield',
     "django_celery_beat",
     "rest_framework",
@@ -328,15 +333,15 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 10,
-    'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
+    'PAGE_SIZE':
+    10,
+    'EXCEPTION_HANDLER':
+    'rest_framework_json_api.exceptions.exception_handler',
     'DEFAULT_PAGINATION_CLASS':
-        'rest_framework_json_api.pagination.JsonApiPageNumberPagination',
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework_json_api.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser'
-    ),
+    'rest_framework_json_api.pagination.JsonApiPageNumberPagination',
+    'DEFAULT_PARSER_CLASSES': ('rest_framework_json_api.parsers.JSONParser',
+                               'rest_framework.parsers.FormParser',
+                               'rest_framework.parsers.MultiPartParser'),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
         # If you're performance testing, you will want to use the browseable API
@@ -344,9 +349,9 @@ REST_FRAMEWORK = {
         # If performance testing, enable:
         # 'example.utils.BrowsableAPIRendererWithoutForms',
         # Otherwise, to play around with the browseable API, enable:
-        'rest_framework.renderers.BrowsableAPIRenderer'
-    ),
-    'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
+        'rest_framework.renderers.BrowsableAPIRenderer'),
+    'DEFAULT_METADATA_CLASS':
+    'rest_framework_json_api.metadata.JSONAPIMetadata',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_json_api.filters.QueryParameterValidationFilter',
         'rest_framework_json_api.filters.OrderingFilter',
@@ -357,17 +362,23 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    'SEARCH_PARAM': 'filter[search]',
-    'TEST_REQUEST_RENDERER_CLASSES': (
-        'rest_framework_json_api.renderers.JSONRenderer',
-    ),
-    'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
+    'SEARCH_PARAM':
+    'filter[search]',
+    'TEST_REQUEST_RENDERER_CLASSES':
+    ('rest_framework_json_api.renderers.JSONRenderer', ),
+    'TEST_REQUEST_DEFAULT_FORMAT':
+    'vnd.api+json'
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env.int("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", default=5)),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=env.int("JWT_REFRESH_TOKEN_LIFETIME_DAYS", default=1825)),  # 5 years
-    'USER_ID_FIELD': 'email',  # model property to attempt claims for
-    'USER_ID_CLAIM': 'user_email',  # actual keyword in token data
+    'ACCESS_TOKEN_LIFETIME':
+    timedelta(minutes=env.int("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", default=5)),
+    'REFRESH_TOKEN_LIFETIME':
+    timedelta(days=env.int("JWT_REFRESH_TOKEN_LIFETIME_DAYS",
+                           default=1825)),  # 5 years
+    'USER_ID_FIELD':
+    'email',  # model property to attempt claims for
+    'USER_ID_CLAIM':
+    'user_email',  # actual keyword in token data
 }
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 # CORS_URLS_REGEX = r"^/api/.*$"
@@ -399,3 +410,16 @@ SWAGGER_SETTINGS = {
 }
 
 ALLOWED_HOSTS = ['testserver']
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': env("GOOGLE_AUTH_CLIENT_ID", default=""),
+            'secret': env("GOOGLE_AUTH_SECRET", default=""),
+            'key': ''
+        }
+    }
+}
