@@ -1,6 +1,10 @@
 from rest_framework_json_api import serializers
+from rest_framework_json_api.relations import ResourceRelatedField
 
-from afi_backend.events.models import Event, OfflineLecture, Lecturer, Category
+from afi_backend.events.models import (Category, Event, Lecturer,
+                                       OfflineLecture, VideoLecture,
+                                       VideoLectureCertificate,
+                                       VideoLectureBulletPoint)
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -63,4 +67,42 @@ class OfflineLectureSerializer(serializers.ModelSerializer):
             'lecture_summary_file',
             'price',
             'price_currency',
+        ]
+
+
+class VideoLectureCertificateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoLectureCertificate
+        fields = [
+            'certificate_file',
+        ]
+
+
+class VideoLectureBulletPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoLectureBulletPoint
+        fields = [
+            'text',
+        ]
+
+
+class VideoLectureSerializer(serializers.ModelSerializer):
+    included_serializers = {
+        'certificate': VideoLectureCertificateSerializer,
+        'bullet_points': VideoLectureBulletPointSerializer,
+    }
+
+    class Meta:
+        model = VideoLecture
+        fields = [
+            'link',
+            'certificate',
+            'name',
+            'picture',
+            'lecturer',
+            'category',
+            'description',
+            'price',
+            'price_currency',
+            'bullet_points',
         ]

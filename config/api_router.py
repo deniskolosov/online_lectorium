@@ -7,6 +7,7 @@ from afi_backend.events.api.views import (
     LecturersViewset,
     OfflineLectureViewset,
     CategoriesViewSet,
+    VideoLectureViewset,
 )
 from afi_backend.payments.api.views import (
     CloudpaymentsWebhook,
@@ -31,9 +32,10 @@ router.register("events", EventViewSet, basename='events')
 router.register("offline-lectures",
                 OfflineLectureViewset,
                 basename='offline-lectures')
-router.register("categories",
-                CategoriesViewSet,
-                basename='categories')
+router.register("video-lectures",
+                VideoLectureViewset,
+                basename='video-lectures')
+router.register("categories", CategoriesViewSet, basename='categories')
 router.register("lecturers", LecturersViewset, basename='lecturers')
 
 urlpatterns = [

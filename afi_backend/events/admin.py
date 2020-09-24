@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import Event, Lecturer, OfflineLecture, Category, LectureRating
+
+from afi_backend.events.models import (
+    VideoLecture,
+    VideoLectureBulletPoint,
+    VideoLectureCertificate,
+)
+
+from afi_backend.events.models import (Category, Event, Lecturer,
+                                       LectureRating, OfflineLecture,
+                                       UsersVideoLectureCertificates)
 
 
 @admin.register(Event)
@@ -28,3 +37,40 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class LectureRatingAdmin(LectureRating):
     pass
+
+
+class BulletPointsInline(admin.StackedInline):
+    model = VideoLectureBulletPoint
+
+
+@admin.register(VideoLecture)
+class VideoLectureAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'description',
+        'link',
+    ]
+    inlines = [BulletPointsInline]
+
+
+@admin.register(VideoLectureCertificate)
+class VideoLectureCertificateAdmin(admin.ModelAdmin):
+    list_display = [
+        'certificate_file',
+    ]
+
+
+@admin.register(VideoLectureBulletPoint)
+class VideoLectureBulletPointAdmin(admin.ModelAdmin):
+    list_display = [
+        'text',
+        'video_lecture',
+    ]
+
+
+@admin.register(UsersVideoLectureCertificates)
+class UsersVideoLectureCertificatesAdmin(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'certificate',
+    ]

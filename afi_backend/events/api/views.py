@@ -4,12 +4,13 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_json_api import django_filters, filters, relations, serializers
 
-from ..models import Event, Category, Lecturer, OfflineLecture
+from ..models import Event, Category, Lecturer, OfflineLecture, VideoLecture
 from .serializers import (
     EventSerializer,
     CategorySerializer,
     LecturerSerializer,
     OfflineLectureSerializer,
+    VideoLectureSerializer,
 )
 
 
@@ -37,18 +38,10 @@ class OfflineLectureViewset(viewsets.ModelViewSet):
             'gt',
             'lt',
         ),
-        'lecturer__id': (
-            'exact',
-        ),
-        'lecturer__name': (
-            'exact',
-        ),
-        'category__name': (
-            'icontains',
-        ),
-        'category__id': (
-            'exact',
-        ),
+        'lecturer__id': ('exact', ),
+        'lecturer__name': ('exact', ),
+        'category__name': ('icontains', ),
+        'category__id': ('exact', ),
     }
     search_fields = ['name']
 
@@ -62,11 +55,7 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         drf_filters.SearchFilter,
     )
     permission_classes = [IsAuthenticated]
-    filterset_fields = {
-        'name': (
-            'icontains',
-        )
-    }
+    filterset_fields = {'name': ('icontains', )}
     search_fields = ['name']
 
 
@@ -79,9 +68,22 @@ class LecturersViewset(viewsets.ModelViewSet):
         django_filters.DjangoFilterBackend,
         drf_filters.SearchFilter,
     )
-    filterset_fields = {
-        'name': (
-            'icontains',
-        )
-    }
+    filterset_fields = {'name': ('icontains', )}
     search_fields = ['name']
+
+
+class VideoLectureViewset(viewsets.ModelViewSet):
+    queryset = VideoLecture.objects.all()
+    serializer_class = VideoLectureSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = (
+        filters.QueryParameterValidationFilter,
+        django_filters.DjangoFilterBackend,
+        drf_filters.SearchFilter,
+    )
+    filterset_fields = {
+        'lecturer__id': ('exact', ),
+        'lecturer__name': ('exact', ),
+        'category__name': ('icontains', ),
+        'category__id': ('exact', ),
+    }
