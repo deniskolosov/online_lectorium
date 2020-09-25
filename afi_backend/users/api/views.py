@@ -14,13 +14,13 @@ User = get_user_model()
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    lookup_field = "username"
+    lookup_field = "email"
+    lookup_value_regex = "[^/]+"
 
     @action(detail=False, methods=["GET"])
     def me(self, request):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
-
 
     def get_permissions(self):
         """
@@ -32,13 +32,20 @@ class UserViewSet(ModelViewSet):
             permission_classes = [IsAdminUser, IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-    @action(detail=True, methods=["PUT"], serializer_class=UserpicSerializer,
-            url_path='upload-userpic', url_name='upload_userpic', permission_classes=[IsAuthenticated])
+    @action(detail=True,
+            methods=["PUT"],
+            serializer_class=UserpicSerializer,
+            url_path='upload-userpic',
+            url_name='upload_userpic',
+            permission_classes=[IsAuthenticated])
     @parser_classes([parsers.MultiPartParser])
     def upload_userpic(self, request, username=None):
         obj = self.get_object()
-        serializer = self.serializer_class(obj, data=request.data, partial=True)
+        serializer = self.serializer_class(obj,
+                                           data=request.data,
+                                           partial=True)
         if serializer.is_valid():
             serializer.save()
             return response.Response(serializer.data)
-        return response.Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+        return response.Response(serializer.errors,
+                                 status.HTTP_400_BAD_REQUEST)

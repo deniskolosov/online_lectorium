@@ -9,22 +9,17 @@ from PIL import Image
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.users.models import User
 
-
 pytestmark = pytest.mark.django_db
 
 
 class TestUserViewSet:
     client = APIClient()
-    test_username = 'test_test'
-    test_name = 'Test Test'
     test_email = 'test@test.com'
     test_password = '123456'
     test_data = {
         "data": {
             "type": "User",
             "attributes": {
-                "username": test_username,
-                "name": test_name,
                 "email": test_email,
                 "password": test_password,
             }
@@ -44,16 +39,15 @@ class TestUserViewSet:
         view = UserViewSet()
         request = rf.get("/fake-url/")
         request.user = user
+        email = user.email
 
         view.request = request
 
         response = view.me(request)
 
         assert response.data == {
-            "username": user.username,
-            "email": user.email,
-            "name": user.name,
-            "url": f"http://testserver/api/users/{user.username}/",
+            "email": email,
+            "url": f"http://testserver/api/users/{email}/",
         }
 
     def _generate_photo_file(self) -> BinaryIO:
@@ -71,11 +65,11 @@ class TestUserViewSet:
     def test_create_user_upload_picture(self):
         # TODO: test for uploading a userpic
         user_data = self._post_create_user()
-        assert self.test_username == user_data['username']
         assert self.test_email == user_data['email']
-        assert f'http://testserver/api/users/{self.test_username}/' == user_data['url']
+        assert f'http://testserver/api/users/{self.test_email}/' == user_data[
+            'url']
         user = User.objects.get(email=user_data['email'])
-        assert user.name == self.test_name
+        assert user.email == self.test_email
 
     #     self.client.force_authenticate(user=user)
     #     pic = self._generate_photo_file()
