@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, EmailField, ImageField
+from django.db.models import CharField, EmailField, ImageField, DateField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -15,6 +15,7 @@ class User(AbstractUser):
                          upload_to='user_userpics/',
                          null=True,
                          blank=True)
+    birthdate = DateField(_("Birth Date"), blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
