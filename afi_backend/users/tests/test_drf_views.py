@@ -1,7 +1,8 @@
+import datetime
 import io
 from django.test import RequestFactory, modify_settings
 from rest_framework.test import APIClient, force_authenticate
-from typing import Dict, BinaryIO
+from typing import BinaryIO, Dict
 
 import pytest
 from PIL import Image
@@ -39,6 +40,8 @@ class TestUserViewSet:
         view = UserViewSet()
         request = rf.get("/fake-url/")
         request.user = user
+        test_bdate = datetime.date(2010, 10, 10)
+        user.birthdate = test_bdate
         email = user.email
 
         view.request = request
@@ -48,6 +51,8 @@ class TestUserViewSet:
         assert response.data == {
             "email": email,
             "url": f"http://testserver/api/users/{email}/",
+            "birthdate": test_bdate.strftime("%Y-%m-%d"),
+            "name": user.name,
         }
 
     def _generate_photo_file(self) -> BinaryIO:
