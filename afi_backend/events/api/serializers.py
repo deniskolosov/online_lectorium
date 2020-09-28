@@ -90,6 +90,8 @@ class VideoLectureSerializer(serializers.ModelSerializer):
     included_serializers = {
         'certificate': VideoLectureCertificateSerializer,
         'bullet_points': VideoLectureBulletPointSerializer,
+        'lecturer': LecturerSerializer,
+        'category': CategorySerializer,
     }
 
     class Meta:
