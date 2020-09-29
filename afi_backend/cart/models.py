@@ -24,6 +24,7 @@ class OrderItem(models.Model):
 
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('item', 'object_id')
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Cart(Payable):
