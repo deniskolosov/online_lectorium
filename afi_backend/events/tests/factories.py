@@ -54,7 +54,7 @@ class BaseLectureFactory(factory.django.DjangoModelFactory):
     lecturer = factory.SubFactory(LecturerFactory)
     category = factory.SubFactory(CategoryFactory)
     rating = factory.SubFactory(LectureRatingFactory)
-    picture = factory.Faker("image_url")
+    picture = 'lecture_pictures/1573646089377-9wpu20ce.jpeg'
 
     class Meta:
         model = LectureBase
