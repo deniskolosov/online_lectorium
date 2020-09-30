@@ -5,12 +5,15 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    userpic = serializers.FileField(read_only=True)
+
     class Meta:
         model = User
         fields = [
             "email",
             "url",
             "password",
+            "userpic",
             "name",
             "birthdate",
         ]

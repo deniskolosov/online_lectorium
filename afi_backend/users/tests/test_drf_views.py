@@ -52,6 +52,7 @@ class TestUserViewSet:
             "email": email,
             "url": f"http://testserver/api/users/{email}/",
             "birthdate": test_bdate.strftime("%Y-%m-%d"),
+            "userpic": None,
             "name": user.name,
         }
 
