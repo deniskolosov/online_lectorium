@@ -43,7 +43,8 @@ class CartViewset(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             last_cart.order_items.add(serializer.instance)
-            return Response({"status": "created"})
+            last_cart_serializer = CartSerializer(last_cart)
+            return Response(last_cart_serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

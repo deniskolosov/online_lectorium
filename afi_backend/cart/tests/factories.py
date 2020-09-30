@@ -2,7 +2,7 @@ import factory
 
 from afi_backend.cart.models import OrderItem, Cart
 from django.contrib.contenttypes.models import ContentType
-from afi_backend.events.tests.factories import VideoLectureFactory
+from afi_backend.tickets.tests.factories import TicketFactory
 from afi_backend.users.tests.factories import UserFactory
 
 
@@ -16,8 +16,8 @@ class OrderItemFactory(factory.django.DjangoModelFactory):
         exclude = ['content_object']
 
 
-class OrderItemVideoLectureFactory(OrderItemFactory):
-    content_object = factory.SubFactory(VideoLectureFactory)
+class OrderItemTicketFactory(OrderItemFactory):
+    content_object = factory.SubFactory(TicketFactory)
 
     class Meta:
         model = OrderItem

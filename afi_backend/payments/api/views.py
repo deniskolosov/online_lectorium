@@ -25,7 +25,13 @@ class PaymentCreateView(APIView):
         """
         Create Payment object for user for given item type, "Pending" status, currency and Payment Method
         """
-        required_fields = ('payment_type_value', 'amount', 'currency', 'payment_for', 'related_object_id',)
+        required_fields = (
+            'payment_type_value',
+            'amount',
+            'currency',
+            'payment_for',
+            'related_object_id',
+        )
         for val in required_fields:
             if val not in request.data:
                 raise ValidationError(f"{val} field is  required")
@@ -41,6 +47,7 @@ class PaymentCreateView(APIView):
             user=request.user,
             payment_for=payment_for,
             related_object_id=related_object_id)
+
         adaptor = payment.payment_method.get_adaptor()
 
         payment_url = adaptor.charge(value=amount,

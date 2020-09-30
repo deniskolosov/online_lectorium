@@ -7,10 +7,9 @@ from afi_backend.events.models import OfflineLecture
 from afi_backend.payments.models import Payable
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import (GenericForeignKey,
-    GenericRelation)
+                                                GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from afi_backend.payments.models import Payment
-
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +29,11 @@ class Ticket(Payable):
         logger.info("Generating qr code for {self}")
         return QRCode.objects.create(ticket=self, scanned=False)
 
-    def do_afterpayment_logic(self):
+    def do_afterpayment_logic(self, customer=None):
         logger.info(f"Generating qr code for ticket{self}")
         self.generate_qr_code()
+        self.customer = customer
+        self.save()
 
     def get_qr_code(self):
         return self.qrcode.code

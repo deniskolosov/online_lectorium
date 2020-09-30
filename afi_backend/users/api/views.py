@@ -10,8 +10,6 @@ from .serializers import UserSerializer, UserpicSerializer
 
 User = get_user_model()
 
-from rest_auth import urls
-
 
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer

@@ -34,3 +34,10 @@ class Cart(Payable):
     order_items = models.ManyToManyField(OrderItem)
     is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def do_afterpayment_logic(self, customer=None):
+        """
+        Calls do_afterpayment_logic for each item in the cart.
+        """
+        for order_item in self.order_items.all():
+            order_item.content_object.do_afterpayment_logic(customer=customer)

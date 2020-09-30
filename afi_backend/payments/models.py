@@ -11,7 +11,7 @@ from afi_backend.users import models as user_models
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
+from afi_backend.events import models as events_models
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +20,16 @@ class Payable(models.Model):
     """
     Inherit from this if you want the model to be 'buyable'.
     """
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
     class Meta:
         abstract = True
 
-    def do_afterpayment_logic(self):
+    def do_afterpayment_logic(self, *args, **kwargs):
         """
         Logic which should be done after Payment is paid
         """
@@ -87,7 +91,7 @@ class Payment(models.Model):
             logger.info(
                 f"Calling afterpayment logic for {self.content_object}")
 
-            self.content_object.do_afterpayment_logic()
+            self.content_object.do_afterpayment_logic(customer=self.user)
 
 
 def create_content_type_obj_for_payment(model_type: str, user: User,
@@ -96,12 +100,15 @@ def create_content_type_obj_for_payment(model_type: str, user: User,
     # Using model type as string and user, create object, for which Payment is created.
     model_class = ContentType.objects.get(model=model_type).model_class()
 
+    # remove when cart is done and move to afterpayment logic
     if model_type == 'ticket':
         offline_lecture = OfflineLecture.objects.get(id=related_object_id)
 
         return model_class.objects.create(customer=user,
                                           offline_lecture=offline_lecture)
-    return model_class.objects.create(customer=user)
+
+    # Get object and return it
+    return model_class.objects.get(id=related_object_id)
 
 
 def create_payment_with_paid_object_and_link(
@@ -118,3 +125,13 @@ def create_payment_with_paid_object_and_link(
                                      content_object=object_to_pay_for)
 
     return payment
+
+
+class VideoLectureOrderItem(Payable):
+    video_lecture = models.ForeignKey(events_models.VideoLecture,
+                                      on_delete=models.CASCADE)
+
+    def do_afterpayment_logic(self, customer=None):
+        logger.info("Videolecture afterpayment logic is called")
+        self.customer = customer
+        self.save()

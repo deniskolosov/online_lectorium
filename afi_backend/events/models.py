@@ -1,5 +1,7 @@
 import time
 
+import logging
+
 from colorfield.fields import ColorField
 from django.db import models
 from rest_framework.exceptions import ValidationError
@@ -9,7 +11,9 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
                                                 GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from djmoney.models.fields import MoneyField
-from afi_backend.payments.models import Payment
+from afi_backend.payments import models as payment_models
+
+logger = logging.getLogger(__name__)
 
 
 class Event(models.Model):
@@ -98,7 +102,7 @@ class OfflineLecture(LectureBase):
         Get number of tickets sold for this lecture
         """
         return self.tickets.filter(
-            payments__status=Payment.STATUS.PAID).count()
+            payments__status=payment_models.Payment.STATUS.PAID).count()
 
     def __str__(self):
         return f"Lecture {self.name}"
