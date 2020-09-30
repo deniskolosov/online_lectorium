@@ -93,7 +93,7 @@ class TestPaymentViewSet:
             payment_type=PaymentMethod.TYPE_YANDEX_CHECKOUT)
         test_user = UserFactory()
         cart = cart_factories.CartFactory()
-        test_order_item = cart_factories.OrderItemVideoLectureFactory()
+        test_order_item = OrderItemVideoLectureFactory()
         cart.order_items.add(test_order_item)
         test_url = "https://foo.bar"
         mocked_adaptor = mocker.patch.object(adaptor,
