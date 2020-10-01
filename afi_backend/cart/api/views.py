@@ -63,18 +63,3 @@ class OrderItemViewset(viewsets.ModelViewSet):
             'lt',
         ),
     }
-
-    # def create(self, request):
-    #     # Create order item and link it to Cart
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-
-    #     last_cart = Cart.objects.filter(customer=request.user,
-    #                                     is_paid=False).last()
-    #     if not last_cart:
-    #         last_cart = Cart.objects.create(customer=request.user)
-
-    #     last_cart.add(serializer.instance)
-
-    #     return Response(status=status.HTTP_200_OK, data=serializer.data)

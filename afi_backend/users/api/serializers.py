@@ -1,11 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from afi_backend.payments.api.serializers import VideoLectureOrderItemSerializer
+from afi_backend.tickets.api.serializers import TicketSerializer
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
     userpic = serializers.FileField(read_only=True)
+    purchased_items = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -16,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
             "userpic",
             "name",
             "birthdate",
+            "purchased_items",
         ]
 
         extra_kwargs = {
@@ -33,6 +37,16 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['username'] = validated_data.get('email')
         user = User.objects.create_user(**validated_data)
         return user
+
+    def get_purchased_items(self, obj):
+        data = {
+            "video_lectures":
+            VideoLectureOrderItemSerializer(
+                obj.videolectureorderitem_set.all(), many=True).data,
+            "tickets":
+            TicketSerializer(obj.ticket_set.all(), many=True).data
+        }
+        return data
 
 
 class UserpicSerializer(serializers.ModelSerializer):

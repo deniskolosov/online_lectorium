@@ -10,6 +10,8 @@ from PIL import Image
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.users.models import User
 from afi_backend.users.tests.factories import UserFactory
+from afi_backend.payments.tests.factories import VideoLectureOrderItemFactory
+from afi_backend.tickets.tests.factories import TicketFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -55,6 +57,10 @@ class TestUserViewSet:
             "birthdate": test_bdate.strftime("%Y-%m-%d"),
             "userpic": None,
             "name": user.name,
+            "purchased_items": {
+                'tickets': [],
+                'video_lectures': []
+            },
         }
 
     def _generate_photo_file(self) -> BinaryIO:
@@ -98,3 +104,68 @@ class TestUserViewSet:
         assert resp.status_code == 200
         assert resp.data["birthdate"] == new_birthdate
         assert resp.data["name"] == new_name
+
+    def test_user_purchased_items(self):
+        test_user = UserFactory()
+        test_video_lecture_order_item = VideoLectureOrderItemFactory(
+            customer=test_user)
+        vl = test_video_lecture_order_item.video_lecture
+
+        test_ticket = TicketFactory(customer=test_user)
+        test_data = {
+            'data': {
+                'type': 'User',
+                'id': str(test_user.id),
+                'attributes': {
+                    'email': test_user.email,
+                    'userpic': None,
+                    'name': test_user.name,
+                    'birthdate': None,
+                    'purchased_items': {
+                        'video_lectures': [{
+                            'video_lecture': {
+                                'link': vl.link,
+                                'certificate': {
+                                    'type': 'VideoLectureCertificate',
+                                    'id': str(vl.certificate.id),
+                                },
+                                'name': vl.name,
+                                'picture': vl.picture.url,
+                                'lecturer': {
+                                    'type': 'Lecturer',
+                                    'id': str(vl.lecturer.id)
+                                },
+                                'category': {
+                                    'type': 'Category',
+                                    'id': str(vl.category.id),
+                                },
+                                'description': '',
+                                'price': None,
+                                'price_currency': 'RUB',
+                                'bullet_points': []
+                            }
+                        }],
+                        'tickets': [{
+                            'customer': {
+                                'type': 'User',
+                                'id': str(test_user.id)
+                            },
+                            'activation_link':
+                            '',
+                            'scanned':
+                            test_ticket.scanned,
+                            'offline_lecture':
+                            test_ticket.offline_lecture
+                        }]
+                    }
+                },
+                'links': {
+                    'self': f'http://testserver/api/users/{test_user.email}/'
+                }
+            }
+        }
+
+        self.client.force_authenticate(user=test_user)
+        resp = self.client.get(f'/api/users/{test_user.email}/')
+        assert resp.status_code == 200
+        assert resp.json() == test_data
