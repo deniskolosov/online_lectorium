@@ -9,6 +9,7 @@ from PIL import Image
 
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.users.models import User
+from afi_backend.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -77,12 +78,23 @@ class TestUserViewSet:
         user = User.objects.get(email=user_data['email'])
         assert user.email == self.test_email
 
-    #     self.client.force_authenticate(user=user)
-    #     pic = self._generate_photo_file()
-    #     data = {'userpic': pic}
-    #     from rest_framework.test import RequestsClient
-    #     client = RequestsClient()
-    #     resp = client.post('http://testserver/api/auth-token/', data={"email": "a@a.ru", "password": "123456"})
-
-    #     # response = self.client.put('/api/users/{user.username}/upload-userpic/', data, format='multipart')
-    #     assert False
+    def test_edit_user_data(self):
+        test_user = UserFactory()
+        new_name = "Ivan Ivanov"
+        new_birthdate = "2020-10-14"
+        data = {
+            "data": {
+                "type": "User",
+                "id": test_user.email,
+                "attributes": {
+                    "name": new_name,
+                    "email": test_user.email,
+                    "birthdate": new_birthdate,
+                }
+            }
+        }
+        self.client.force_authenticate(user=test_user)
+        resp = self.client.put(f'/api/users/{test_user.email}/', data=data)
+        assert resp.status_code == 200
+        assert resp.data["birthdate"] == new_birthdate
+        assert resp.data["name"] == new_name

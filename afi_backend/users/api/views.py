@@ -29,7 +29,7 @@ class UserViewSet(ModelViewSet):
         if self.action == 'create':
             permission_classes = []
         else:
-            permission_classes = [IsAdminUser, IsAuthenticated]
+            permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     @action(detail=True,
