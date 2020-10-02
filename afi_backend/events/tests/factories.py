@@ -63,6 +63,7 @@ class BaseLectureFactory(factory.django.DjangoModelFactory):
 class OfflineLectureFactory(BaseLectureFactory):
     name = factory.Sequence(lambda n: f"Offline lecture {n}")
     lecture_date = factory.Faker("date_time")
+    price = 1000
 
     class Meta:
         model = OfflineLecture
@@ -72,6 +73,7 @@ class VideoLectureFactory(BaseLectureFactory):
     name = factory.Sequence(lambda n: f"Video lecture {n}")
     link = "http://video.com"
     certificate = factory.SubFactory(VideoLectureCertificateFactory)
+    price = 800
 
     class Meta:
         model = VideoLecture

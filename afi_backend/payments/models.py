@@ -35,6 +35,10 @@ class Payable(models.Model):
         """
         raise NotImplementedError()
 
+    @property
+    def price(self):
+        raise NotImplementedError()
+
 
 class PaymentMethod(models.Model):
     TYPE_YANDEX_CHECKOUT = 0
@@ -135,3 +139,7 @@ class VideoLectureOrderItem(Payable):
         logger.info("Videolecture afterpayment logic is called")
         self.customer = customer
         self.save()
+
+    @property
+    def price(self):
+        return self.video_lecture.price

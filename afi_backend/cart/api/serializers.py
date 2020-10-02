@@ -26,6 +26,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     included_serializers = {'order_items': OrderItemSerializer}
+    total = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart
@@ -33,7 +34,11 @@ class CartSerializer(serializers.ModelSerializer):
             'order_items',
             'is_paid',
             'created_at',
+            'total',
         ]
+
+    def get_total(self, obj):
+        return None
 
 
 class CartOrderItemSerializer(serializers.ModelSerializer):

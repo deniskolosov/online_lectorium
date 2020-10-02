@@ -44,6 +44,10 @@ class Ticket(Payable):
             return self.qrcode.scanned
         return False
 
+    @property
+    def price(self):
+        return self.offline_lecture.price
+
 
 class QRCode(models.Model):
     code = models.UUIDField(default=uuid.uuid4,

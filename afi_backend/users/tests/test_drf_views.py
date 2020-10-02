@@ -140,7 +140,7 @@ class TestUserViewSet:
                                     'id': str(vl.category.id),
                                 },
                                 'description': '',
-                                'price': None,
+                                'price': str(vl.price.round(2).amount),
                                 'price_currency': 'RUB',
                                 'bullet_points': []
                             }
@@ -150,12 +150,12 @@ class TestUserViewSet:
                                 'type': 'User',
                                 'id': str(test_user.id)
                             },
-                            'activation_link':
-                            '',
-                            'scanned':
-                            test_ticket.scanned,
-                            'offline_lecture':
-                            test_ticket.offline_lecture
+                            'activation_link': '',
+                            'scanned': test_ticket.scanned,
+                            'offline_lecture': {
+                                'type': 'OfflineLecture',
+                                'id': str(test_ticket.offline_lecture.id)
+                            }
                         }]
                     }
                 },
