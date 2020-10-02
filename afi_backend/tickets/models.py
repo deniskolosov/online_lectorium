@@ -20,10 +20,6 @@ class Ticket(Payable):
                                         null=True,
                                         blank=True,
                                         related_name='tickets')
-    payments = GenericRelation(Payment,
-                               content_type_field='payment_for',
-                               object_id_field='object_id',
-                               related_query_name='tickets')
 
     def generate_qr_code(self):
         logger.info("Generating qr code for {self}")
@@ -31,6 +27,7 @@ class Ticket(Payable):
 
     def do_afterpayment_logic(self, customer=None):
         logger.info(f"Generating qr code for ticket{self}")
+        self.paid = True
         self.generate_qr_code()
         self.customer = customer
         self.save()

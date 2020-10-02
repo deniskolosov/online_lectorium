@@ -1,6 +1,7 @@
 from .base import *  # noqa
 from .base import env
 import os
+from datetime import timedelta
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -34,8 +35,8 @@ EMAIL_PORT = 1025
 # WhiteNoise
 # ------------------------------------------------------------------------------
 # http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development
-INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa F405
-
+INSTALLED_APPS = ["whitenoise.runserver_nostatic"
+                  ] + INSTALLED_APPS  # noqa F405
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -71,3 +72,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../../frontend/dist/introverted-right-brain/')
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':
+    timedelta(minutes=60000),
+    'REFRESH_TOKEN_LIFETIME':
+    timedelta(days=env.int("JWT_REFRESH_TOKEN_LIFETIME_DAYS",
+                           default=1825)),  # 5 years
+    'USER_ID_FIELD':
+    'email',  # model property to attempt claims for
+    'USER_ID_CLAIM':
+    'user_email',  # actual keyword in token data
+}

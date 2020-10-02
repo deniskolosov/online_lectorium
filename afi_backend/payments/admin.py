@@ -4,8 +4,11 @@ from django.contrib import admin
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'payment_method', 'created_at', 'status', 'payment_for',]
+    list_display = [
+        'id', 'user', 'payment_method', 'created_at', 'status', 'cart'
+    ]
     search_fields = ['id']
+
 
 @admin.register(PaymentMethod)
 class PaymentMethodAdmin(admin.ModelAdmin):

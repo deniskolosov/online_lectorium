@@ -27,6 +27,12 @@ class OrderItem(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class LatestNotPaidCartManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            is_paid=False).latest('created_at')
+
+
 class Cart(Payable):
     """
     Cart which consists of Order Items
@@ -34,6 +40,8 @@ class Cart(Payable):
     order_items = models.ManyToManyField(OrderItem)
     is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
+    latest_not_paid = LatestNotPaidCartManager()
 
     def do_afterpayment_logic(self, customer=None):
         """
@@ -41,3 +49,7 @@ class Cart(Payable):
         """
         for order_item in self.order_items.all():
             order_item.content_object.do_afterpayment_logic(customer=customer)
+
+    @property
+    def price(self):
+        return self.order_items.aggregate()

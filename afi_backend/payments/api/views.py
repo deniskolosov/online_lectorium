@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
-from afi_backend.payments.models import Payment, PaymentMethod, create_payment_with_paid_object_and_link
+from afi_backend.payments.models import Payment, PaymentMethod, link_payment_with_cart
 
 from .serializers import PaymentMethodSerializer
 
@@ -29,8 +29,7 @@ class PaymentCreateView(APIView):
             'payment_type_value',
             'amount',
             'currency',
-            'payment_for',
-            'related_object_id',
+            'cart_id',
         )
         for val in required_fields:
             if val not in request.data:
@@ -39,14 +38,12 @@ class PaymentCreateView(APIView):
         payment_type_value = request.data['payment_type_value']
         amount = request.data['amount']
         currency = request.data['currency']
-        payment_for = request.data['payment_for']
-        related_object_id = request.data['related_object_id']
+        cart_id = request.data['cart_id']
 
-        payment = create_payment_with_paid_object_and_link(
-            payment_type=payment_type_value,
-            user=request.user,
-            payment_for=payment_for,
-            related_object_id=related_object_id)
+        # Create Payment for cart
+        payment = link_payment_with_cart(payment_type=payment_type_value,
+                                         user=request.user,
+                                         cart_id=cart_id)
 
         adaptor = payment.payment_method.get_adaptor()
 

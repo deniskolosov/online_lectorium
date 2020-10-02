@@ -101,8 +101,7 @@ class OfflineLecture(LectureBase):
         """
         Get number of tickets sold for this lecture
         """
-        return self.tickets.filter(
-            payments__status=payment_models.Payment.STATUS.PAID).count()
+        return self.tickets.filter(is_paid=True).count()
 
     def __str__(self):
         return f"Lecture {self.name}"

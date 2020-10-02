@@ -17,19 +17,9 @@ class PaymentMethodFactory(factory.django.DjangoModelFactory):
 
 # https://factoryboy.readthedocs.io/en/latest/recipes.html#django-models-with-genericforeignkeys
 class PaymentFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        abstract = True
-        exclude = ['content_object']
-
     payment_method = factory.SubFactory(PaymentMethodFactory)
     user = factory.SubFactory(UserFactory)
-    object_id = factory.SelfAttribute('content_object.id')
-    payment_for = factory.LazyAttribute(
-        lambda o: ContentType.objects.get_for_model(o.content_object))
-
-
-class TicketPaymentFactory(PaymentFactory):
-    content_object = factory.SubFactory(TicketFactory)
+    cart = factory.SubFactory(cart_factories.CartFactory)
 
     class Meta:
         model = Payment
@@ -53,13 +43,6 @@ class OrderItemVideoLectureFactory(cart_factories.OrderItemFactory):
 
 class VideoLectureOrderItemPaymentFactory(PaymentFactory):
     content_object = factory.SubFactory(VideoLectureOrderItemFactory)
-
-    class Meta:
-        model = Payment
-
-
-class CartPaymentFactory(PaymentFactory):
-    content_object = factory.SubFactory(cart_factories.CartFactory)
 
     class Meta:
         model = Payment

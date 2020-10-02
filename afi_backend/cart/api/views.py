@@ -13,7 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 
 
 class CartViewset(viewsets.ModelViewSet):
-    queryset = Cart.objects.all()
+    queryset = Cart.objects.filter(is_paid=False)
     serializer_class = CartSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = (
@@ -34,8 +34,7 @@ class CartViewset(viewsets.ModelViewSet):
             url_path='add-to-cart',
             permission_classes=[IsAuthenticated])
     def add_to_cart(self, request, pk=None):
-        last_cart = Cart.objects.filter(customer=request.user,
-                                        is_paid=False).last()
+        last_cart = Cart.latest_not_paid.all()
         if not last_cart:
             last_cart = Cart.objects.create(customer=request.user)
         serializer = self.serializer_class(data=request.data)
@@ -46,6 +45,14 @@ class CartViewset(viewsets.ModelViewSet):
             last_cart_serializer = CartSerializer(last_cart)
             return Response(last_cart_serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False,
+            methods=["GET"],
+            url_path='last-cart',
+            permission_classes=[IsAuthenticated])
+    def last_cart(self, pk=None):
+        last_cart = Cart.latest_not_paid.all()
+        return Response(self.serializer_class(last_cart).data)
 
 
 class OrderItemViewset(viewsets.ModelViewSet):

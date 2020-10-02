@@ -10,8 +10,8 @@ from afi_backend.events.tests.factories import OfflineLectureFactory
 from afi_backend.payments.adaptors.yandex import YandexCheckoutAdaptor as adaptor
 from afi_backend.payments.api.views import PaymentCreateView, YandexWebhook
 from afi_backend.payments.models import Payment, PaymentMethod
-from afi_backend.payments.tests.factories import (CartPaymentFactory,
-                                                  PaymentMethodFactory,
+from afi_backend.payments.tests.factories import (PaymentMethodFactory,
+                                                  PaymentFactory,
                                                   VideoLectureOrderItemFactory,
                                                   OrderItemVideoLectureFactory)
 from afi_backend.users.tests.factories import UserFactory
@@ -24,7 +24,7 @@ class TestPaymentViewSet:
         payment_method = PaymentMethodFactory(
             payment_type=PaymentMethod.TYPE_YANDEX_CHECKOUT)
         test_user = UserFactory()
-        offline_lecture = OfflineLectureFactory()
+        cart = cart_factories.CartFactory()
         test_url = "https://foo.bar"
         mocked_adaptor = mocker.patch.object(adaptor,
                                              'charge',
@@ -32,7 +32,6 @@ class TestPaymentViewSet:
                                              return_value=test_url)
 
         test_payment_type_value = payment_method.payment_type
-        test_payment_for = "ticket"
         test_amount = "100.00"
         test_currency = "RUB"
         factory = APIRequestFactory()
@@ -42,10 +41,9 @@ class TestPaymentViewSet:
                 "type": "PaymentCreateView",
                 "attributes": {
                     "payment_type_value": test_payment_type_value,
-                    "payment_for": test_payment_for,
                     "amount": test_amount,
                     "currency": test_currency,
-                    "related_object_id": offline_lecture.id,
+                    "cart_id": cart.id,
                 }
             }
         }
@@ -56,9 +54,8 @@ class TestPaymentViewSet:
         assert response.data == {"payment_url": test_url}
 
         payment = Payment.objects.first()
-        ticket = payment.content_object
 
-        assert ticket.offline_lecture == offline_lecture
+        assert cart == payment.cart
 
         mocked_adaptor.assert_called_with(ANY,
                                           value=test_amount,
@@ -111,10 +108,9 @@ class TestPaymentViewSet:
                 "type": "PaymentCreateView",
                 "attributes": {
                     "payment_type_value": test_payment_type_value,
-                    "payment_for": test_payment_for,
                     "amount": test_amount,
                     "currency": test_currency,
-                    "related_object_id": cart.id,
+                    "cart_id": cart.id,
                 }
             }
         }
@@ -125,9 +121,8 @@ class TestPaymentViewSet:
         assert response.data == {"payment_url": test_url}
 
         payment = Payment.objects.first()
-        payment_cart = payment.content_object
+        payment_cart = payment.cart
 
-        # check cart order items
         assert cart == payment_cart
 
         mocked_adaptor.assert_called_with(ANY,
@@ -149,8 +144,7 @@ class TestYandexWebhookView:
             test_order_item_video_lecture,
             test_order_item_ticket,
         ))
-        payment = CartPaymentFactory(external_id=test_external_id,
-                                     content_object=cart)
+        payment = PaymentFactory(external_id=test_external_id, cart=cart)
         test_data = {
             'type': 'notification',
             'event': 'payment.succeeded',
