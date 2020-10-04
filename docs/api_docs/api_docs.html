@@ -1,0 +1,1565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-10-04 Sun 22:07 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Den4ik" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcbfe4b0">1. Документация API для сайта Art For Introvert</a>
+<ul>
+<li><a href="#org4fa9afe">1.1. Регистрация/авторизация</a>
+<ul>
+<li><a href="#org960db9d">1.1.1. Регистрация нового пользователя:</a></li>
+<li><a href="#orge245676">1.1.2. Получение access токена</a></li>
+<li><a href="#orgd6f4f2b">1.1.3. Обновление access токенa</a></li>
+</ul>
+</li>
+<li><a href="#org5c0815b">1.2. Покупка билета/видео-лекции</a>
+<ul>
+<li><a href="#orgc6c7b05">1.2.1. Добавление в корзину</a></li>
+<li><a href="#org0d9cb69">1.2.2. Получение текущей корзины</a></li>
+<li><a href="#orgee5a526">1.2.3. Покупка корзины</a></li>
+</ul>
+</li>
+<li><a href="#orgc1910bb">1.3. Изменение данных пользователя</a>
+<ul>
+<li><a href="#orgb20fcb7">1.3.1. Изменение полей профиля</a></li>
+<li><a href="#orgdc7142e">1.3.2. Изменение юзерпика</a></li>
+</ul>
+</li>
+<li><a href="#orgc57eb1b">1.4. Фильтрация, сортировка и поиск по API</a>
+<ul>
+<li><a href="#org9803533">1.4.1. Сортировка</a></li>
+<li><a href="#orgd3314d5">1.4.2. Фильтрация</a></li>
+<li><a href="#orgdc1fa22">1.4.3. Поиск</a></li>
+</ul>
+</li>
+<li><a href="#orgff8e639">1.5. Добавление related объектов (include)</a>
+<ul>
+<li><a href="#org8f2cdf0">1.5.1. Параметр include</a></li>
+</ul>
+</li>
+<li><a href="#org4bd1c67">1.6. Список ендпойнтов  <i>api</i></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcbfe4b0" class="outline-2">
+<h2 id="orgcbfe4b0"><span class="section-number-2">1</span> Документация API для сайта Art For Introvert</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Для всех запросов используется формат "application/vnd.api+json"
+</p>
+</div>
+
+
+<div id="outline-container-org4fa9afe" class="outline-3">
+<h3 id="org4fa9afe"><span class="section-number-3">1.1</span> Регистрация/авторизация</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org960db9d" class="outline-4">
+<h4 id="org960db9d"><span class="section-number-4">1.1.1</span> Регистрация нового пользователя:</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+<code>POST /api/users/</code>
+</p>
+<pre class="example">
+{
+ "data": {
+     "type": "User",
+     "attributes": {
+         "email": &lt;user_email&gt;,
+         "password": &lt;user_password&gt;
+     }
+ }
+ }
+</pre>
+<p>
+Пример ответа:
+</p>
+<pre class="example">
+   {
+    "data": {
+        "type": "User",
+        "id": &lt;user_id&gt;,
+        "attributes": {
+            "email": &lt;user_email&gt;,
+            "userpic": null,
+            "name": "",
+            "birthdate": null
+        },
+        "links": {
+            "self": "https://afi-backend.herokuapp.com/api/users/&lt;user_email&gt;/"
+        }
+    }
+}
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge245676" class="outline-4">
+<h4 id="orge245676"><span class="section-number-4">1.1.2</span> Получение access токена</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+После регистрации пользователя нужно получить access token (JWT <a href="https://jwt.io/">https://jwt.io/</a>) послав запрос
+<code>POST /api/auth-token/</code>
+</p>
+<pre class="example">
+{
+      "data": {
+          "type": "MyTokenObtainPairView",
+          "attributes": {
+              "email": "&lt;user_email&gt;",
+              "password": "&lt;user_password"
+          }
+      }
+  }
+</pre>
+<p>
+Пример ответа:
+</p>
+<pre class="example">
+  {
+    "data": {
+        "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1OTMyMTQxMCwianRpIjoiMzVjZDQ1NzNjN2E0NDA3MTg5OWI0MDY5Y2FjZDYzNzkiLCJ1c2VyX2VtYWlsIjoiYXNkZkB5YW5kZXgucnUifQ.ONxmCsiy3PawjMdYOwd2DCCvh8uu8RHdsY_u5ftActM",
+        "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1MjQxNDEwLCJqdGkiOiJhOGU5YzczNjY2ZWE0ZDAyYTljYTA5YWM4YTg3ODgzMyIsInVzZXJfZW1haWwiOiJhc2RmQHlhbmRleC5ydSJ9.XfQVuISFkBZdmK6_T5sI1pJ61DkiTcxdyMPAgTee6Ak"
+    }
+}
+</pre>
+<p>
+Время жизни токена конфигурируется через переменные окружения на <a href="https://dashboard.heroku.com/apps/afi-backend/settings">https://dashboard.heroku.com/apps/afi-backend/settings</a>
+В данный момент access токен живет 5 минут, refresh &#x2013; 1825 дней
+Для дальнейшей авторизации нужно при каждом запросе посылать в заголовке refresh токен:
+</p>
+
+<pre class="example">
+'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjAxNTYyNzM4LCJqdGkiOiIzYTYwYTU2ZjAxOTQ0YjRkOTM4OGYwOGY0ZjkzYTVjNiIsInVzZXJfZW1haWwiOiJka29sMjAwMEB5YW5kZXgucnUifQ.Zf-x3Pq1A15uc83nl5ZxmHLpZv1OA6xDFmQxeJpBme4'
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd6f4f2b" class="outline-4">
+<h4 id="orgd6f4f2b"><span class="section-number-4">1.1.3</span> Обновление access токенa</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+После истечения времени жизни access токена нужно получить новый, используя refresh token
+<code>POST /api/auth-token/refresh/</code>
+</p>
+<pre class="example">
+   {
+    "data": {
+        "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NDMxNDkxLCJqdGkiOiIzOWUyMGEyMjA4ZWI0OWUxOGVlMWI0MTI4Mzg3ZTZjYiIsInVzZXJfZW1haWwiOiJhc2RmQHlhbmRleC5ydSJ9.pd6OuXtVXEtjvvv9ASywQ6JZjgF_5Da1stTdvOtln-U"
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div id="outline-container-org5c0815b" class="outline-3">
+<h3 id="org5c0815b"><span class="section-number-3">1.2</span> Покупка билета/видео-лекции</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-orgc6c7b05" class="outline-4">
+<h4 id="orgc6c7b05"><span class="section-number-4">1.2.1</span> Добавление в корзину</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Для покупки чего-либо нужно добавить этот объект в корзину, если корзины не было, она создастся,
+либо объект добавится в последнюю существующую корзину.
+В данный момент можно отправить параметры
+</p>
+<ul class="org-ul">
+<li>"videolecture"</li>
+<li>"ticket"</li>
+</ul>
+
+<p>
+<code>POST /api/cart/add-to-cart/</code>
+</p>
+<pre class="example">
+{
+    "data": {
+        "type": "OrderItem",
+        "attributes": {
+            "item_type": "videolecture",
+            "object_id": 1
+        }
+    }
+}
+</pre>
+<p>
+Пример ответа:
+</p>
+<pre class="example">
+{
+    "data": {
+        "type": "OrderItem",
+        "id": "6",
+        "attributes": {
+            "is_paid": false,
+            "created_at": "2020-10-01T20:18:27.661918+03:00",
+            "total": null
+        },
+        "relationships": {
+            "order_items": {
+                "meta": {
+                    "count": 2
+                },
+                "data": [
+                    {
+                        "type": "OrderItem",
+                        "id": "11"
+                    },
+                    {
+                        "type": "OrderItem",
+                        "id": "12"
+                    }
+                ]
+            }
+        }
+    }
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-org0d9cb69" class="outline-4">
+<h4 id="org0d9cb69"><span class="section-number-4">1.2.2</span> Получение текущей корзины</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Товары в текущей корзине можно посмотреть отправив
+<code>GET /api/cart/last-cart/</code>
+Пример ответа:
+</p>
+<pre class="example">
+    {
+    "data": {
+        "type": "Cart",
+        "id": "6",
+        "attributes": {
+            "is_paid": false,
+            "created_at": "2020-10-01T20:18:27.661918+03:00",
+            "total": null
+        },
+        "relationships": {
+            "order_items": {
+                "meta": {
+                    "count": 2
+                },
+                "data": [
+                    {
+                        "type": "OrderItem",
+                        "id": "11"
+                    },
+                    {
+                        "type": "OrderItem",
+                        "id": "12"
+                    }
+                ]
+            }
+        }
+    }
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-orgee5a526" class="outline-4">
+<h4 id="orgee5a526"><span class="section-number-4">1.2.3</span> Покупка корзины</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+Далее для покупки, используя id корзины (6, в примере выше), нужно отправить запрос на оплату корзины:
+параметр payment<sub>type</sub><sub>value</sub> это идентификатор платежного провайдера, сейчас подключена только Яндекс-касса, id 0,
+в будущем добавится еще несколько, id можно посмотреть в админке Django
+<code>POST /api/payments/</code>
+</p>
+<pre class="example">
+{
+            "data": {
+                "type": "PaymentCreateView",
+                "attributes": {
+                    "payment_type_value": 0,
+                    "amount": 100,
+                    "currency": "RUB",
+                    "cart_id": 6
+                }
+            }
+        }
+</pre>
+
+<p>
+Вернется ссылка на платежную форму, которую нужно будет показать пользователю для оплаты
+</p>
+<pre class="example">
+{
+    "data": {
+        "payment_url": "https://money.yandex.ru/api-pages/v2/payment-confirm/epl?orderId=270c1d0a-000f-5000-9000-1441f6311382"
+    }
+}
+</pre>
+<p>
+Для яндекс кассы тестовая карт 5555 5555 5555 4444, срок действия любой в будушем, cvv любой
+</p>
+
+<p>
+после успешной оплаты пользователем приобретенные айтемы появятся в массиве <code>purchased_items</code> пользователя
+<code>GET /api/users/user@mail.com</code>
+</p>
+<pre class="example">
+{
+    "data": {
+        "type": "User",
+        "id": "1",
+        "attributes": {
+            "email": "user@mail.com",
+            "userpic": null,
+            "name": "Denis Dionisov",
+            "birthdate": "2021-09-11",
+            "purchased_items": {
+                "video_lectures": [],
+                "tickets": []
+            }
+        },
+        "links": {
+            "self": "http://127.0.0.1:8000/api/users/user@mail.com/"
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1910bb" class="outline-3">
+<h3 id="orgc1910bb"><span class="section-number-3">1.3</span> Изменение данных пользователя</h3>
+<div class="outline-text-3" id="text-1-3">
+</div>
+<div id="outline-container-orgb20fcb7" class="outline-4">
+<h4 id="orgb20fcb7"><span class="section-number-4">1.3.1</span> Изменение полей профиля</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Для того, чтобы поменять данные пользователя, нужно отправить запрос
+<code>PUT /api/users/user@mail.com/</code>
+</p>
+<pre class="example">
+{
+    "data": {
+        "type": "User",
+        "id": "asdf@yandex.ru",
+        "attributes": {
+            "birthdate": "2010-10-10",
+            "email": "asdf@yandex.ru"
+        }
+    }
+
+</pre>
+<p>
+Поле email обязательно, остальные не обязательны. В поле id должен стоять нынешний email пользователя
+В случае смены email, токен перестанет действовать, так как в нем содержится старый email, нужно выпустить новый.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdc7142e" class="outline-4">
+<h4 id="orgdc7142e"><span class="section-number-4">1.3.2</span> Изменение юзерпика</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Чтобы поменять юзерпик, нужно послать запрос form-data:
+<code>PUT /api/users/asdf@yandex.ru</code>
+</p>
+
+<p>
+Пример запроса:
+</p>
+
+<p>
+curl:
+</p>
+<pre class="example">
+curl --location --request PUT 'http://127.0.0.1:8000/api/users/asdf@yandex.ru/upload-userpic/' \
+--header 'Content-Type: application/vnd.api+json' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NDM0NjA3LCJqdGkiOiJkNDZkNzkzNjBkNWU0N2Q3YmZmZTU2YjBiNjU0ZDkyMCIsInVzZXJfZW1haWwiOiJhc2RmQHlhbmRleC5ydSJ9.S1o8Czhv53jD9LcmP5Y6FlBEHEVhl6QwBLlto3E4Tas' \
+--form 'userpic=@/Users/dkol/Desktop/Screenshot 2020-10-01 at 18.56.41.png'
+</pre>
+
+<p>
+JS:
+</p>
+<pre class="example">
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/vnd.api+json");
+myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NDM0NjA3LCJqdGkiOiJkNDZkNzkzNjBkNWU0N2Q3YmZmZTU2YjBiNjU0ZDkyMCIsInVzZXJfZW1haWwiOiJhc2RmQHlhbmRleC5ydSJ9.S1o8Czhv53jD9LcmP5Y6FlBEHEVhl6QwBLlto3E4Tas");
+
+var formdata = new FormData();
+formdata.append("userpic", fileInput.files[0], "Screenshot 2020-10-01 at 18.56.41.png");
+
+var requestOptions = {
+  method: 'PUT',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch("http://127.0.0.1:8000/api/users/asdf@yandex.ru/upload-userpic/", requestOptions)
+  .then(response =&gt; response.text())
+  .then(result =&gt; console.log(result))
+  .catch(error =&gt; console.log('error', error));curl --location --request PUT 'http://127.0.0.1:8000/api/users/asdf@yandex.ru/upload-userpic/' \
+--header 'Content-Type: application/vnd.api+json' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NDM0NjA3LCJqdGkiOiJkNDZkNzkzNjBkNWU0N2Q3YmZmZTU2YjBiNjU0ZDkyMCIsInVzZXJfZW1haWwiOiJhc2RmQHlhbmRleC5ydSJ9.S1o8Czhv53jD9LcmP5Y6FlBEHEVhl6QwBLlto3E4Tas' \
+--form 'userpic=@/Users/dkol/Desktop/Screenshot 2020-10-01 at 18.56.41.png'
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc57eb1b" class="outline-3">
+<h3 id="orgc57eb1b"><span class="section-number-3">1.4</span> Фильтрация, сортировка и поиск по API</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="outline-container-org9803533" class="outline-4">
+<h4 id="org9803533"><span class="section-number-4">1.4.1</span> Сортировка</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Для сортировки используется параметр <code>?sort</code>
+~GET <i>api/users</i>?sort=email
+</p>
+<pre class="example">
+   {
+    "links": {
+        "first": "http://127.0.0.1:8000/api/users/?page%5Bnumber%5D=1&amp;sort=email",
+        "last": "http://127.0.0.1:8000/api/users/?page%5Bnumber%5D=4&amp;sort=email",
+        "next": "http://127.0.0.1:8000/api/users/?page%5Bnumber%5D=2&amp;sort=email",
+        "prev": null
+    },
+    "data": [
+        {
+            "type": "User",
+            "id": "20",
+            "attributes": {
+                "email": "angela52@hotmail.com",
+                "userpic": null,
+                "name": "Ethan Ellis",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/angela52@hotmail.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "1",
+            "attributes": {
+                "email": "asdf@yandex.ru",
+                "userpic": "http://127.0.0.1:8000/media/user_userpics/Screenshot_2020-10-01_at_18.56.41.png",
+                "name": "Denis Dionisov",
+                "birthdate": "2010-11-10",
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/asdf@yandex.ru/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "23",
+            "attributes": {
+                "email": "ashleyhoward@gmail.com",
+                "userpic": null,
+                "name": "Tammy Rowland",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/ashleyhoward@gmail.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "19",
+            "attributes": {
+                "email": "benjamin53@montoya-lucas.info",
+                "userpic": null,
+                "name": "Christine Paul",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/benjamin53@montoya-lucas.info/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "22",
+            "attributes": {
+                "email": "brittany89@berg-taylor.com",
+                "userpic": null,
+                "name": "Michael Stevenson",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/brittany89@berg-taylor.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "9",
+            "attributes": {
+                "email": "carrolllydia@gmail.com",
+                "userpic": null,
+                "name": "David Lopez",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/carrolllydia@gmail.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "26",
+            "attributes": {
+                "email": "chadunderwood@tran.com",
+                "userpic": null,
+                "name": "Melanie Cohen",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/chadunderwood@tran.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "12",
+            "attributes": {
+                "email": "cindypitts@yahoo.com",
+                "userpic": null,
+                "name": "Gregory Parker",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/cindypitts@yahoo.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "18",
+            "attributes": {
+                "email": "cynthia08@king.com",
+                "userpic": null,
+                "name": "Michael Vaughan",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/cynthia08@king.com/"
+            }
+        },
+        {
+            "type": "User",
+            "id": "2",
+            "attributes": {
+                "email": "denis.kolosov@gmail.com",
+                "userpic": null,
+                "name": "",
+                "birthdate": null,
+                "purchased_items": {
+                    "video_lectures": [],
+                    "tickets": []
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/api/users/denis.kolosov@gmail.com/"
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pages": 4,
+            "count": 32
+        }
+    }
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-orgd3314d5" class="outline-4">
+<h4 id="orgd3314d5"><span class="section-number-4">1.4.2</span> Фильтрация</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+Для фильтра по полям нужно добавить параметр ?filter[/поле<sub>фильтрации</sub>/]
+<code>GET /api/offline-lectures/?filter[lecture_date]=1976-08-11T07:03:48</code>
+</p>
+<pre class="example">
+   {
+    "links": {
+        "first": "http://127.0.0.1:8000/api/offline-lectures/?filter%5Blecture_date%5D=1976-08-11T07%3A03%3A48&amp;page%5Bnumber%5D=1",
+        "last": "http://127.0.0.1:8000/api/offline-lectures/?filter%5Blecture_date%5D=1976-08-11T07%3A03%3A48&amp;page%5Bnumber%5D=1",
+        "next": null,
+        "prev": null
+    },
+    "data": [
+        {
+            "type": "OfflineLecture",
+            "id": "18",
+            "attributes": {
+                "name": "Offline lecture 0",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1976-08-11T07:03:48+03:00",
+                "lecture_date_ts": 208573428,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": null,
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "19"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "19"
+                    }
+                }
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pages": 1,
+            "count": 1
+        }
+    }
+}
+</pre>
+
+<p>
+ Предыдущий пример вернет лекцию с точным значением времени. Удобно возвращать объекты, меньше или
+ или больше заданного параметра, для этого можно использовать параметры <code>gt</code> и <code>lt</code> . Также параметры можно
+ комбинировать(не только filter, но и остальные)
+<code>GET /api/offline-lectures/?filter[lecture_date.gt]=1976-08-11T07:03:48&amp;filter[lecture_date.lt]=2020-10-10T10:10:10</code>
+</p>
+<pre class="example">
+  {
+    "links": {
+        "first": "http://127.0.0.1:8000/api/offline-lectures/?filter%5Blecture_date.gt%5D=1976-08-11T07%3A03%3A48&amp;filter%5Blecture_date.lt%5D=2020-10-10T10%3A10%3A10&amp;page%5Bnumber%5D=1",
+        "last": "http://127.0.0.1:8000/api/offline-lectures/?filter%5Blecture_date.gt%5D=1976-08-11T07%3A03%3A48&amp;filter%5Blecture_date.lt%5D=2020-10-10T10%3A10%3A10&amp;page%5Bnumber%5D=1",
+        "next": null,
+        "prev": null
+    },
+    "data": [
+        {
+            "type": "OfflineLecture",
+            "id": "19",
+            "attributes": {
+                "name": "Offline lecture 1",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1996-09-11T09:06:21+04:00",
+                "lecture_date_ts": 842407581,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": null,
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "20"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "20"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "20",
+            "attributes": {
+                "name": "Offline lecture 0",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1992-04-07T01:51:02+04:00",
+                "lecture_date_ts": 702586262,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "21"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "21"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "24",
+            "attributes": {
+                "name": "Offline lecture 1",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "2013-05-25T22:16:49+04:00",
+                "lecture_date_ts": 1369491409,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "25"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "25"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "25",
+            "attributes": {
+                "name": "Offline lecture 2",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1990-07-21T01:50:40+04:00",
+                "lecture_date_ts": 648499840,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "26"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "26"
+                    }
+                }
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pages": 1,
+            "count": 4
+        }
+    }
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgdc1fa22" class="outline-4">
+<h4 id="orgdc1fa22"><span class="section-number-4">1.4.3</span> Поиск</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+Для поиска по содержанию полей используется фильтр search
+<code>GET /api/offline-lectures/?filter[search]=Offline</code>
+</p>
+<pre class="example">
+  {
+    "links": {
+        "first": "http://127.0.0.1:8000/api/offline-lectures/?filter%5Bsearch%5D=Offline&amp;page%5Bnumber%5D=1",
+        "last": "http://127.0.0.1:8000/api/offline-lectures/?filter%5Bsearch%5D=Offline&amp;page%5Bnumber%5D=1",
+        "next": null,
+        "prev": null
+    },
+    "data": [
+        {
+            "type": "OfflineLecture",
+            "id": "18",
+            "attributes": {
+                "name": "Offline lecture 0",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1976-08-11T07:03:48+03:00",
+                "lecture_date_ts": 208573428,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": null,
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "19"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "19"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "19",
+            "attributes": {
+                "name": "Offline lecture 1",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1996-09-11T09:06:21+04:00",
+                "lecture_date_ts": 842407581,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": null,
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "20"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "20"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "20",
+            "attributes": {
+                "name": "Offline lecture 0",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1992-04-07T01:51:02+04:00",
+                "lecture_date_ts": 702586262,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "21"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "21"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "24",
+            "attributes": {
+                "name": "Offline lecture 1",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "2013-05-25T22:16:49+04:00",
+                "lecture_date_ts": 1369491409,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "25"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "25"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "25",
+            "attributes": {
+                "name": "Offline lecture 2",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1990-07-21T01:50:40+04:00",
+                "lecture_date_ts": 648499840,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "26"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "26"
+                    }
+                }
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pages": 1,
+            "count": 5
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgff8e639" class="outline-3">
+<h3 id="orgff8e639"><span class="section-number-3">1.5</span> Добавление related объектов (include)</h3>
+<div class="outline-text-3" id="text-1-5">
+</div>
+<div id="outline-container-org8f2cdf0" class="outline-4">
+<h4 id="org8f2cdf0"><span class="section-number-4">1.5.1</span> Параметр include</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<p>
+Для добавления относящихся объектов используется параметр <code>?include</code>
+Несколько объектов можно перечислять через запятую
+</p>
+
+<p>
+Объекты будут находится в поле <code>"included"</code>
+<code>GET /api/offline-lectures/?include=category,lecturer</code>
+</p>
+<pre class="example">
+   {
+    "links": {
+        "first": "http://127.0.0.1:8000/api/offline-lectures/?include=category%2Clecturer&amp;page%5Bnumber%5D=1",
+        "last": "http://127.0.0.1:8000/api/offline-lectures/?include=category%2Clecturer&amp;page%5Bnumber%5D=1",
+        "next": null,
+        "prev": null
+    },
+    "data": [
+        {
+            "type": "OfflineLecture",
+            "id": "18",
+            "attributes": {
+                "name": "Offline lecture 0",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1976-08-11T07:03:48+03:00",
+                "lecture_date_ts": 208573428,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": null,
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "19"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "19"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "19",
+            "attributes": {
+                "name": "Offline lecture 1",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1996-09-11T09:06:21+04:00",
+                "lecture_date_ts": 842407581,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": null,
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "20"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "20"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "20",
+            "attributes": {
+                "name": "Offline lecture 0",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1992-04-07T01:51:02+04:00",
+                "lecture_date_ts": 702586262,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "21"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "21"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "24",
+            "attributes": {
+                "name": "Offline lecture 1",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "2013-05-25T22:16:49+04:00",
+                "lecture_date_ts": 1369491409,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "25"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "25"
+                    }
+                }
+            }
+        },
+        {
+            "type": "OfflineLecture",
+            "id": "25",
+            "attributes": {
+                "name": "Offline lecture 2",
+                "address": "",
+                "picture": "http://127.0.0.1:8000/media/lecture_pictures/1573646089377-9wpu20ce.jpeg",
+                "lecture_date": "1990-07-21T01:50:40+04:00",
+                "lecture_date_ts": 648499840,
+                "capacity": null,
+                "description": "",
+                "tickets_sold": 0,
+                "lecture_summary_file": null,
+                "price": "1000.00",
+                "price_currency": "RUB"
+            },
+            "relationships": {
+                "lecturer": {
+                    "data": {
+                        "type": "Lecturer",
+                        "id": "26"
+                    }
+                },
+                "category": {
+                    "data": {
+                        "type": "Category",
+                        "id": "26"
+                    }
+                }
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "Category",
+            "id": "19",
+            "attributes": {
+                "name": "Аниме",
+                "color": "#be78be"
+            }
+        },
+        {
+            "type": "Category",
+            "id": "20",
+            "attributes": {
+                "name": "Кино",
+                "color": "#df78be"
+            }
+        },
+        {
+            "type": "Category",
+            "id": "21",
+            "attributes": {
+                "name": "Архитектура",
+                "color": "#ad78be"
+            }
+        },
+        {
+            "type": "Category",
+            "id": "25",
+            "attributes": {
+                "name": "Искусство",
+                "color": "#be78be"
+            }
+        },
+        {
+            "type": "Category",
+            "id": "26",
+            "attributes": {
+                "name": "Кино",
+                "color": "#ad78be"
+            }
+        },
+        {
+            "type": "Lecturer",
+            "id": "19",
+            "attributes": {
+                "name": "Isabel Gibbs",
+                "userpic": null,
+                "bio": "Western blood yes too. Claim big event themselves cost rather story. Wide industry career have.\nBig open lose some American five those. Large guess religious me traditional road."
+            }
+        },
+        {
+            "type": "Lecturer",
+            "id": "20",
+            "attributes": {
+                "name": "Michelle Levy",
+                "userpic": null,
+                "bio": "Issue tonight woman before culture. Song network certainly walk our do authority American. Response bar matter oil everything start."
+            }
+        },
+        {
+            "type": "Lecturer",
+            "id": "21",
+            "attributes": {
+                "name": "Melissa Collins",
+                "userpic": null,
+                "bio": "Trouble when worry officer. Baby central ago keep although red interesting.\nOccur trip stop have discuss. Usually teacher and join card wife note put. Fly see section enjoy use similar."
+            }
+        },
+        {
+            "type": "Lecturer",
+            "id": "25",
+            "attributes": {
+                "name": "Jackson Moore",
+                "userpic": null,
+                "bio": "Ball act agency begin season never. Image knowledge professional piece serve scientist position real. Fish consider up bit know where second."
+            }
+        },
+        {
+            "type": "Lecturer",
+            "id": "26",
+            "attributes": {
+                "name": "Timothy Jones",
+                "userpic": null,
+                "bio": "Government nice once reflect fish street staff. Sort beyond determine chair.\nShare visit though there walk stand."
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pages": 1,
+            "count": 5
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4bd1c67" class="outline-3">
+<h3 id="org4bd1c67"><span class="section-number-3">1.6</span> Список ендпойнтов  <i>api</i></h3>
+<div class="outline-text-3" id="text-1-6">
+<ul class="org-ul">
+<li>"users": "<i>api/users</i>"</li>
+<li>"payment<sub>methods</sub>": "<i>api/payment<sub>methods</sub></i>",</li>
+<li>"tickets": "<i>api/tickets</i>",</li>
+<li>"events": "<i>api/events</i>",</li>
+<li>"offline-lectures": "<i>api/offline-lectures</i>",</li>
+<li>"video-lectures": "<i>api/video-lectures</i>",</li>
+<li>"cart": "<i>api/cart</i>",</li>
+<li>"order-items": "<i>api/order-items</i>",</li>
+<li>"categories": "<i>api/categories</i>",</li>
+<li>"lecturers": "<i>api/lecturers</i>"</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Den4ik</p>
+<p class="date">Created: 2020-10-04 Sun 22:07</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
