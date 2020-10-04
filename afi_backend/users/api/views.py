@@ -39,7 +39,7 @@ class UserViewSet(ModelViewSet):
             url_name='upload_userpic',
             permission_classes=[IsAuthenticated])
     @parser_classes([parsers.MultiPartParser])
-    def upload_userpic(self, request, username=None):
+    def upload_userpic(self, request, email=None):
         obj = self.get_object()
         serializer = self.serializer_class(obj,
                                            data=request.data,
