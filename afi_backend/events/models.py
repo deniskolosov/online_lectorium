@@ -129,6 +129,12 @@ class VideoLecture(LectureBase):
     def __str__(self):
         return f"{self.name}"
 
+    def do_afterpayment_logic(self, customer=None):
+        logger.info("Adding Video Lectures to user purchases.")
+        payment_models.VideoLectureOrderItem.objects.create(customer=customer,
+                                                            is_paid=True,
+                                                            video_lecture=self)
+
 
 class VideoLectureBulletPoint(models.Model):
     text = models.TextField()
