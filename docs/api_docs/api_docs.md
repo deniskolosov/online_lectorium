@@ -5,19 +5,20 @@
 
 ## Регистрация/авторизация<a id="sec-1-1"></a>
 
-Регистрация нового пользователя:
+Регистрация нового пользователя: `POST /api/users/`
 
-       POST /api/users/
-       {
-        "data": {
-            "type": "User",
-            "attributes": {
-                "email": <user_email>,
-                "password": <user_password>
-            }
-        }
-        }
-       Пример ответа:
+    {
+     "data": {
+         "type": "User",
+         "attributes": {
+             "email": <user_email>,
+             "password": <user_password>
+         }
+     }
+     }
+
+Пример ответа:
+
        {
         "data": {
             "type": "User",
