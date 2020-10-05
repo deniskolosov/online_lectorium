@@ -12,7 +12,6 @@ from afi_backend.users import models as user_models
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from afi_backend.events import models as events_models
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ class Payable(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
-    is_paid = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False, null=True)
 
     class Meta:
         abstract = True
@@ -109,13 +108,9 @@ def link_payment_with_cart(payment_type: int, user: User,
 
 
 class VideoLectureOrderItem(Payable):
-    video_lecture = models.ForeignKey(events_models.VideoLecture,
+    # VideoLecture which user purchased
+    video_lecture = models.ForeignKey('events.VideoLecture',
                                       on_delete=models.CASCADE)
-
-    def do_afterpayment_logic(self, customer=None):
-        logger.info("Videolecture afterpayment logic is called")
-        self.customer = customer
-        self.save()
 
     @property
     def price(self):

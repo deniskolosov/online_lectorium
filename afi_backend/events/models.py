@@ -1,17 +1,17 @@
-import time
-
 import logging
+import time
 
 from colorfield.fields import ColorField
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
+from afi_backend.payments import models as payment_models
 from afi_backend.users.models import User
+from afi_backend.cart.models import OrderItem
 from django.contrib.contenttypes.fields import (GenericForeignKey,
                                                 GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from djmoney.models.fields import MoneyField
-from afi_backend.payments import models as payment_models
 
 logger = logging.getLogger(__name__)
 
@@ -125,6 +125,10 @@ class VideoLecture(LectureBase):
     link = models.URLField()
     certificate = models.ForeignKey(VideoLectureCertificate,
                                     on_delete=models.CASCADE)
+    order_items = GenericRelation(OrderItem,
+                                  object_id_field='object_id',
+                                  content_type_field='content_type',
+                                  related_query_name='video_lecture')
 
     def __str__(self):
         return f"{self.name}"

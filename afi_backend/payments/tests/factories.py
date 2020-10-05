@@ -35,7 +35,7 @@ class VideoLectureOrderItemFactory(factory.django.DjangoModelFactory):
 
 class OrderItemVideoLectureFactory(cart_factories.OrderItemFactory):
     # Order item with content type video lecture (order item)
-    content_object = factory.SubFactory(VideoLectureOrderItemFactory)
+    content_object = factory.SubFactory(VideoLectureFactory)
 
     class Meta:
         model = OrderItem

@@ -4,6 +4,7 @@ from afi_backend.cart.models import Cart, OrderItem
 from afi_backend.events.models import VideoLecture
 from rest_framework_json_api.relations import ResourceRelatedField
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import F, Sum
 
 
 class OrderItemRelatedField(ResourceRelatedField):
@@ -38,7 +39,10 @@ class CartSerializer(serializers.ModelSerializer):
         ]
 
     def get_total(self, obj):
-        return None
+        return obj.order_items.annotate(
+            v_price=F('video_lecture__price'),
+            t_price=F('ticket__offline_lecture__price')).aggregate(
+                total=Sum('v_price') + Sum('t_price'))['total']
 
 
 class CartOrderItemSerializer(serializers.ModelSerializer):

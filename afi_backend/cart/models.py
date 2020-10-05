@@ -17,13 +17,13 @@ class OrderItem(models.Model):
     """
     Order item contained in the Cart
     """
-    item = models.ForeignKey(ContentType,
-                             on_delete=models.CASCADE,
-                             null=True,
-                             blank=True)
+    content_type = models.ForeignKey(ContentType,
+                                     on_delete=models.CASCADE,
+                                     null=True,
+                                     blank=True)
 
     object_id = models.PositiveIntegerField(blank=True, null=True)
-    content_object = GenericForeignKey('item', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -38,7 +38,6 @@ class Cart(Payable):
     Cart which consists of Order Items
     """
     order_items = models.ManyToManyField(OrderItem)
-    is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
     latest_not_paid = LatestNotPaidCartManager()
