@@ -2,6 +2,7 @@ from rest_framework_json_api import serializers
 
 from afi_backend.cart.models import Cart, OrderItem
 from afi_backend.events.models import VideoLecture
+from afi_backend.tickets.models import Ticket
 from rest_framework_json_api.relations import ResourceRelatedField
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import F, Sum
@@ -14,6 +15,8 @@ class OrderItemRelatedField(ResourceRelatedField):
         """
         if isinstance(value, VideoLecture):
             return 'Video Lecture ' + value.name
+        if isinstance(value, Ticket):
+            return f'Ticket for {value.offline_lecture} '
         raise Exception('Unexpected type of order_item')
 
 
