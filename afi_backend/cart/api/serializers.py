@@ -58,6 +58,6 @@ class CartOrderItemSerializer(serializers.ModelSerializer):
             model=validated_data['item_type'])
 
         order_item = OrderItem.objects.create(
-            item=content_type, object_id=validated_data['object_id'])
+            content_type=content_type, object_id=validated_data['object_id'])
 
         return order_item
