@@ -6,6 +6,7 @@ from .models import Ticket, QRCode
 class TicketAdmin(admin.ModelAdmin):
     list_display = ['id']
 
+
 @admin.register(QRCode)
 class QRCodeAdmin(admin.ModelAdmin):
-    list_display = ['code', 'scanned']
+    list_display = ['code', 'scanned', 'paid']
