@@ -5,7 +5,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
@@ -35,6 +35,12 @@ urlpatterns = [
     path("payments/", include("afi_backend.payments.urls",
                               namespace="payments")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if not settings.DEBUG:
+    urlpatterns += [
+        path('favicon.ico',
+             RedirectView.as_view(url='images/favicons/favicon.ico'))
+    ]
 
 schema_view = get_schema_view(
     openapi.Info(
