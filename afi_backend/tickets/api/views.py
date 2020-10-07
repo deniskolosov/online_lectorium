@@ -16,22 +16,27 @@ class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['get'], permission_classes=[], url_path='activate/(?P<qr_code>[^/.]+)')
+    @action(detail=False,
+            methods=['get'],
+            permission_classes=[],
+            url_path='activate/(?P<qr_code>[^/.]+)')
     def activate(self, request, qr_code, pk=None):
         try:
             qr_code_object = QRCode.objects.get(code=qr_code)
         except QRCode.DoesNotExist:
-            return Response({"error": "No such code"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "No such code"},
+                            status=status.HTTP_404_NOT_FOUND)
 
         if qr_code_object.is_valid():
             qr_code_object.activate()
             return Response({"msg": "Activated"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Invalid Code"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid Code"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         user = self.request.user
-        tickets = Ticket.objects.filter(customer=user, payments__status=Payment.STATUS.PAID)
+        tickets = Ticket.objects.filter(customer=user, is_paid=True)
         return tickets
 
 

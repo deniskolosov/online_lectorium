@@ -31,7 +31,7 @@ class Ticket(Payable):
 
     def do_afterpayment_logic(self, customer=None):
         logger.info(f"Generating qr code for ticket{self}")
-        self.paid = True
+        self.is_paid = True
         self.generate_qr_code()
         self.customer = customer
         self.save()

@@ -14,9 +14,9 @@ class OrderItemRelatedField(ResourceRelatedField):
         Serialize tagged objects to a simple textual representation.
         """
         if isinstance(value, VideoLecture):
-            return 'Video Lecture ' + value.name
+            return f'Video Lecture id#{value.id}'
         if isinstance(value, Ticket):
-            return f'Ticket for {value.offline_lecture} '
+            return f'Ticket #id {value.id}'
         raise Exception('Unexpected type of order_item')
 
 
@@ -42,10 +42,17 @@ class CartSerializer(serializers.ModelSerializer):
         ]
 
     def get_total(self, obj):
-        return obj.order_items.annotate(
-            v_price=F('video_lecture__price'),
-            t_price=F('ticket__offline_lecture__price')).aggregate(
-                total=Sum('v_price') + Sum('t_price'))['total']
+        total = 0
+        for item in obj.order_items.all():
+            price = None
+            if item.content_object:
+                price = item.content_object.price
+            if price:
+                total += price
+
+        if total:
+            return total.amount
+        return None
 
 
 class CartOrderItemSerializer(serializers.ModelSerializer):

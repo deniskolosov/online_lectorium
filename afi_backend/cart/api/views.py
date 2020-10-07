@@ -28,22 +28,37 @@ class CartViewset(viewsets.ModelViewSet):
         ),
     }
 
-    @action(detail=False,
+    @action(detail=True,
             methods=["POST"],
             serializer_class=CartOrderItemSerializer,
             url_path='add-to-cart',
             permission_classes=[IsAuthenticated])
     def add_to_cart(self, request, pk=None):
-        last_cart = Cart.latest_not_paid.all()
-        if not last_cart:
-            last_cart = Cart.objects.create(customer=request.user)
+        cart = self.get_object()
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
-            last_cart.order_items.add(serializer.instance)
-            last_cart_serializer = CartSerializer(last_cart)
-            return Response(last_cart_serializer.data)
+            cart.order_items.add(serializer.instance)
+            cart_serializer = CartSerializer(cart)
+            return Response(cart_serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False,
+            methods=["POST"],
+            serializer_class=CartOrderItemSerializer,
+            url_path='buy-one',
+            permission_classes=[IsAuthenticated])
+    def buy_one(self, request):
+        # TODO: DRY, create helper function, both methods are the same
+        cart = Cart.objects.create()
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            cart.order_items.add(serializer.instance)
+            cart_serializer = CartSerializer(cart)
+            return Response(cart_serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False,
