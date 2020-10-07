@@ -11,7 +11,7 @@ from django.db.models import F, Sum
 class OrderItemRelatedField(ResourceRelatedField):
     def to_representation(self, value):
         """
-        Serialize tagged objects to a simple textual representation.
+        Serialize order_items to a simple textual representation.
         """
         if isinstance(value, VideoLecture):
             return f'Video Lecture id#{value.id}'

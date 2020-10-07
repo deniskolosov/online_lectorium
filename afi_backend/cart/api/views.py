@@ -36,6 +36,8 @@ class CartViewset(viewsets.ModelViewSet):
     def add_to_cart(self, request, pk=None):
         cart = self.get_object()
         serializer = self.serializer_class(data=request.data)
+        # To return correct type
+        self.resource_name = 'Cart'
 
         if serializer.is_valid():
             serializer.save()
