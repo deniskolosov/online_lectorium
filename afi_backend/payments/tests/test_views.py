@@ -195,6 +195,7 @@ class TestYandexWebhookView:
         assert payment.status == Payment.STATUS.PENDING
         assert not hasattr(test_order_item_ticket.content_object, 'qrcode')
 
+        assert not test_order_item_ticket.content_object.is_paid
         request = factory.post('/api/checkout-wh/',
                                data=test_data,
                                format='json')
@@ -204,6 +205,7 @@ class TestYandexWebhookView:
         test_order_item_ticket.content_object.refresh_from_db()
 
         assert payment.status == Payment.STATUS.PAID
+        assert test_order_item_ticket.content_object.is_paid
         # ticket: assert code is generated, but not generated before Payment is confirmed
         # video lecture: assert video lecture is avalaible for user, but not available before.
         assert test_order_item_ticket.content_object.qrcode
