@@ -67,17 +67,17 @@ class CartSerializer(serializers.ModelSerializer):
 class CartOrderItemSerializer(serializers.ModelSerializer):
     item_type = serializers.CharField()
     object_id = serializers.IntegerField()
-    customer_id = serializers.IntegerField()
+    customer_email = serializers.EmailField()
 
     class Meta:
         model = OrderItem
-        fields = ['item_type', 'object_id', 'customer_id']
+        fields = ['item_type', 'object_id', 'customer_email']
 
     def create(self, validated_data):
         content_type = ContentType.objects.get(
             model=validated_data['item_type'])
 
-        user = User.objects.get(id=validated_data['customer_id'])
+        user = User.objects.get(email=validated_data['customer_email'])
 
         order_item = OrderItem.objects.create(
             customer=user,
