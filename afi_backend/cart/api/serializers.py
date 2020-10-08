@@ -80,6 +80,8 @@ class CartOrderItemSerializer(serializers.ModelSerializer):
         user = User.objects.get(id=validated_data['customer_id'])
 
         order_item = OrderItem.objects.create(
-            content_type=content_type, object_id=validated_data['object_id'])
+            customer=user,
+            content_type=content_type,
+            object_id=validated_data['object_id'])
 
         return order_item

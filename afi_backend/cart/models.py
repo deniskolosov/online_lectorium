@@ -51,6 +51,7 @@ class Cart(Payable):
         """
         Update order items in the cart
         """
+        self.is_paid = True
         self.order_items.update(is_paid=True)
 
     class Meta:

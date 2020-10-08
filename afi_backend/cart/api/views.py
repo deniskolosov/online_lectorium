@@ -55,6 +55,8 @@ class CartViewset(viewsets.ModelViewSet):
         # TODO: DRY, create helper function, both methods are the same
         cart = Cart.objects.create()
         serializer = self.serializer_class(data=request.data)
+        # To return correct type
+        self.resource_name = 'Cart'
 
         if serializer.is_valid():
             serializer.save()
