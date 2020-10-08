@@ -35,3 +35,4 @@ pytest-mock==3.3.1 # https://github.com/pytest-dev/pytest-mock
 django-colorfield==0.3.2 # https://github.com/fabiocaccamo/django-colorfield
 factory-boy==3.0.1 # https://factoryboy.readthedocs.io/en/latest/
 django-modeltranslation==0.15.2 # https://django-modeltranslation.readthedocs.io/en/latest/
+freezegun==1.0.0 #https://github.com/spulec/freezegun
