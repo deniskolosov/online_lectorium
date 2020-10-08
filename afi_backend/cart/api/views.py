@@ -13,7 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 
 
 class CartViewset(viewsets.ModelViewSet):
-    queryset = Cart.objects.filter(is_paid=False)
+    queryset = Cart.objects.filter()
     serializer_class = CartSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = (
