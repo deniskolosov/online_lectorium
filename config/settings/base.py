@@ -100,6 +100,7 @@ LOCAL_APPS = [
     "afi_backend.tickets.apps.TicketsConfig",
     "afi_backend.events.apps.EventsConfig",
     "afi_backend.cart.apps.CartConfig",
+    "afi_backend.videocourses.apps.VideocoursesConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

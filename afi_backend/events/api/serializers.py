@@ -13,18 +13,6 @@ class EventTypeSerializer(serializers.ModelSerializer):
         fields = ['address']
 
 
-class EventSerializer(serializers.ModelSerializer):
-    category = EventTypeSerializer(source='content_object', read_only=True)
-
-    class Meta:
-        model = Event
-        fields = [
-            'name',
-            'description',
-            'category',
-        ]
-
-
 class LecturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecturer

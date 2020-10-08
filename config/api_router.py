@@ -3,7 +3,6 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from afi_backend.events.api.views import (
-    EventViewSet,
     LecturersViewset,
     OfflineLectureViewset,
     CategoriesViewSet,
@@ -29,7 +28,6 @@ router.register("payment_methods",
                 PaymentMethodViewset,
                 basename='payment-methods')
 router.register("tickets", TicketViewSet, basename='tickets')
-router.register("events", EventViewSet, basename='events')
 router.register("offline-lectures",
                 OfflineLectureViewset,
                 basename='offline-lectures')

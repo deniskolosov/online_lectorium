@@ -52,3 +52,6 @@ class Cart(Payable):
         Update order items in the cart
         """
         self.order_items.update(is_paid=True)
+
+    class Meta:
+        ordering = ['-created_at']

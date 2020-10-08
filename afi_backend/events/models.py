@@ -77,6 +77,9 @@ class LectureBase(models.Model):
                                null=True,
                                blank=True)
 
+    class Meta:
+        ordering = ['id']
+
 
 class OfflineLecture(LectureBase):
     address = models.TextField()

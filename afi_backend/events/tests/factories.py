@@ -1,6 +1,7 @@
 import factory
 import factory.fuzzy
 from django.core.files.base import ContentFile
+from django.utils import timezone
 
 from afi_backend.events.models import (
     Category,
@@ -62,7 +63,8 @@ class BaseLectureFactory(factory.django.DjangoModelFactory):
 
 class OfflineLectureFactory(BaseLectureFactory):
     name = factory.Sequence(lambda n: f"Offline lecture {n}")
-    lecture_date = factory.Faker("date_time")
+    lecture_date = factory.Faker("date_time",
+                                 tzinfo=timezone.get_current_timezone())
     price = 1000
 
     class Meta:

@@ -6,20 +6,11 @@ from rest_framework_json_api import django_filters, filters, relations, serializ
 
 from ..models import Event, Category, Lecturer, OfflineLecture, VideoLecture
 from .serializers import (
-    EventSerializer,
     CategorySerializer,
     LecturerSerializer,
     OfflineLectureSerializer,
     VideoLectureSerializer,
 )
-
-
-class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = (django_filters.DjangoFilterBackend, )
-    filterset_fields = {'event_type': ('exact', )}
 
 
 class OfflineLectureViewset(viewsets.ModelViewSet):
