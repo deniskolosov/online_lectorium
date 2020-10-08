@@ -33,7 +33,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ['created_at', 'content_object']
+        fields = ['created_at', 'content_object', 'is_paid']
 
 
 class CartSerializer(serializers.ModelSerializer):
