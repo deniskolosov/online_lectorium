@@ -12,6 +12,7 @@ class OrderItemFactory(factory.django.DjangoModelFactory):
     object_id = factory.SelfAttribute('content_object.id')
     content_type = factory.LazyAttribute(
         lambda o: ContentType.objects.get_for_model(o.content_object))
+    customer = factory.SubFactory(UserFactory)
 
     class Meta:
         exclude = ['content_object']

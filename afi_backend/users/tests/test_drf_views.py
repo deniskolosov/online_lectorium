@@ -123,7 +123,8 @@ class TestUserViewSet:
             'type': 'OrderItem',
             'id': str(test_vl_oi.id),
             'attributes': {
-                'created_at': '2012-01-14T04:00:00+04:00'
+                'created_at': '2012-01-14T04:00:00+04:00',
+                'is_paid': True
             },
             'relationships': {
                 'content_object': {
@@ -155,7 +156,8 @@ class TestUserViewSet:
             'type': 'OrderItem',
             'id': str(test_ticket_oi.id),
             'attributes': {
-                'created_at': '2012-01-14T04:00:00+04:00'
+                'created_at': '2012-01-14T04:00:00+04:00',
+                'is_paid': True
             },
             'relationships': {
                 'content_object': {

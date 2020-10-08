@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import F, Sum
 from afi_backend.events.api.serializers import VideoLectureSerializer
 from afi_backend.tickets.api.serializers import TicketSerializer
+from afi_backend.users.models import User
 
 
 class OrderItemRelatedField(ResourceRelatedField):
@@ -66,14 +67,17 @@ class CartSerializer(serializers.ModelSerializer):
 class CartOrderItemSerializer(serializers.ModelSerializer):
     item_type = serializers.CharField()
     object_id = serializers.IntegerField()
+    customer_id = serializers.IntegerField()
 
     class Meta:
         model = OrderItem
-        fields = ['item_type', 'object_id']
+        fields = ['item_type', 'object_id', 'customer_id']
 
     def create(self, validated_data):
         content_type = ContentType.objects.get(
             model=validated_data['item_type'])
+
+        user = User.objects.get(id=validated_data['customer_id'])
 
         order_item = OrderItem.objects.create(
             content_type=content_type, object_id=validated_data['object_id'])

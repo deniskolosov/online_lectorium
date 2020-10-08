@@ -138,8 +138,11 @@ class TestYandexWebhookView:
         factory = APIRequestFactory()
         view = YandexWebhook.as_view()
         test_external_id = '27068194-000f-5000-9000-1a8dcaefa7ee'
-        test_order_item_video_lecture = OrderItemVideoLectureFactory()
-        test_order_item_ticket = cart_factories.OrderItemTicketFactory()
+        test_user = UserFactory()
+        test_order_item_video_lecture = OrderItemVideoLectureFactory(
+            customer=test_user)
+        test_order_item_ticket = cart_factories.OrderItemTicketFactory(
+            customer=test_user)
         cart = cart_factories.CartFactory.create(order_items=(
             test_order_item_video_lecture,
             test_order_item_ticket,
@@ -210,3 +213,7 @@ class TestYandexWebhookView:
         # ticket: assert code is generated, but not generated before Payment is confirmed
         # video lecture: assert video lecture is avalaible for user, but not available before.
         assert test_order_item_ticket.content_object.qrcode
+        assert test_order_item_ticket in test_user.order_items.filter(
+            is_paid=True)
+        assert test_order_item_video_lecture in test_user.order_items.filter(
+            is_paid=True)
