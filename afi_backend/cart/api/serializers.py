@@ -6,17 +6,25 @@ from afi_backend.tickets.models import Ticket
 from rest_framework_json_api.relations import ResourceRelatedField
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import F, Sum
+from afi_backend.events.api.serializers import VideoLectureSerializer
+from afi_backend.tickets.api.serializers import TicketSerializer
 
 
 class OrderItemRelatedField(ResourceRelatedField):
     def to_representation(self, value):
         """
-        Serialize order_items to a simple textual representation.
+        Serialize order_items by their type.
         """
         if isinstance(value, VideoLecture):
-            return f'Video Lecture id#{value.id}'
+            data = VideoLectureSerializer(value).data
+            data["type"] = "VideoLecture"
+            return data
+
         if isinstance(value, Ticket):
-            return f'Ticket #id {value.id}'
+            data = TicketSerializer(value).data
+            data["type"] = "Ticket"
+            return data
+
         raise Exception('Unexpected type of order_item')
 
 

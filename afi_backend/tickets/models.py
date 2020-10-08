@@ -37,7 +37,9 @@ class Ticket(Payable):
         self.save()
 
     def get_qr_code(self):
-        return self.qrcode.code
+        if self.order_items.filter(is_paid=True).exists():
+            return self.qrcode.code
+        return None
 
     @property
     def scanned(self):
@@ -48,6 +50,15 @@ class Ticket(Payable):
     @property
     def price(self):
         return self.offline_lecture.price
+
+
+def create_qrcode(sender, **kwargs):
+    ticket = kwargs["instance"]
+    if kwargs["created"]:
+        qrcode = QRCode.objects.create(ticket=ticket, scanned=False)
+
+
+models.signals.post_save.connect(create_qrcode, sender=Ticket)
 
 
 class QRCode(models.Model):

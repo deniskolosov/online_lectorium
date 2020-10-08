@@ -24,7 +24,7 @@ class TicketSerializer(serializers.ModelSerializer):
         ]
 
     def get_activation_link(self, obj):
-        if hasattr(obj, 'qrcode'):
+        if obj.get_qr_code():
             return f"{settings.SITE_URL}/api/tickets/activate/{obj.qrcode.code}"
         return ""
 

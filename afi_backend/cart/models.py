@@ -25,6 +25,11 @@ class OrderItem(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(User,
+                                 on_delete=models.CASCADE,
+                                 null=True,
+                                 related_name='order_items')
+    is_paid = models.BooleanField(default=False)
 
 
 class LatestNotPaidCartManager(models.Manager):
@@ -44,11 +49,6 @@ class Cart(Payable):
 
     def do_afterpayment_logic(self, customer=None):
         """
-        Calls do_afterpayment_logic for each item in the cart.
+        Update order items in the cart
         """
-        for order_item in self.order_items.all():
-            order_item.content_object.do_afterpayment_logic(customer=customer)
-
-    @property
-    def price(self):
-        return self.order_items.aggregate()
+        self.order_items.update(is_paid=True)

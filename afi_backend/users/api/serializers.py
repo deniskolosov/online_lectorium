@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from afi_backend.payments.api.serializers import VideoLectureOrderItemSerializer
 from afi_backend.tickets.api.serializers import TicketSerializer
+from afi_backend.events.api.serializers import VideoLectureSerializer
+from afi_backend.tickets.api.serializers import TicketSerializer
 
 User = get_user_model()
 
@@ -53,3 +55,15 @@ class UserpicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["userpic"]
+
+
+class UserPurchasedItemsSerializer(serializers.ModelSerializer):
+    video_lectures = VideoLectureSerializer(many=True)
+    tickets = TicketSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'video_lectures',
+            'tickets',
+        ]

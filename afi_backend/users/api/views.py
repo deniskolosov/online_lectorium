@@ -5,8 +5,9 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveMode
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from afi_backend.cart.api.serializers import OrderItemSerializer
 
-from .serializers import UserSerializer, UserpicSerializer
+from afi_backend.users.api.serializers import UserSerializer, UserpicSerializer, UserPurchasedItemsSerializer
 
 User = get_user_model()
 
@@ -49,3 +50,17 @@ class UserViewSet(ModelViewSet):
             return response.Response(serializer.data)
         return response.Response(serializer.errors,
                                  status.HTTP_400_BAD_REQUEST)
+
+    @action(
+        detail=True,
+        methods=["GET"],
+        url_path='purchased-items',
+        url_name='purchased-items',
+        serializer_class=OrderItemSerializer,
+        permission_classes=[IsAuthenticated],
+    )
+    def purchased_items(self, request, email=None):
+        obj = self.get_object()
+        serializer = self.serializer_class(
+            obj.order_items.filter(is_paid=True), many=True)
+        return response.Response(serializer.data)

@@ -1,4 +1,5 @@
 import datetime
+from freezegun import freeze_time
 import io
 from django.test import RequestFactory, modify_settings
 from rest_framework.test import APIClient, force_authenticate
@@ -7,11 +8,15 @@ from typing import BinaryIO, Dict
 import pytest
 from PIL import Image
 
+from afi_backend.cart.tests.factories import (OrderItemTicketFactory,
+                                              OrderItemVideoLectureFactory)
+from afi_backend.events.tests.factories import VideoLectureFactory
+from afi_backend.payments.tests.factories import OrderItemVideoLectureFactory
+from afi_backend.tickets.tests.factories import TicketFactory
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.users.models import User
 from afi_backend.users.tests.factories import UserFactory
-from afi_backend.payments.tests.factories import VideoLectureOrderItemFactory
-from afi_backend.tickets.tests.factories import TicketFactory
+from django.utils import timezone
 
 pytestmark = pytest.mark.django_db
 
@@ -105,67 +110,71 @@ class TestUserViewSet:
         assert resp.data["birthdate"] == new_birthdate
         assert resp.data["name"] == new_name
 
-    def test_user_purchased_items(self):
+    @freeze_time("2012-01-14")
+    def test_user_purchased_items_endpoint(self):
         test_user = UserFactory()
-        test_video_lecture_order_item = VideoLectureOrderItemFactory(
-            customer=test_user)
-        vl = test_video_lecture_order_item.video_lecture
-
-        test_ticket = TicketFactory(customer=test_user)
-        test_data = {
-            'data': {
-                'type': 'User',
-                'id': str(test_user.id),
-                'attributes': {
-                    'email': test_user.email,
-                    'userpic': None,
-                    'name': test_user.name,
-                    'birthdate': None,
-                    'purchased_items': {
-                        'video_lectures': [{
-                            'video_lecture': {
-                                'link': vl.link,
-                                'certificate': {
-                                    'type': 'VideoLectureCertificate',
-                                    'id': str(vl.certificate.id),
-                                },
-                                'name': vl.name,
-                                'picture': vl.picture.url,
-                                'lecturer': {
-                                    'type': 'Lecturer',
-                                    'id': str(vl.lecturer.id)
-                                },
-                                'category': {
-                                    'type': 'Category',
-                                    'id': str(vl.category.id),
-                                },
-                                'description': '',
-                                'price': str(vl.price.round(2).amount),
-                                'price_currency': 'RUB',
-                                'bullet_points': []
-                            }
-                        }],
-                        'tickets': [{
-                            'customer': {
-                                'type': 'User',
-                                'id': str(test_user.id)
-                            },
-                            'activation_link': '',
-                            'scanned': test_ticket.scanned,
-                            'offline_lecture': {
-                                'type': 'OfflineLecture',
-                                'id': str(test_ticket.offline_lecture.id)
-                            }
-                        }]
+        test_vl_oi = OrderItemVideoLectureFactory(customer=test_user,
+                                                  is_paid=True)
+        test_ticket_oi = OrderItemTicketFactory(customer=test_user,
+                                                is_paid=True)
+        test_vl = test_vl_oi.content_object
+        test_ticket = test_ticket_oi.content_object
+        test_data = [{
+            'type': 'OrderItem',
+            'id': str(test_vl_oi.id),
+            'attributes': {
+                'created_at': '2012-01-14T04:00:00+04:00'
+            },
+            'relationships': {
+                'content_object': {
+                    'data': {
+                        'link': test_vl.link,
+                        'certificate': {
+                            'type': 'VideoLectureCertificate',
+                            'id': str(test_vl.certificate.id)
+                        },
+                        'name': test_vl.name,
+                        'picture': test_vl.picture.url,
+                        'lecturer': {
+                            'type': 'Lecturer',
+                            'id': str(test_vl.lecturer.id)
+                        },
+                        'category': {
+                            'type': 'Category',
+                            'id': str(test_vl.category.id)
+                        },
+                        'description': '',
+                        'price': str(test_vl.price.round(2).amount),
+                        'price_currency': 'RUB',
+                        'bullet_points': [],
+                        'type': 'VideoLecture'
                     }
-                },
-                'links': {
-                    'self': f'http://testserver/api/users/{test_user.email}/'
                 }
             }
-        }
-
+        }, {
+            'type': 'OrderItem',
+            'id': str(test_ticket_oi.id),
+            'attributes': {
+                'created_at': '2012-01-14T04:00:00+04:00'
+            },
+            'relationships': {
+                'content_object': {
+                    'data': {
+                        'customer': None,
+                        'activation_link':
+                        f"https://afi-backend.herokuapp.com/api/tickets/activate/{test_ticket.qrcode.code}",
+                        'scanned': test_ticket.scanned,
+                        'offline_lecture': {
+                            'type': 'OfflineLecture',
+                            'id': str(test_ticket.offline_lecture.id)
+                        },
+                        'type': 'Ticket'
+                    }
+                }
+            }
+        }]
         self.client.force_authenticate(user=test_user)
-        resp = self.client.get(f'/api/users/{test_user.email}/')
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/')
         assert resp.status_code == 200
-        assert resp.json() == test_data
+        assert test_data == resp.json()['data']
