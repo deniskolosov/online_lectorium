@@ -36,7 +36,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        tickets = Ticket.objects.filter(customer=user, is_paid=True)
+        tickets = Ticket.objects.filter(order_items__customer=user, order_items__is_paid=True)
         return tickets
 
 
