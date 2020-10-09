@@ -6,10 +6,22 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from afi_backend.cart.api.serializers import OrderItemSerializer
-
+from rest_framework import filters as drf_filters
+from rest_framework_json_api import django_filters as dj_filters
+from rest_framework_json_api import filters
 from afi_backend.users.api.serializers import UserSerializer, UserpicSerializer, UserPurchasedItemsSerializer
+from django_filters import rest_framework as django_filters_filters
+from afi_backend.cart.models import OrderItem
 
 User = get_user_model()
+
+
+class ItemTypeFilter(django_filters_filters.FilterSet):
+    item_type = django_filters_filters.CharFilter(field_name='order_items__content_type__model', lookup_expr='exact')
+
+    class Meta:
+        model = User
+        fields = ['item_type']
 
 
 class UserViewSet(ModelViewSet):
@@ -17,6 +29,12 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     lookup_field = "email"
     lookup_value_regex = "[^/]+"
+    filter_backends = (
+        filters.QueryParameterValidationFilter,
+        dj_filters.DjangoFilterBackend,
+        drf_filters.SearchFilter,
+    )
+    filterset_class = ItemTypeFilter
 
     @action(detail=False, methods=["GET"])
     def me(self, request):
@@ -60,9 +78,12 @@ class UserViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def purchased_items(self, request, email=None):
-        obj = self.get_object()
+        obj = User.objects.get(email=email)
         queryset = obj.order_items.filter(is_paid=True)
-        queryset = self.filter_queryset(queryset)
+        item_type = request.GET.get('filter[item_type]')
+
+        if item_type:
+            queryset = queryset.filter(content_type__model=item_type)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
