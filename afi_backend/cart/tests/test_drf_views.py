@@ -46,7 +46,7 @@ class TestCartViewSet:
         cart_total = response.json()['data'][0]['attributes']['total']
         assert cart_total == int(test_video_lecture.price.round(1).amount)
 
-    def test_buy_one(self):
+    def test_buy_one_videolecture(self):
         client = APIClient()
         test_user = UserFactory()
         test_cart = CartFactory()
@@ -65,4 +65,25 @@ class TestCartViewSet:
         response = client.post('/api/cart/buy-one/', data=test_data)
         assert response.status_code == 200
         assert test_video_lecture == test_user.order_items.first(
+        ).content_object
+
+    def test_buy_one_ticket(self):
+        client = APIClient()
+        test_user = UserFactory()
+        test_cart = CartFactory()
+        test_ticket = TicketFactory()
+        client.force_authenticate(user=test_user)
+        test_data = {
+            "data": {
+                "type": "OrderItem",
+                "attributes": {
+                    "customer_email": test_user.email,
+                    "item_type": 'ticket',
+                    "object_id": test_ticket.id,
+                }
+            }
+        }
+        response = client.post('/api/cart/buy-one/', data=test_data)
+        assert response.status_code == 200
+        assert test_ticket == test_user.order_items.first(
         ).content_object
