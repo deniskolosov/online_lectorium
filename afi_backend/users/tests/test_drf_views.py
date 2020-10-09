@@ -162,14 +162,11 @@ class TestUserViewSet:
             'relationships': {
                 'content_object': {
                     'data': {
-                        'customer': None,
+                        'customer_email': test_ticket.customer.email,
                         'activation_link':
-                        f"https://afi-backend.herokuapp.com/api/tickets/activate/{test_ticket.qrcode.code}",
+                        f'https://afi-backend.herokuapp.com/api/tickets/activate/{test_ticket.qrcode.code}',
                         'scanned': test_ticket.scanned,
-                        'offline_lecture': {
-                            'type': 'OfflineLecture',
-                            'id': str(test_ticket.offline_lecture.id)
-                        },
+                        'offline_lecture_id': test_ticket.offline_lecture.id,
                         'type': 'Ticket'
                     }
                 }
