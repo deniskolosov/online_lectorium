@@ -10,7 +10,6 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     userpic = serializers.FileField(read_only=True)
-    purchased_items = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -21,7 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
             "userpic",
             "name",
             "birthdate",
-            "purchased_items",
         ]
 
         extra_kwargs = {
@@ -40,30 +38,8 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-    def get_purchased_items(self, obj):
-        data = {
-            "video_lectures":
-            VideoLectureOrderItemSerializer(
-                obj.videolectureorderitem_set.all(), many=True).data,
-            "tickets":
-            TicketSerializer(obj.ticket_set.all(), many=True).data
-        }
-        return data
-
 
 class UserpicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["userpic"]
-
-
-class UserPurchasedItemsSerializer(serializers.ModelSerializer):
-    video_lectures = VideoLectureSerializer(many=True)
-    tickets = TicketSerializer(many=True)
-
-    class Meta:
-        model = User
-        fields = [
-            'video_lectures',
-            'tickets',
-        ]

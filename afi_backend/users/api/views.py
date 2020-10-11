@@ -7,7 +7,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from afi_backend.cart.api.serializers import OrderItemSerializer
 
-from afi_backend.users.api.serializers import UserSerializer, UserpicSerializer, UserPurchasedItemsSerializer
+from afi_backend.users.api.serializers import UserSerializer, UserpicSerializer
 
 User = get_user_model()
 
