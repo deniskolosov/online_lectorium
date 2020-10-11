@@ -17,12 +17,14 @@ class TicketSerializer(serializers.ModelSerializer):
     }
     customer_email = serializers.EmailField(source='customer.email')
     offline_lecture_id = serializers.IntegerField(source='offline_lecture.id')
+    offline_lecture = serializers.ResourceRelatedField(read_only=True)
 
     class Meta:
         model = Ticket
         fields = [
             'customer_email',
             'activation_link',
+            'offline_lecture',
             'scanned',
             'offline_lecture_id',
         ]

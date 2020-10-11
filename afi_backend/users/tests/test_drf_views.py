@@ -163,6 +163,8 @@ class TestUserViewSet:
                         f'https://afi-backend.herokuapp.com/api/tickets/activate/{test_ticket.qrcode.code}',
                         'scanned': test_ticket.scanned,
                         'offline_lecture_id': test_ticket.offline_lecture.id,
+                        'offline_lecture': {'id': str(test_ticket.offline_lecture.id),
+                                            'type': 'OfflineLecture'},
                         'type': 'Ticket'
                     }
                 }
