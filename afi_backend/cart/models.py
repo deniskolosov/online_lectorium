@@ -31,6 +31,9 @@ class OrderItem(models.Model):
                                  related_name='order_items')
     is_paid = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['id']
+
 
 class LatestNotPaidCartManager(models.Manager):
     def get_queryset(self):

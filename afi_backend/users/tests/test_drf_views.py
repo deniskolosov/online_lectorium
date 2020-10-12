@@ -10,7 +10,7 @@ from PIL import Image
 
 from afi_backend.cart.tests.factories import (OrderItemTicketFactory,
                                               OrderItemVideoLectureFactory)
-from afi_backend.events.tests.factories import VideoLectureFactory
+from afi_backend.events.tests.factories import VideoLectureFactory, OfflineLectureFactory
 from afi_backend.payments.tests.factories import OrderItemVideoLectureFactory
 from afi_backend.tickets.tests.factories import TicketFactory
 from afi_backend.users.api.views import UserViewSet
@@ -179,3 +179,65 @@ class TestUserViewSet:
             f'/api/users/{test_user.email}/purchased-items/')
         assert resp.status_code == 200
         assert test_data == resp.json()['data']
+
+    def test_purchased_items_filter(self):
+        test_user = UserFactory()
+        test_vl_oi = OrderItemVideoLectureFactory(customer=test_user,
+                                                  is_paid=True)
+        test_ticket_oi = OrderItemTicketFactory(customer=test_user,
+                                                is_paid=True)
+        test_vl = test_vl_oi.content_object
+        test_ticket = test_ticket_oi.content_object
+        self.client.force_authenticate(user=test_user)
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=videolecture'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 1
+        assert data[0]['relationships']['content_object']['data'][
+            'type'] == 'VideoLecture'
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=ticket'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 1
+        assert data[0]['relationships']['content_object']['data'][
+            'type'] == 'Ticket'
+        test_vl_oi1 = OrderItemVideoLectureFactory(customer=test_user,
+                                                   is_paid=True)
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=videolecture&filter[lecturer.id]={test_vl.lecturer.id}'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 1
+        assert data[0]['relationships']['content_object']['data']['lecturer'][
+            'id'] == f'{test_vl.lecturer.id}'
+
+    def test_purchased_items_search(self):
+        test_user = UserFactory()
+        test_vl = VideoLectureFactory(name='bar', description='bar')
+        test_vl_oi = OrderItemVideoLectureFactory(customer=test_user,
+                                                  content_object=test_vl,
+                                                  is_paid=True)
+        offline_lecture = OfflineLectureFactory(description="Footest")
+        test_ticket = TicketFactory(offline_lecture=offline_lecture)
+        test_ticket_oi = OrderItemTicketFactory(customer=test_user,
+                                                content_object=test_ticket,
+                                                is_paid=True)
+        self.client.force_authenticate(user=test_user)
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[search]=foot'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 1
+        assert data[0]['id'] == f'{test_ticket_oi.id}'
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[search]=toof'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 0

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from rest_framework import status, parsers, response
 from rest_framework.decorators import action, parser_classes
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
@@ -79,12 +80,26 @@ class UserViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def purchased_items(self, request, email=None):
+        # todo: refactor filters
         obj = User.objects.get(email=email)
         queryset = obj.order_items.filter(is_paid=True)
         item_type = request.GET.get('filter[item_type]')
+        lecturer_id = request.GET.get('filter[lecturer.id]')
+        search = request.GET.get('filter[search]')
 
         if item_type:
             queryset = queryset.filter(content_type__model=item_type)
+
+        if lecturer_id:
+            queryset = queryset.filter(content_type__model='videolecture',
+                                       video_lecture__lecturer__id=lecturer_id)
+
+        if search:
+            queryset = queryset.filter(
+                Q(video_lecture__name__icontains=search)
+                | Q(video_lecture__description__icontains=search)
+                | Q(ticket__offline_lecture__description__icontains=search)
+                | Q(ticket__offline_lecture__name__icontains=search))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
