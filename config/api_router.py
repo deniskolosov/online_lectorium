@@ -17,6 +17,7 @@ from afi_backend.payments.api.views import (
 from afi_backend.tickets.api.views import TicketViewSet
 from afi_backend.users.api.views import UserViewSet
 from afi_backend.cart.api.views import CartViewset, OrderItemViewset
+from afi_backend.videocourses.api.views import VideoCourseViewset
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -34,6 +35,7 @@ router.register("offline-lectures",
 router.register("video-lectures",
                 VideoLectureViewset,
                 basename='video-lectures')
+router.register("videocourses", VideoCourseViewset, basename='videocourses')
 router.register("cart", CartViewset, basename='cart')
 router.register("order-items", OrderItemViewset, basename='order-items')
 router.register("categories", CategoriesViewSet, basename='categories')
