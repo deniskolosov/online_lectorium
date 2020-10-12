@@ -85,6 +85,7 @@ class VideoLectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoLecture
         fields = [
+            'id',
             'link',
             'certificate',
             'name',

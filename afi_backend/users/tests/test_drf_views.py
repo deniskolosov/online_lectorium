@@ -125,6 +125,7 @@ class TestUserViewSet:
             'relationships': {
                 'content_object': {
                     'data': {
+                        'id': test_vl.id,
                         'link': test_vl.link,
                         'certificate': {
                             'type': 'VideoLectureCertificate',
@@ -158,13 +159,16 @@ class TestUserViewSet:
             'relationships': {
                 'content_object': {
                     'data': {
+                        'id': test_ticket.id,
                         'customer_email': test_ticket.customer.email,
                         'activation_link':
                         f'https://afi-backend.herokuapp.com/api/tickets/activate/{test_ticket.qrcode.code}',
                         'scanned': test_ticket.scanned,
                         'offline_lecture_id': test_ticket.offline_lecture.id,
-                        'offline_lecture': {'id': str(test_ticket.offline_lecture.id),
-                                            'type': 'OfflineLecture'},
+                        'offline_lecture': {
+                            'id': str(test_ticket.offline_lecture.id),
+                            'type': 'OfflineLecture'
+                        },
                         'type': 'Ticket'
                     }
                 }

@@ -22,6 +22,7 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = [
+            'id',
             'customer_email',
             'activation_link',
             'offline_lecture',
