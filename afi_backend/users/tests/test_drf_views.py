@@ -116,6 +116,8 @@ class TestUserViewSet:
                                                 is_paid=True)
         test_vl = test_vl_oi.content_object
         test_ticket = test_ticket_oi.content_object
+        test_ticket.offline_lecture.lecture_date = timezone.now()
+        test_ticket.offline_lecture.save()
         test_data = [{
             'type': 'OrderItem',
             'id': str(test_vl_oi.id),
@@ -135,8 +137,9 @@ class TestUserViewSet:
                         'name': test_vl.name,
                         'picture': test_vl.picture.url,
                         'lecturer': {
-                            'type': 'Lecturer',
-                            'id': str(test_vl.lecturer.id)
+                            'name': test_vl.lecturer.name,
+                            'userpic': None,
+                            'bio': test_vl.lecturer.bio,
                         },
                         'category': {
                             'type': 'Category',
@@ -167,8 +170,38 @@ class TestUserViewSet:
                         'scanned': test_ticket.scanned,
                         'offline_lecture_id': test_ticket.offline_lecture.id,
                         'offline_lecture': {
-                            'id': str(test_ticket.offline_lecture.id),
-                            'type': 'OfflineLecture'
+                            'name':
+                            test_ticket.offline_lecture.name,
+                            'address':
+                            test_ticket.offline_lecture.address,
+                            'picture':
+                            test_ticket.offline_lecture.picture.url,
+                            'lecture_date':
+                            '2012-01-14T04:00:00+04:00',
+                            'lecture_date_ts':
+                            test_ticket.offline_lecture.lecture_date_ts(),
+                            'lecturer': {
+                                'type': 'Lecturer',
+                                'id':
+                                f'{test_ticket.offline_lecture.lecturer.id}',
+                            },
+                            'category': {
+                                'type': 'Category',
+                                'id':
+                                f'{test_ticket.offline_lecture.category.id}'
+                            },
+                            'capacity':
+                            None,
+                            'description':
+                            '',
+                            'tickets_sold':
+                            0,
+                            'lecture_summary_file':
+                            None,
+                            'price':
+                            '1000.00',
+                            'price_currency':
+                            'RUB'
                         },
                         'type': 'Ticket'
                     }
@@ -230,7 +263,7 @@ class TestUserViewSet:
         data = resp.json()['data']
         assert len(data) == 1
         assert data[0]['relationships']['content_object']['data']['lecturer'][
-            'id'] == f'{test_vl.lecturer.id}'
+            'name'] == test_vl.lecturer.name
 
         test_vc_oi1 = OrderItemVideoCourseFactory(customer=test_user,
                                                   is_paid=True)

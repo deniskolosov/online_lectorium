@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from afi_backend.payments.api.serializers import VideoLectureOrderItemSerializer
 from afi_backend.tickets.api.serializers import TicketSerializer
-from afi_backend.events.api.serializers import VideoLectureSerializer
+from afi_backend.events.api.serializers import VideoLectureSerializer, OfflineLectureSerializer
 from afi_backend.tickets.api.serializers import TicketSerializer
 
 User = get_user_model()
@@ -10,6 +10,9 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     userpic = serializers.FileField(read_only=True)
+    included_serializers = {
+        'offline_lectures': OfflineLectureSerializer,
+    }
 
     class Meta:
         model = User

@@ -6,7 +6,7 @@ from afi_backend.tickets.models import Ticket
 from rest_framework_json_api.relations import ResourceRelatedField
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import F, Sum
-from afi_backend.events.api.serializers import VideoLectureSerializer
+from afi_backend.events.api.serializers import VideoLectureSerializer, OfflineLectureSerializer, LecturerSerializer
 from afi_backend.tickets.api.serializers import TicketSerializer
 from afi_backend.videocourses.api.serializers import VideoCourseSerializer
 from afi_backend.videocourses.models import VideoCourse
@@ -21,11 +21,16 @@ class OrderItemRelatedField(ResourceRelatedField):
         if isinstance(value, VideoLecture):
             data = VideoLectureSerializer(value).data
             data["type"] = "VideoLecture"
+            # TODO: OPTIMIZE ME!
+            data["lecturer"] = LecturerSerializer(value.lecturer).data
             return data
 
         if isinstance(value, Ticket):
             data = TicketSerializer(value).data
             data["type"] = "Ticket"
+            # TODO: OPTIMIZE ME!
+            data["offline_lecture"] = OfflineLectureSerializer(
+                value.offline_lecture).data
             return data
 
         if isinstance(value, VideoCourse):
@@ -38,6 +43,9 @@ class OrderItemRelatedField(ResourceRelatedField):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     content_object = OrderItemRelatedField(read_only=True)
+    included_serializers = {
+        'offline_lectures': OfflineLectureSerializer,
+    }
 
     class Meta:
         model = OrderItem
