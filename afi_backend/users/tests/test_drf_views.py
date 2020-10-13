@@ -9,7 +9,8 @@ import pytest
 from PIL import Image
 
 from afi_backend.cart.tests.factories import (OrderItemTicketFactory,
-                                              OrderItemVideoLectureFactory)
+                                              OrderItemVideoLectureFactory,
+                                              OrderItemVideoCourseFactory)
 from afi_backend.events.tests.factories import VideoLectureFactory, OfflineLectureFactory
 from afi_backend.payments.tests.factories import OrderItemVideoLectureFactory
 from afi_backend.tickets.tests.factories import TicketFactory
@@ -188,6 +189,10 @@ class TestUserViewSet:
                                                 is_paid=True)
         test_vl = test_vl_oi.content_object
         test_ticket = test_ticket_oi.content_object
+        test_videocourse_oi = OrderItemVideoCourseFactory(customer=test_user,
+                                                          is_paid=True)
+        test_videocourse = test_videocourse_oi.content_object
+
         self.client.force_authenticate(user=test_user)
         resp = self.client.get(
             f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=videolecture'
@@ -197,6 +202,7 @@ class TestUserViewSet:
         assert len(data) == 1
         assert data[0]['relationships']['content_object']['data'][
             'type'] == 'VideoLecture'
+
         resp = self.client.get(
             f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=ticket'
         )
@@ -205,6 +211,16 @@ class TestUserViewSet:
         assert len(data) == 1
         assert data[0]['relationships']['content_object']['data'][
             'type'] == 'Ticket'
+
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=videocourse'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 1
+        assert data[0]['relationships']['content_object']['data'][
+            'type'] == 'VideoCourse'
+
         test_vl_oi1 = OrderItemVideoLectureFactory(customer=test_user,
                                                    is_paid=True)
         resp = self.client.get(
@@ -215,6 +231,18 @@ class TestUserViewSet:
         assert len(data) == 1
         assert data[0]['relationships']['content_object']['data']['lecturer'][
             'id'] == f'{test_vl.lecturer.id}'
+
+        test_vc_oi1 = OrderItemVideoCourseFactory(customer=test_user,
+                                                  is_paid=True)
+
+        resp = self.client.get(
+            f'/api/users/{test_user.email}/purchased-items/?filter[item_type]=videocourse&filter[lecturer.id]={test_videocourse.lecturer.id}'
+        )
+        assert resp.status_code == 200
+        data = resp.json()['data']
+        assert len(data) == 1
+        assert data[0]['relationships']['content_object']['data']['lecturer'][
+            'id'] == f'{test_videocourse.lecturer.id}'
 
     def test_purchased_items_search(self):
         test_user = UserFactory()

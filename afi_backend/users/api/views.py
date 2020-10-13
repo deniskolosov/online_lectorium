@@ -91,15 +91,19 @@ class UserViewSet(ModelViewSet):
             queryset = queryset.filter(content_type__model=item_type)
 
         if lecturer_id:
-            queryset = queryset.filter(content_type__model='videolecture',
-                                       video_lecture__lecturer__id=lecturer_id)
+            queryset = queryset.filter(
+                (Q(content_type__model='videolecture')
+                 & Q(video_lecture__lecturer__id=lecturer_id))
+                | (Q(content_type__model='videocourse')
+                   & Q(video_course__lecturer__id=lecturer_id)))
 
         if search:
             queryset = queryset.filter(
                 Q(video_lecture__name__icontains=search)
                 | Q(video_lecture__description__icontains=search)
                 | Q(ticket__offline_lecture__description__icontains=search)
-                | Q(ticket__offline_lecture__name__icontains=search))
+                | Q(ticket__offline_lecture__name__icontains=search)
+                | Q(video_course__name__icontains=search))
 
         page = self.paginate_queryset(queryset)
         if page is not None:

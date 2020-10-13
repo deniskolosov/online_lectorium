@@ -8,6 +8,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import F, Sum
 from afi_backend.events.api.serializers import VideoLectureSerializer
 from afi_backend.tickets.api.serializers import TicketSerializer
+from afi_backend.videocourses.api.serializers import VideoCourseSerializer
+from afi_backend.videocourses.models import VideoCourse
 from afi_backend.users.models import User
 
 
@@ -24,6 +26,11 @@ class OrderItemRelatedField(ResourceRelatedField):
         if isinstance(value, Ticket):
             data = TicketSerializer(value).data
             data["type"] = "Ticket"
+            return data
+
+        if isinstance(value, VideoCourse):
+            data = VideoCourseSerializer(value).data
+            data["type"] = "VideoCourse"
             return data
 
         raise Exception('Unexpected type of order_item')

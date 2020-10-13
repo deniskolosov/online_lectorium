@@ -144,9 +144,12 @@ class TestYandexWebhookView:
             customer=test_user)
         test_order_item_ticket = cart_factories.OrderItemTicketFactory(
             customer=test_user)
+        test_order_item_videocourse = cart_factories.OrderItemVideoCourseFactory(
+            customer=test_user)
         cart = cart_factories.CartFactory.create(order_items=(
             test_order_item_video_lecture,
             test_order_item_ticket,
+            test_order_item_videocourse,
         ))
         payment = PaymentFactory(external_id=test_external_id, cart=cart)
         test_data = {
@@ -207,14 +210,19 @@ class TestYandexWebhookView:
         payment.refresh_from_db()
         test_order_item_ticket.refresh_from_db()
         test_order_item_video_lecture.refresh_from_db()
+        test_order_item_videocourse.refresh_from_db()
 
         assert payment.status == Payment.STATUS.PAID
         assert test_order_item_ticket.is_paid
         assert test_order_item_video_lecture.is_paid
+        assert test_order_item_videocourse.is_paid
         # ticket: assert code is generated, but not generated before Payment is confirmed
         # video lecture: assert video lecture is avalaible for user, but not available before.
         assert test_order_item_ticket.content_object.qrcode
         assert test_order_item_ticket in test_user.order_items.filter(
             is_paid=True)
         assert test_order_item_video_lecture in test_user.order_items.filter(
+            is_paid=True)
+
+        assert test_order_item_videocourse in test_user.order_items.filter(
             is_paid=True)
