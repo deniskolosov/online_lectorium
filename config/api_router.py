@@ -13,6 +13,7 @@ from afi_backend.payments.api.views import (
     PaymentCreateView,
     PaymentMethodViewset,
     YandexWebhook,
+    CreateSubscriptionViewset,
 )
 from afi_backend.tickets.api.views import TicketViewSet
 from afi_backend.users.api.views import UserViewSet
@@ -40,6 +41,9 @@ router.register("cart", CartViewset, basename='cart')
 router.register("order-items", OrderItemViewset, basename='order-items')
 router.register("categories", CategoriesViewSet, basename='categories')
 router.register("lecturers", LecturersViewset, basename='lecturers')
+router.register("payments/subscriptions",
+                CreateSubscriptionViewset,
+                basename="create-subscription")
 
 urlpatterns = [
     path("payments/",

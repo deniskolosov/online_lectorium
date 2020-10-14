@@ -25,11 +25,12 @@ class TestPaymentViewSet:
             payment_type=PaymentMethod.TYPE_YANDEX_CHECKOUT)
         test_user = UserFactory()
         cart = cart_factories.CartFactory()
-        test_url = "https://foo.bar"
+        test_url, external_id = ("https://foo.bar", "fff-ooo-bar")
         mocked_adaptor = mocker.patch.object(adaptor,
                                              'charge',
                                              autospec=True,
-                                             return_value=test_url)
+                                             return_value=(test_url,
+                                                           external_id))
 
         test_payment_type_value = payment_method.payment_type
         test_amount = "100.00"
@@ -60,8 +61,7 @@ class TestPaymentViewSet:
         mocked_adaptor.assert_called_with(ANY,
                                           value=test_amount,
                                           currency=test_currency,
-                                          description=f"Payment #{payment.id}",
-                                          internal_payment_id=payment.id)
+                                          description=f"Payment #{payment.id}")
 
     def test_raises_validation_error(self):
         factory = APIRequestFactory()
@@ -93,11 +93,12 @@ class TestPaymentViewSet:
         cart = cart_factories.CartFactory()
         test_order_item = OrderItemVideoLectureFactory()
         cart.order_items.add(test_order_item)
-        test_url = "https://foo.bar"
+        test_url, external_id = ("https://foo.bar", "fff-ooo-bar")
         mocked_adaptor = mocker.patch.object(adaptor,
                                              'charge',
                                              autospec=True,
-                                             return_value=test_url)
+                                             return_value=(test_url,
+                                                           external_id))
         test_payment_type_value = payment_method.payment_type
         test_payment_for = "cart"
         test_amount = "100.00"
@@ -129,8 +130,7 @@ class TestPaymentViewSet:
         mocked_adaptor.assert_called_with(ANY,
                                           value=test_amount,
                                           currency=test_currency,
-                                          description=f"Payment #{payment.id}",
-                                          internal_payment_id=payment.id)
+                                          description=f"Payment #{payment.id}")
 
 
 class TestYandexWebhookView:

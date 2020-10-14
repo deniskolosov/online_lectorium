@@ -12,6 +12,7 @@ from afi_backend.users import models as user_models
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from djmoney.models.fields import MoneyField
 
 logger = logging.getLogger(__name__)
 
@@ -115,3 +116,26 @@ class VideoLectureOrderItem(Payable):
     @property
     def price(self):
         return self.video_lecture.price
+
+
+class Membership(models.Model):
+    TIER = Choices((0, 'FREE', 'free'), (1, 'PAID', 'paid'))
+    membership_type = models.IntegerField(choices=TIER, default=TIER.FREE)
+    price = MoneyField(max_digits=10,
+                       decimal_places=2,
+                       null=True,
+                       default=1,
+                       default_currency='RUB')
+
+
+class UserMembership(models.Model):
+    membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Subscription(models.Model):
+    user_membership = models.ForeignKey(UserMembership,
+                                        on_delete=models.CASCADE)
+    external_id = models.CharField(max_length=256, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_trial = models.BooleanField(default=True)
