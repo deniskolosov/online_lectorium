@@ -91,6 +91,7 @@ class CreateSubscriptionViewset(CreateModelMixin, GenericViewSet):
             description=f'Subscription #{subscription.id}',
             save_payment_method=True)
         subscription.external_id = external_id
+        subscription.payment_method = payment_method
         subscription.save()
 
         return Response({'payment_url': payment_url})
@@ -118,11 +119,14 @@ class YandexWebhook(APIView):
 
         if saved:  # Recurrent payment, use Subscription
             try:
+                payment_method_id = payment_object["payment_method"]["id"]
                 subscription = Subscription.objects.get(
                     external_id=external_id)
                 subscription.is_active = True
                 subscription.is_trial = False
+                subscription.external_id = payment_method_id
                 subscription.save()
+                # TODO: schedule monthly payment task here
             except Payment.DoesNotExist:
                 return Response({"msg": "No such payment"},
                                 status=status.HTTP_400_BAD_REQUEST)

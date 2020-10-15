@@ -59,8 +59,8 @@ class PaymentMethod(models.Model):
         choices=PAYMENT_TYPES, default=TYPE_YANDEX_CHECKOUT)
 
     def get_adaptor(self):
-        from .adaptors import ADAPTORS_MAP
-        return ADAPTORS_MAP.get(self.payment_type)
+        from afi_backend.payments.adaptors import get_adaptor_from_payment_type
+        return get_adaptor_from_payment_type(self.payment_type)
 
     def __str__(self):
         return f"{self.get_payment_type_display()}"
@@ -132,10 +132,18 @@ class UserMembership(models.Model):
     membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ("user", "membership",)
+
 
 class Subscription(models.Model):
     user_membership = models.ForeignKey(UserMembership,
                                         on_delete=models.CASCADE)
     external_id = models.CharField(max_length=256, null=True, blank=True)
+    due = models.DateTimeField(null=True, blank=True)
+    payment_method = models.ForeignKey(
+        PaymentMethod,
+        on_delete=models.CASCADE,
+        default=PaymentMethod.TYPE_YANDEX_CHECKOUT)
     is_active = models.BooleanField(default=True)
     is_trial = models.BooleanField(default=True)

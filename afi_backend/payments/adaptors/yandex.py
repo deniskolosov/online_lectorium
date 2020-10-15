@@ -1,5 +1,6 @@
 import json
 import logging
+from decimal import Decimal
 
 from django.conf import settings
 from yandex_checkout import Configuration, Payment
@@ -53,3 +54,9 @@ class YandexCheckoutAdaptor(BasePaymentAdaptor):
 
         return (payment_response["confirmation"]["confirmation_url"],
                 payment_response.get('id'))
+
+    def charge_recurrent(self,
+                         external_id: str,
+                         amount: Decimal):
+        # TODO: implement me!
+        pass
