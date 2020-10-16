@@ -52,7 +52,7 @@ class CourseLecture(models.Model):
     video_link = models.FileField()
     lecture_test = models.ForeignKey(LectureTest,
                                      on_delete=models.CASCADE,
-                                     null=True)
+                                     null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.lecturer is None:
