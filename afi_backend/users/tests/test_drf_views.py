@@ -63,6 +63,7 @@ class TestUserViewSet:
             "birthdate": test_bdate.strftime("%Y-%m-%d"),
             "userpic": None,
             "name": user.name,
+            "user_memberships": [],
         }
 
     def _generate_photo_file(self) -> BinaryIO:

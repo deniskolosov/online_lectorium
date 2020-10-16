@@ -10,6 +10,8 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     userpic = serializers.FileField(read_only=True)
+    user_memberships = UserMembershipSerializer(read_only=True, many=True)
+
     included_serializers = {
         'offline_lectures': OfflineLectureSerializer,
         'user_memberships': UserMembershipSerializer

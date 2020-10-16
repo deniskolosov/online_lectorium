@@ -49,7 +49,7 @@ class CourseLecture(models.Model):
                                  null=True,
                                  help_text="Set if different from course",
                                  on_delete=models.CASCADE)
-    video_link = models.URLField()
+    video_link = models.FileField()
     lecture_test = models.ForeignKey(LectureTest,
                                      on_delete=models.CASCADE,
                                      null=True)
