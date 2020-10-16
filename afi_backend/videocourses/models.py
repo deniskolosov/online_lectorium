@@ -4,13 +4,14 @@ from afi_backend.events.models import Category, Lecturer
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
 from djmoney.models.fields import MoneyField
+from afi_backend.payments.models import Subscriptable
 
 
 class LectureTest(models.Model):
     pass
 
 
-class VideoCourse(models.Model):
+class VideoCourse(Subscriptable):
     name = models.CharField(max_length=255)
     description = models.TextField()
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE)

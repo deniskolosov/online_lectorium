@@ -1,4 +1,5 @@
 from time import sleep
+from datetime import timedelta
 from decimal import Decimal
 
 from afi_backend.payments.adaptors import get_adaptor_from_payment_type
@@ -55,3 +56,15 @@ def charge_user_monthly():
                                   currency=qs['user_membership__membership__price'],
                                   description=f"Payment for subsription #{subscription_data['id']}",
                                   subscription_id=qs['id'])
+
+@celery_app.task()
+def end_finished_trial_subscriptions():
+    """
+    Create task which runs every day and checks for Subscriptions which are active,
+        and on trial. Check whether their trial has ended and set them to not active.
+    """
+    Subscription.objects.filter(
+        is_active=True,
+        is_trial=True,
+        created_at__lt=timezone.now() - timedelta(days=7)).update(is_active=False,
+                                                                  is_trial=False)

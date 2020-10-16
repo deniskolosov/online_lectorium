@@ -17,6 +17,7 @@ from djmoney.models.fields import MoneyField
 logger = logging.getLogger(__name__)
 
 
+
 class Payable(models.Model):
     """
     Inherit from this if you want the model to be 'buyable'.
@@ -127,13 +128,24 @@ class Membership(models.Model):
                        default=1,
                        default_currency='RUB')
 
+    def __str__(self):
+        return f"{self.get_membership_type_display()}"
+
+
+class Subscriptable(models.Model):
+    allowed_memberships = models.ManyToManyField(Membership)
+
+    class Meta:
+        abstract = True
+
 
 class UserMembership(models.Model):
     membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_memberships')
 
     class Meta:
         unique_together = ("user", "membership",)
+
 
 
 class Subscription(models.Model):
@@ -147,3 +159,16 @@ class Subscription(models.Model):
         default=PaymentMethod.TYPE_YANDEX_CHECKOUT)
     is_active = models.BooleanField(default=True)
     is_trial = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    tracker = FieldTracker()
+
+    def save(self, *args, **kwargs):
+        # todo if is_active is changed to False, update user_membership status to Free
+        super().save(*args, **kwargs)
+        # If payment is completed for item, do afterpayment logic
+        if self.tracker.has_changed('is_active') and self.tracker.previous(
+                'is_active'):
+            self.user_membership.membership.membership_type = Membership.TIER.FREE
+            self.user_membership.membership.save()
+            logger.info(f"Setting membership for subscription {self.user_membership.id}")
