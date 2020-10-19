@@ -82,8 +82,6 @@ class CreateSubscriptionViewset(CreateModelMixin, GenericViewSet):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
 
-        serializer.data['payment_url'] = serializer.instance.get_payment_url()
-
         return Response(status=status.HTTP_201_CREATED, data=serializer.data)
 
 class YandexWebhook(APIView):

@@ -43,10 +43,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         choices=PaymentMethod.PAYMENT_TYPES,
         source='payment_method.payment_type',
     )
+    payment_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Subscription
-        fields = ['membership_type', 'payment_method',]
+        fields = ['membership_type',
+                  'payment_method',
+                  'payment_url',]
 
     def create(self, validated_data):
         membership = validated_data.get('user_membership')
@@ -54,7 +57,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         user = self.context.get('user')
 
         payment_type = validated_data.get('payment_method').get('payment_type')
-        breakpoint()
         payment_method = PaymentMethod.objects.get(payment_type=payment_type)
 
         membership_type = Membership.objects.get(
@@ -62,6 +64,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         user_membership = UserMembership.objects.create(
             membership=membership_type, user=user)
         return Subscription.objects.create(user_membership=user_membership, payment_method=payment_method)
+
+    def get_payment_url(self, obj):
+        return obj.get_payment_url()
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):

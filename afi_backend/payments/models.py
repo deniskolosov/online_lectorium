@@ -177,7 +177,7 @@ class Subscription(models.Model):
         adaptor = self.payment_method.get_adaptor()
 
         payment_url, external_id = adaptor.charge(
-            value=self.user_membership.membership.price,
+            value=str(self.user_membership.membership.price.amount),
             currency=self.user_membership.membership.price_currency,
             description=f'Subscription #{self.id}')
         self.external_id = external_id
