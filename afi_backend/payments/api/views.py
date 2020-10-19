@@ -1,19 +1,23 @@
 import logging
 
 from django.contrib.contenttypes.models import ContentType
+from django.db import IntegrityError
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin
+from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
+    RetrieveModelMixin, UpdateModelMixin)
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.decorators import action
 
-from afi_backend.payments.models import Payment, PaymentMethod, Subscription, link_payment_with_cart
+from afi_backend.payments.api.serializers import (PaymentMethodSerializer,
+    SubscriptionSerializer)
+from afi_backend.payments.models import (Payment, PaymentMethod, Subscription, UserMembership,
+    link_payment_with_cart)
+from rest_framework.views import APIView
 
-from afi_backend.payments.api.serializers import PaymentMethodSerializer, SubscriptionSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -62,40 +66,25 @@ class CreateSubscriptionViewset(CreateModelMixin, GenericViewSet):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
 
-    @action(detail=True,
+    @action(detail=False,
             methods=["POST"],
             url_path='get-payment-link',
             permission_classes=[IsAuthenticated])
-    def get_payment_link(self, request, pk=None):
+    def get_payment_link(self, request):
         # Create payment link using payment adaptor.
+        qs = UserMembership.objects.filter(user=request.user)
+        serializer = None
+        if qs.exists():  # Subscription exists.
+            subscription = qs.first().subscription
+            serializer = self.serializer_class(subscription, context={'user': request.user})
+        else:  # Subscription doesn't exists, create it
+            serializer = self.serializer_class(data=request.data, context={'user': request.user})
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
 
-        required_fields = ('payment_type_value', )
+        serializer.data['payment_url'] = serializer.instance.get_payment_url()
 
-        for val in required_fields:
-            if val not in request.data:
-                raise ValidationError(f"{val} field is  required")
-
-        payment_type_value = request.data['payment_type_value']
-
-        subscription = self.get_object()
-        membership = subscription.user_membership.membership
-
-        payment_method = PaymentMethod.objects.get(
-            payment_type=payment_type_value)
-
-        adaptor = payment_method.get_adaptor()
-
-        payment_url, external_id = adaptor.charge(
-            value=str(membership.price.amount),
-            currency=membership.price.currency,
-            description=f'Subscription #{subscription.id}',
-            save_payment_method=True)
-        subscription.external_id = external_id
-        subscription.payment_method = payment_method
-        subscription.save()
-
-        return Response({'payment_url': payment_url})
-
+        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
 
 class YandexWebhook(APIView):
     payment_model = Payment

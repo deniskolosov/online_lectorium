@@ -39,22 +39,29 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     membership_type = serializers.ChoiceField(
         choices=Membership.TIER,
         source='user_membership.membership.membership_type')
-    user_id = serializers.IntegerField(source='user_membership.user.id')
+    payment_method = serializers.ChoiceField(
+        choices=PaymentMethod.PAYMENT_TYPES,
+        source='payment_method.payment_type',
+    )
 
     class Meta:
         model = Subscription
-        fields = ['membership_type', 'user_id']
+        fields = ['membership_type', 'payment_method',]
 
     def create(self, validated_data):
         membership = validated_data.get('user_membership')
         membership_type = membership.get('membership').get('membership_type')
-        user_data = membership.get('user')
-        user = User.objects.get(id=user_data.get('id'))
+        user = self.context.get('user')
+
+        payment_type = validated_data.get('payment_method').get('payment_type')
+        breakpoint()
+        payment_method = PaymentMethod.objects.get(payment_type=payment_type)
+
         membership_type = Membership.objects.get(
             membership_type=membership_type)
         user_membership = UserMembership.objects.create(
             membership=membership_type, user=user)
-        return Subscription.objects.create(user_membership=user_membership)
+        return Subscription.objects.create(user_membership=user_membership, payment_method=payment_method)
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):

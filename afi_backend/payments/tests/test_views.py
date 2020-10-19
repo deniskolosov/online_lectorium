@@ -3,7 +3,7 @@ from unittest.mock import ANY
 import pytest
 from django.test import Client
 from rest_framework.exceptions import ErrorDetail
-from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.test import APIRequestFactory, force_authenticate, APIClient
 
 import afi_backend.cart.tests.factories as cart_factories
 from afi_backend.events.tests.factories import OfflineLectureFactory
@@ -131,6 +131,54 @@ class TestPaymentViewSet:
                                           value=test_amount,
                                           currency=test_currency,
                                           description=f"Payment #{payment.id}")
+
+class TestSubscriptionViewset():
+    def test_charge_user_due(self, mocker):
+        # look up how to mock sleep?
+        pass
+
+    def test_create_subscription(self, mocker):
+        pass
+        # payment_method = PaymentMethodFactory(
+        #     payment_type=PaymentMethod.TYPE_YANDEX_CHECKOUT)
+        # test_user = UserFactory()
+        # test_url, external_id = ("https://foo.bar", "fff-ooo-bar")
+        # mocked_adaptor = mocker.patch.object(adaptor,
+        #                                      'charge',
+        #                                      autospec=True,
+        #                                      return_value=(test_url,
+        #                                                    external_id))
+
+        # test_payment_type_value = payment_method.payment_type
+        # test_amount = "100.00"
+        # test_currency = "RUB"
+        # client = APIClient()
+        # client.force_authenticate(user=test_user)
+        # test_data = {
+        #     "data": {
+        #         "type": "PaymentCreateView",
+        #         "attributes": {
+        #             "payment_type_value": test_payment_type_value,
+        #             "amount": test_amount,
+        #             "currency": test_currency,
+        #             "cart_id": cart.id,
+        #         }
+        #     }
+        # }
+
+        # response = client.post('/api/')
+        # assert response.data == {"payment_url": test_url}
+
+        # payment = Payment.objects.first()
+
+        # assert cart == payment.cart
+
+        # mocked_adaptor.assert_called_with(ANY,
+        #                                   value=test_amount,
+        #                                   currency=test_currency,
+        #                                   description=f"Payment #{payment.id}")
+
+
 
 
 class TestYandexWebhookView:

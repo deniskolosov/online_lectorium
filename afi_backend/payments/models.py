@@ -57,7 +57,7 @@ class PaymentMethod(models.Model):
     )
 
     payment_type = models.PositiveSmallIntegerField(
-        choices=PAYMENT_TYPES, default=TYPE_YANDEX_CHECKOUT)
+        choices=PAYMENT_TYPES, default=TYPE_YANDEX_CHECKOUT, unique=True)
 
     def get_adaptor(self):
         from afi_backend.payments.adaptors import get_adaptor_from_payment_type
@@ -149,8 +149,8 @@ class UserMembership(models.Model):
 
 
 class Subscription(models.Model):
-    user_membership = models.ForeignKey(UserMembership,
-                                        on_delete=models.CASCADE)
+    user_membership = models.OneToOneField(UserMembership,
+                                           on_delete=models.CASCADE)
     external_id = models.CharField(max_length=256, null=True, blank=True)
     due = models.DateTimeField(null=True, blank=True)
     payment_method = models.ForeignKey(
@@ -172,3 +172,14 @@ class Subscription(models.Model):
             self.user_membership.membership.membership_type = Membership.TIER.FREE
             self.user_membership.membership.save()
             logger.info(f"Setting membership for subscription {self.user_membership.id}")
+
+    def get_payment_url(self):
+        adaptor = self.payment_method.get_adaptor()
+
+        payment_url, external_id = adaptor.charge(
+            value=self.user_membership.membership.price,
+            currency=self.user_membership.membership.price_currency,
+            description=f'Subscription #{self.id}')
+        self.external_id = external_id
+
+        return payment_url
