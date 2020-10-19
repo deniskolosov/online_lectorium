@@ -1,12 +1,12 @@
 import factory
 
+from afi_backend.cart.models import OrderItem
 from afi_backend.cart.tests import factories as cart_factories
 from afi_backend.events.tests.factories import VideoLectureFactory
 from afi_backend.payments.models import (Payment, PaymentMethod,
-                                         VideoLectureOrderItem)
+                                         VideoLectureOrderItem, Membership, UserMembership, Subscription)
 from afi_backend.tickets.tests.factories import TicketFactory
 from afi_backend.users.tests.factories import UserFactory
-from afi_backend.cart.models import OrderItem
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -46,3 +46,27 @@ class VideoLectureOrderItemPaymentFactory(PaymentFactory):
 
     class Meta:
         model = Payment
+
+
+class MembershipFactory(factory.django.DjangoModelFactory):
+    membership_type = Membership.TIER.PAID
+    price = 1000
+
+    class Meta:
+        model = Membership
+
+
+class UserMembershipFactory(factory.django.DjangoModelFactory):
+    membership = factory.SubFactory(MembershipFactory)
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = UserMembership
+
+
+class SubscriptionFactory(factory.django.DjangoModelFactory):
+    user_membership = factory.SubFactory(UserMembershipFactory)
+    payment_method = factory.SubFactory(PaymentMethodFactory)
+
+    class Meta:
+        model = Subscription

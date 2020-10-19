@@ -114,8 +114,8 @@ class YandexWebhook(APIView):
                 subscription.external_id = payment_method_id
                 subscription.save()
                 # TODO: schedule monthly payment task here
-            except Payment.DoesNotExist:
-                return Response({"msg": "No such payment"},
+            except Subscription.DoesNotExist:
+                return Response({"msg": "No such subscription"},
                                 status=status.HTTP_400_BAD_REQUEST)
         else:  # normal payment, use Payment
             try:
