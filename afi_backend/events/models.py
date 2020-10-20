@@ -5,13 +5,15 @@ from colorfield.fields import ColorField
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
+from afi_backend.cart.models import OrderItem
 from afi_backend.payments import models as payment_models
 from afi_backend.users.models import User
-from afi_backend.cart.models import OrderItem
 from django.contrib.contenttypes.fields import (GenericForeignKey,
-                                                GenericRelation)
+    GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from djmoney.models.fields import MoneyField
+from afi_backend.payments.models import Subscriptable
+
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +127,7 @@ class UsersVideoLectureCertificates(models.Model):
                                     on_delete=models.CASCADE)
 
 
-class VideoLecture(LectureBase):
+class VideoLecture(LectureBase, Subscriptable):
     link = models.URLField()
     certificate = models.ForeignKey(VideoLectureCertificate,
                                     on_delete=models.CASCADE)

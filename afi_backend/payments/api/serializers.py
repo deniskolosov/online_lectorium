@@ -8,8 +8,6 @@ from afi_backend.payments.models import (Payment,
 from afi_backend.events.api.serializers import VideoLectureSerializer
 from afi_backend.users.models import User
 
-#TODO: display both number and human readable value
-
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
     payment_type_name = serializers.CharField(
@@ -69,12 +67,22 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return obj.get_payment_url()
 
 
-class UserMembershipSerializer(serializers.ModelSerializer):
+
+
+class MembershipSerializer(serializers.ModelSerializer):
     membership_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Membership
+        fields = ['membership_type', 'price']
+
+    def get_membership_type(self, obj):
+        return obj.get_membership_type_display()
+
+
+class UserMembershipSerializer(serializers.ModelSerializer):
+    membership = MembershipSerializer()
 
     class Meta:
         model = UserMembership
         fields = ['membership_type']
-
-    def get_membership_type(self, obj):
-        return obj.membership.get_membership_type_display()

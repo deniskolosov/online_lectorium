@@ -1,6 +1,7 @@
 from rest_framework_json_api import serializers
 from afi_backend.videocourses.models import VideoCourse, CourseLecture
 from afi_backend.events.api import serializers as events_serializers
+from afi_backend.payments.api.serializers import MembershipSerializer
 
 
 class CourseLectureSerializer(serializers.ModelSerializer):
@@ -25,7 +26,8 @@ class VideoCourseSerializer(serializers.ModelSerializer):
     included_serializers = {
         'lecturer': events_serializers.LecturerSerializer,
         'category': events_serializers.CategorySerializer,
-        'lectures': CourseLectureSerializer
+        'lectures': CourseLectureSerializer,
+        'allowed_memberships': MembershipSerializer
     }
 
     class Meta:
@@ -40,6 +42,7 @@ class VideoCourseSerializer(serializers.ModelSerializer):
             'category',
             'price',
             'price_currency',
+            'allowed_memberships',
             'lectures',
         ]
 
