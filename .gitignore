@@ -281,3 +281,4 @@ afi_backend/media/
 # spacemacs
 *.\#*
 *.org
+flycheck_*.py

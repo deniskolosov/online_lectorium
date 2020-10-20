@@ -140,8 +140,8 @@ class Subscriptable(models.Model):
 
 
 class UserMembership(models.Model):
-    membership = models.ForeignKey(Membership, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_memberships')
+    membership = models.OneToOneField(Membership, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_membership')
 
     class Meta:
         unique_together = ("user", "membership",)

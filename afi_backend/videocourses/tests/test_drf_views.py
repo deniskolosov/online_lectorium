@@ -2,12 +2,14 @@ import pytest
 from afi_backend.users.tests.factories import UserFactory
 from rest_framework.test import APIClient, force_authenticate
 from afi_backend.videocourses.tests.factories import VideoCourseFactory, CourseLectureFactory
+from afi_backend.payments.tests.factories import UserMembershipFactory
 
 pytestmark = pytest.mark.django_db
 
 
 def test_videocourses_translated():
     test_user = UserFactory(email='test@test.ru', password='pass')
+    UserMembershipFactory(user=test_user)
     test_name_ru = 'Тестовое Имя'
     test_name_en = 'Test Name'
     VideoCourseFactory(name_ru=test_name_ru, name_en=test_name_en)
@@ -30,6 +32,7 @@ def test_videocourses_translated():
 
 def test_course_lectures_translated():
     test_user = UserFactory(email='test@test.ru', password='pass')
+    UserMembershipFactory(user=test_user)
     test_name_ru = 'Тестовое Имя'
     test_name_en = 'Test Name'
     CourseLectureFactory(name_ru=test_name_ru, name_en=test_name_en)
