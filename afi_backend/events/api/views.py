@@ -77,4 +77,5 @@ class VideoLectureViewset(viewsets.ModelViewSet):
         'lecturer__name': ('exact', ),
         'category__name': ('icontains', ),
         'category__id': ('exact', ),
+        'allowed_memberships__membership_type': ('exact',)
     }
