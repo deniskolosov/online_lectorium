@@ -5,7 +5,6 @@ from afi_backend.payments.models import (Payment,
                                          Subscription,
                                          Membership,
                                          UserMembership)
-from afi_backend.events.api.serializers import VideoLectureSerializer
 from afi_backend.users.models import User
 
 
@@ -26,8 +25,6 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
 
 
 class VideoLectureOrderItemSerializer(serializers.ModelSerializer):
-    video_lecture = VideoLectureSerializer()
-
     class Meta:
         model = VideoLectureOrderItem
         fields = ['video_lecture']

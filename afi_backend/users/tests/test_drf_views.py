@@ -150,7 +150,8 @@ class TestUserViewSet:
                         'price': str(test_vl.price.round(2).amount),
                         'price_currency': 'RUB',
                         'bullet_points': [],
-                        'type': 'VideoLecture'
+                        'allowed_memberships': [],
+                        'type': 'VideoLecture',
                     }
                 }
             }

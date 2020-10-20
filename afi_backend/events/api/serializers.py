@@ -5,6 +5,7 @@ from afi_backend.events.models import (Category, Event, Lecturer,
                                        OfflineLecture, VideoLecture,
                                        VideoLectureCertificate,
                                        VideoLectureBulletPoint)
+from afi_backend.payments.api.serializers import MembershipSerializer
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -80,6 +81,7 @@ class VideoLectureSerializer(serializers.ModelSerializer):
         'bullet_points': VideoLectureBulletPointSerializer,
         'lecturer': LecturerSerializer,
         'category': CategorySerializer,
+        'allowed_memberships': MembershipSerializer,
     }
 
     class Meta:
@@ -96,4 +98,5 @@ class VideoLectureSerializer(serializers.ModelSerializer):
             'price',
             'price_currency',
             'bullet_points',
+            'allowed_memberships',
         ]
