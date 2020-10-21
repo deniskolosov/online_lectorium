@@ -30,6 +30,7 @@ djangorestframework-jsonapi==3.2.0 # https://django-rest-framework-json-api.read
 django-debug-toolbar==2.2  # https://github.com/jazzband/django-debug-toolbar
 django-polymorphic==3.0.0 # https://django-polymorphic.readthedocs.io/en/stable/
 django-filter==2.3.0 # https://django-filter.readthedocs.io/en/stable/
+django-extensions==3.0.5  # https://github.com/django-extensions/django-extensions
 django-money==1.1 # https://github.com/django-money/django-money
 rest-framework-generic-relations==2.0.0 # https://github.com/Ian-Foote/rest-framework-generic-relations
 pytest-mock==3.3.1 # https://github.com/pytest-dev/pytest-mock
