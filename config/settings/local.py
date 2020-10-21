@@ -69,9 +69,9 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../../frontend/dist/introverted-right-brain/')
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, '../../frontend/dist/introverted-right-brain/')
+# ]
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME':

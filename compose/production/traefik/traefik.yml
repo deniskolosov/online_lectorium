@@ -26,8 +26,8 @@ certificatesResolvers:
 http:
   routers:
     web-router:
-      rule: "Host(`artofintovert.ru`) || Host(`www.artofintovert.ru`)"
-      
+      rule: "Host(`188.166.88.221`)"
+
       entryPoints:
         - web
       middlewares:
@@ -36,8 +36,8 @@ http:
       service: django
 
     web-secure-router:
-      rule: "Host(`artofintovert.ru`) || Host(`www.artofintovert.ru`)"
-      
+      rule: "Host(`188.166.88.221`)"
+
       entryPoints:
         - web-secure
       middlewares:
