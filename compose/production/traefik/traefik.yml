@@ -6,23 +6,23 @@ entryPoints:
     # http
     address: ":80"
 
-  web-secure:
-    # https
-    address: ":443"
+  # web-secure:
+  #   # https
+  #   address: ":443"
 
   flower:
     address: ":5555"
 
-certificatesResolvers:
-  letsencrypt:
-    # https://docs.traefik.io/master/https/acme/#lets-encrypt
-    acme:
-      email: "denis.kolosov@gmail.com"
-      storage: /etc/traefik/acme/acme.json
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-      # https://docs.traefik.io/master/https/acme/#httpchallenge
-      httpChallenge:
-        entryPoint: web
+# certificatesResolvers:
+#   letsencrypt:
+#     # https://docs.traefik.io/master/https/acme/#lets-encrypt
+#     acme:
+#       email: "denis.kolosov@gmail.com"
+#       storage: /etc/traefik/acme/acme.json
+#       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+#       # https://docs.traefik.io/master/https/acme/#httpchallenge
+#       httpChallenge:
+#         entryPoint: web
 
 http:
   routers:
@@ -36,32 +36,32 @@ http:
         - csrf
       service: django
 
-    web-secure-router:
-      rule: "Host(`188.166.88.221`)"
+    # web-secure-router:
+    #   rule: "Host(`188.166.88.221`)"
 
-      entryPoints:
-        - web-secure
-      middlewares:
-        - csrf
-      service: django
-      tls:
-        # https://docs.traefik.io/master/routing/routers/#certresolver
-        certResolver: letsencrypt
+    #   entryPoints:
+    #     - web-secure
+    #   middlewares:
+    #     - csrf
+    #   service: django
+    #   tls:
+    #     # https://docs.traefik.io/master/routing/routers/#certresolver
+    #     certResolver: letsencrypt
 
     flower-secure-router:
-      rule: "Host(`artofintovert.ru`)"
+      rule: "Host(`188.166.88.221`)"
       entryPoints:
         - flower
       service: flower
-      tls:
-        # https://docs.traefik.io/master/routing/routers/#certresolver
-        certResolver: letsencrypt
+      # tls:
+      #   # https://docs.traefik.io/master/routing/routers/#certresolver
+      #   certResolver: letsencrypt
 
   middlewares:
     redirect:
       # https://docs.traefik.io/master/middlewares/redirectscheme/
       redirectScheme:
-        scheme: https
+        scheme: http
         permanent: true
     csrf:
       # https://docs.traefik.io/master/middlewares/headers/#hostsproxyheaders
