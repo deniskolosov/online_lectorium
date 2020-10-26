@@ -59,7 +59,7 @@ class TestUserViewSet:
 
         assert response.data == {
             "email": email,
-            "url": f"http://testserver/api/users/{email}/",
+            "url": f"http://testserver/api/users/{email}",
             "birthdate": test_bdate.strftime("%Y-%m-%d"),
             "userpic": None,
             "name": user.name,
@@ -81,7 +81,7 @@ class TestUserViewSet:
         # TODO: test for uploading a userpic
         user_data = self._post_create_user()
         assert self.test_email == user_data['email']
-        assert f'http://testserver/api/users/{self.test_email}/' == user_data[
+        assert f'http://testserver/api/users/{self.test_email}' == user_data[
             'url']
         user = User.objects.get(email=user_data['email'])
         assert user.email == self.test_email
