@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views import defaults as default_views
 from django.views.generic import TemplateView, RedirectView
+from django.views.decorators.http import require_GET
+from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
@@ -18,6 +20,16 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 from django.urls import include, path, re_path
 from rest_auth.views import (PasswordChangeView, PasswordResetConfirmView,
                              PasswordResetView)
+
+
+@require_GET
+def robots_txt(request):
+    lines = [
+        "User-Agent: *",
+        "Disallow: /",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
+
 
 urlpatterns = [
     path("",
@@ -34,6 +46,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     path("payments/", include("afi_backend.payments.urls",
                               namespace="payments")),
+    path("robots.txt", robots_txt),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
