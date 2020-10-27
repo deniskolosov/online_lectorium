@@ -20,10 +20,17 @@ from afi_backend.users.api.views import UserViewSet
 from afi_backend.cart.api.views import CartViewset, OrderItemViewset
 from afi_backend.videocourses.api.views import VideoCourseViewset
 
+
+class OptionalSlashRouter(SimpleRouter):
+
+    def __init__(self):
+        super().__init__()
+        self.trailing_slash = '/?'
+
 if settings.DEBUG:
-    router = DefaultRouter()
+    router = OptionalSlashRouter()
 else:
-    router = SimpleRouter()
+    router = OptionalSlashRouter()
 
 router.register("users", UserViewSet)
 router.register("payment_methods",
