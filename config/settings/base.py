@@ -91,6 +91,8 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "django_filters",
     'djmoney',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 LOCAL_APPS = [
@@ -101,6 +103,7 @@ LOCAL_APPS = [
     "afi_backend.events.apps.EventsConfig",
     "afi_backend.cart.apps.CartConfig",
     "afi_backend.videocourses.apps.VideocoursesConfig",
+    "afi_backend.blog.apps.BlogConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -425,3 +428,5 @@ SWAGGER_SETTINGS = {
 }
 
 ALLOWED_HOSTS = ['testserver']
+CKEDITOR_UPLOAD_PATH = "blog_uploads/"
+AWS_QUERYSTRING_AUTH = False

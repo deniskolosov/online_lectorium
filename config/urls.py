@@ -15,7 +15,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_auth.views import (PasswordChangeView, PasswordResetConfirmView,
                              PasswordResetView)
 
@@ -34,6 +34,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     path("payments/", include("afi_backend.payments.urls",
                               namespace="payments")),
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if not settings.DEBUG:
