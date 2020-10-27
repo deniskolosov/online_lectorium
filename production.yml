@@ -44,6 +44,15 @@ services:
       - "0.0.0.0:443:443"
       - "0.0.0.0:5555:5555"
 
+  frontend:
+    build:
+      context: ../frontend/
+    image: afi_frontend
+    depends_on:
+      - django
+    ports:
+      -  "4000:4000"
+
   redis:
     image: redis:5.0
 
@@ -62,7 +71,7 @@ services:
     image: afi_backend_production_flower
     command: /start-flower
 
-  
+
   awscli:
     build:
       context: .

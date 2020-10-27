@@ -19,7 +19,7 @@ certificatesResolvers:
     acme:
       email: "developer@artforintrovert.ru"
       storage: /etc/traefik/acme/acme.json
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      caServer: https://acme-v02.api.letsencrypt.org/directory
       # https://docs.traefik.io/master/https/acme/#httpchallenge
       httpChallenge:
         entryPoint: web
@@ -33,17 +33,14 @@ http:
         - web
       middlewares:
         - redirect
-        - csrf
-      service: django
+      service: frontend
 
     web-secure-router:
       rule: "Host(`dev.artforintrovert.ru`)"
 
       entryPoints:
         - web-secure
-      middlewares:
-        - csrf
-      service: django
+      service: frontend
       tls:
         # https://docs.traefik.io/master/routing/routers/#certresolver
         certResolver: letsencrypt
@@ -63,17 +60,12 @@ http:
       redirectScheme:
         scheme: http
         permanent: true
-    csrf:
-      # https://docs.traefik.io/master/middlewares/headers/#hostsproxyheaders
-      # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
-      headers:
-        hostsProxyHeaders: ["X-CSRFToken"]
 
   services:
-    django:
+    frontend:
       loadBalancer:
         servers:
-          - url: http://django:5000
+          - url: http://frontend:4000
 
     flower:
       loadBalancer:
