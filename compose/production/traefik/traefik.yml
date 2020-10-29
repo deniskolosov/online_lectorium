@@ -1,5 +1,8 @@
 log:
-  level: INFO
+  level: "DEBUG"
+
+api:
+  dashboard: true
 
 entryPoints:
   web:
@@ -26,9 +29,49 @@ certificatesResolvers:
 
 http:
   routers:
+    robots:
+      rule: "Host(`dev.artforintrovert.ru`) && Path(`/robots.txt`)"
+      service: django
+      entryPoints:
+        - web
+      middlewares:
+        - redirect
+
+    robots-secure:
+      rule: "Host(`dev.artforintrovert.ru`) && Path(`/robots.txt`)"
+      service: django
+      entryPoints:
+        - web-secure
+      tls:
+        # https://docs.traefik.io/master/routing/routers/#certresolver
+        certResolver: letsencrypt
+
+    drf-api:
+      rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/api`)"
+      service: django
+      entryPoints:
+        - web
+      middlewares:
+        - redirect
+
+    drf-secure-api:
+      rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/api`)"
+      service: django
+      entryPoints:
+        - web-secure
+      tls:
+        # https://docs.traefik.io/master/routing/routers/#certresolver
+        certResolver: letsencrypt
+
+    dashboard:
+      rule: "(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      service: api@internal
+      middlewares:
+        - auth
+        - redirect
+
     web-router:
       rule: "Host(`dev.artforintrovert.ru`)"
-
       entryPoints:
         - web
       middlewares:
@@ -50,9 +93,10 @@ http:
       entryPoints:
         - flower
       service: flower
-      # tls:
-      #   # https://docs.traefik.io/master/routing/routers/#certresolver
-      #   certResolver: letsencrypt
+      tls:
+        # https://docs.traefik.io/master/routing/routers/#certresolver
+        certResolver: letsencrypt
+
 
   middlewares:
     redirect:
@@ -60,12 +104,21 @@ http:
       redirectScheme:
         scheme: http
         permanent: true
+    auth:
+      basicAuth:
+        users:
+          - "test:$apr1$pwy2cslb$2pXFRaZtsXW/CKgBzqq9L1"
 
   services:
     frontend:
       loadBalancer:
         servers:
           - url: http://frontend:4000
+
+    django:
+      loadBalancer:
+        servers:
+          - url: http://django:5000
 
     flower:
       loadBalancer:
