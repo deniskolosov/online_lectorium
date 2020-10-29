@@ -7,3 +7,4 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = RichTextUploadingField()
+    picture = models.ImageField(upload_to='blog_pictures/', null=True)
