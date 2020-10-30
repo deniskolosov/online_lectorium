@@ -63,6 +63,16 @@ http:
         # https://docs.traefik.io/master/routing/routers/#certresolver
         certResolver: letsencrypt
 
+    django-admin:
+      rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/oPL63AzL5RWzskE2BQKk4bvxVYVFmqSg/`)"
+      service: django
+      entryPoints:
+        - web-secure
+      tls:
+        # https://docs.traefik.io/master/routing/routers/#certresolver
+        certResolver: letsencrypt
+
+
     dashboard:
       rule: "(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       service: api@internal
