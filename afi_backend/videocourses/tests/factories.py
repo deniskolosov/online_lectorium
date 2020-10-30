@@ -1,6 +1,6 @@
 import factory
 from django.utils import timezone
-from afi_backend.videocourses.models import VideoCourse, CourseLecture
+from afi_backend.videocourses.models import VideoCourse, CourseLecture, VideoCoursePart
 from afi_backend.events.tests import factories as events_factories
 
 
@@ -19,10 +19,20 @@ class VideoCourseFactory(factory.django.DjangoModelFactory):
         model = VideoCourse
 
 
+class VideoCoursePartFactory(factory.django.DjangoModelFactory):
+    name = factory.Sequence(lambda n: f"Videocourse part {n}")
+    description = factory.Faker("text")
+    course = factory.SubFactory(VideoCourseFactory)
+
+    class Meta:
+        model = VideoCoursePart
+
+
 class CourseLectureFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Videocourse lecture {n}")
     description = factory.Faker("text")
     course = factory.SubFactory(VideoCourseFactory)
+    part = factory.SubFactory(VideoCoursePartFactory)
 
     class Meta:
         model = CourseLecture
