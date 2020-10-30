@@ -1,7 +1,7 @@
 from rest_framework import filters as drf_filters
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from rest_framework_json_api import (django_filters, filters, relations,
                                      serializers)
@@ -15,7 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 class CartViewset(viewsets.ModelViewSet):
     queryset = Cart.objects.filter()
     serializer_class = CartSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,
@@ -32,7 +32,7 @@ class CartViewset(viewsets.ModelViewSet):
             methods=["POST"],
             serializer_class=CartOrderItemSerializer,
             url_path='add-to-cart',
-            permission_classes=[IsAuthenticated])
+            permission_classes=[IsAuthenticatedOrReadOnly])
     def add_to_cart(self, request, pk=None):
         cart = self.get_object()
         serializer = self.serializer_class(data=request.data)
@@ -50,7 +50,7 @@ class CartViewset(viewsets.ModelViewSet):
             methods=["POST"],
             serializer_class=CartOrderItemSerializer,
             url_path='buy-one',
-            permission_classes=[IsAuthenticated])
+            permission_classes=[IsAuthenticatedOrReadOnly])
     def buy_one(self, request):
         # TODO: DRY, create helper function, both methods are the same
         cart = Cart.objects.create()
@@ -68,7 +68,7 @@ class CartViewset(viewsets.ModelViewSet):
     @action(detail=False,
             methods=["GET"],
             url_path='last-cart',
-            permission_classes=[IsAuthenticated])
+            permission_classes=[IsAuthenticatedOrReadOnly])
     def last_cart(self, pk=None):
         last_cart = Cart.latest_not_paid.all()
         return Response(self.serializer_class(last_cart).data)
@@ -77,7 +77,7 @@ class CartViewset(viewsets.ModelViewSet):
 class OrderItemViewset(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,

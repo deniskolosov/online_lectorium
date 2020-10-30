@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
     RetrieveModelMixin, UpdateModelMixin)
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class PaymentCreateView(APIView):
     payment_model = Payment
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def post(self, request):
         """

@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from afi_backend.payments.models import Payment
 
 from ..models import QRCode, Ticket
@@ -14,7 +14,7 @@ class TicketViewSet(viewsets.ModelViewSet):
     A simple ViewSet for viewing and editing tickets.
     """
     serializer_class = TicketSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @action(detail=False,
             methods=['get'],

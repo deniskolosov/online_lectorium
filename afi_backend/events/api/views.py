@@ -1,7 +1,7 @@
 from rest_framework import filters as drf_filters
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework_json_api import django_filters, filters, relations, serializers
 
 from ..models import Event, Category, Lecturer, OfflineLecture, VideoLecture
@@ -16,7 +16,7 @@ from .serializers import (
 class OfflineLectureViewset(viewsets.ModelViewSet):
     queryset = OfflineLecture.objects.all()
     serializer_class = OfflineLectureSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,
@@ -45,7 +45,7 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         django_filters.DjangoFilterBackend,
         drf_filters.SearchFilter,
     )
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filterset_fields = {'name': ('icontains', )}
     search_fields = ['name']
 
@@ -53,7 +53,7 @@ class CategoriesViewSet(viewsets.ModelViewSet):
 class LecturersViewset(viewsets.ModelViewSet):
     queryset = Lecturer.objects.all()
     serializer_class = LecturerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,
@@ -66,7 +66,7 @@ class LecturersViewset(viewsets.ModelViewSet):
 class VideoLectureViewset(viewsets.ModelViewSet):
     queryset = VideoLecture.objects.all()
     serializer_class = VideoLectureSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,
