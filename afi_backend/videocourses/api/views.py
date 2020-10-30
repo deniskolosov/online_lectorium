@@ -8,7 +8,8 @@ from afi_backend.videocourses.models import VideoCourse
 from afi_backend.videocourses.api.serializers import VideoCourseSerializer
 from afi_backend.payments.models import Membership
 
-class UserHasSubscription(permissions.BasePermission):
+
+class UserHasSubscription(permissions.IsAuthenticatedOrReadOnly):
     """
     Object-level permission to allow access only to subscribed users.
     """
@@ -17,11 +18,10 @@ class UserHasSubscription(permissions.BasePermission):
         return request.user.user_membership.membership.membership_type != Membership.TIER.FREE
 
 
-
 class VideoCourseViewset(viewsets.ModelViewSet):
     queryset = VideoCourse.objects.all()
     serializer_class = VideoCourseSerializer
-    permission_classes = [permissions.IsAuthenticated, UserHasSubscription]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = (
         filters.QueryParameterValidationFilter,
         django_filters.DjangoFilterBackend,

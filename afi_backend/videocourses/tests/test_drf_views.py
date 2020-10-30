@@ -52,3 +52,22 @@ def test_course_lectures_translated():
                           **{"HTTP_ACCEPT_LANGUAGE": "ru-RU"})
 
     assert response.json()['included'][0]['attributes']['name'] == test_name_ru
+
+def test_course_lectures_not_available_wo_subscription():
+    test_user = UserFactory(email='test@test.ru', password='pass')
+    test_video_link = 'video.com'
+    test_course_lecture = CourseLectureFactory(video_link=test_video_link)
+
+    # # Locale set to en-US
+    client = APIClient()
+    response = client.get('/api/videocourses/?include=lectures')
+    assert 'video_link' not in response.json()['included'][0]['attributes']
+
+    # Authenticate and subscribe user, check videolink is available
+
+    client.force_authenticate(user=test_user)
+    UserMembershipFactory(user=test_user)
+    response = client.get('/api/videocourses/?include=lectures')
+    included = response.json()['included'][0]['attributes']
+    assert 'video_link' in included
+    assert f'http://testserver/media/{test_video_link}' == included['video_link']
