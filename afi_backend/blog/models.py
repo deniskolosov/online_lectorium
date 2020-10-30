@@ -10,5 +10,5 @@ class Post(models.Model):
     content = RichTextUploadingField()
     picture = models.ImageField(upload_to='blog_pictures/', null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=256)
-    description = models.TextField()
+    name = models.CharField(max_length=256, null=True)
+    description = models.TextField(blank=True)
