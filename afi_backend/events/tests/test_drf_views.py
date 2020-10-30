@@ -56,3 +56,19 @@ def test_video_lectures_bullet_points_translated():
     assert response.status_code == 200
     resp = response.json()
     assert resp['included'][0]['attributes']['text'] == test_ru_text
+
+
+def test_offline_lecture_translated_fallback():
+    test_user = UserFactory(email='test@test.ru', password='pass')
+    test_name_ru = ''
+    test_name_en = 'Test Name'
+    OfflineLectureFactory(name_ru=test_name_ru, name_en=test_name_en)
+
+    # # Locale set to en-US
+    client = APIClient()
+    client.force_authenticate(user=test_user)
+
+    # Russian name is not set, fallback to english.
+    response = client.get('/api/offline-lectures/', None,
+                          **{"HTTP_ACCEPT_LANGUAGE": "ru-RU"})
+    assert response.data['results'][0]['name'] == test_name_en

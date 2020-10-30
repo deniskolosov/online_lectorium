@@ -39,10 +39,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
 LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 
+# django modeltranslation
 LANGUAGES = (
     ('ru', _('Russian')),
     ('en', _('English')),
 )
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('ru', 'en')
 
 # DATABASES
 # ------------------------------------------------------------------------------
