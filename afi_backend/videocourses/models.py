@@ -38,12 +38,19 @@ class VideoCourse(Subscriptable):
         ordering = ['id']
 
 
+class VideoCoursePart(models.Model):
+    name = models.CharField(max_length=256)
+    description = models.TextField()
+    course = models.ForeignKey(VideoCourse, on_delete=models.CASCADE, related_name='parts')
+
+
 class CourseLecture(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     course = models.ForeignKey(VideoCourse,
                                on_delete=models.CASCADE,
                                related_name='lectures')
+    part = models.ForeignKey(VideoCoursePart, on_delete=models.CASCADE, related_name='lectures', null=True)
     lecturer = models.ForeignKey(Lecturer,
                                  blank=True,
                                  null=True,

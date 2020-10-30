@@ -1,5 +1,5 @@
 from django.contrib import admin
-from afi_backend.videocourses.models import VideoCourse, CourseLecture
+from afi_backend.videocourses.models import VideoCourse, CourseLecture, VideoCoursePart
 
 
 @admin.register(VideoCourse)
@@ -18,5 +18,15 @@ class CourseLectureAdmin(admin.ModelAdmin):
         'name',
         'description',
         'course',
+        'part',
+    ]
+    search_fields = ['name']
+
+
+@admin.register(VideoCoursePart)
+class VideoCoursePartAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'description',
     ]
     search_fields = ['name']

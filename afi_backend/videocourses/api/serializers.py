@@ -9,6 +9,7 @@ class CourseLectureSerializer(serializers.ModelSerializer):
     included_serializers = {
         'lecturer': events_serializers.LecturerSerializer,
     }
+    part = serializers.CharField(source='part.name')
 
     def __init__(self, *args, **kwargs):
         # Exclude video_link, lecture_test fields for nonauthenticated users
@@ -24,6 +25,7 @@ class CourseLectureSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'course',
+            'part',
             'lecturer',
             'video_link',
             'lecture_test',
