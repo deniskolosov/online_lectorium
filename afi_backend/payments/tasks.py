@@ -1,6 +1,7 @@
-from time import sleep
 from datetime import timedelta
+from time import sleep
 from decimal import Decimal
+from django.conf import settings
 
 from afi_backend.payments.adaptors import get_adaptor_from_payment_type
 from afi_backend.payments.models import PaymentMethod, Subscription
@@ -21,7 +22,7 @@ def charge_user_due(
         currency: str,
         description: str,
         subscription_id: int
-):
+) -> None:
     # Sleep random time from 1 to 10 sec. Then do request to provider.
     # This should be enough for up to 10 sub payments per day.
     sleep(randrange(10))
@@ -32,13 +33,18 @@ def charge_user_due(
                                        description=description,)
     if not success:
         Subscription.objects.filter(id=subscription_id).update(is_active=False, due=None)
+        return None
+
+    Subscription.objects.filter(id=subscription_id).update(is_active=True,
+                                                           due=timezone.now() + timedelta(
+                                                               days=settings.SUBSCRIPTION_LENGTH_DAYS))
 
 
 @celery_app.task()
 def charge_user_monthly():
     """
     Find all subscriptions that are due today. Try to charge the user. If payment is revoked, cancel subscriptions
-    If other error, try again"
+    If other error, try again.
     """
     # For every method create their adaptor and call adaptor's charge recurrent method with
     # sub ids
@@ -52,10 +58,12 @@ def charge_user_monthly():
                                                                         'id')
         for val in qs:
             charge_user_due.delay(provider_id=method,
-                                  amount=qs['user_membership__membership__price'],
-                                  currency=qs['user_membership__membership__price'],
-                                  description=f"Payment for subsription #{subscription_data['id']}",
-                                  subscription_id=qs['id'])
+                                  external_id=val['external_id'],
+                                  amount=val['user_membership__membership__price'],
+                                  currency=val['user_membership__membership__price_currency'],
+                                  description=f"Payment for subsription #{val['id']}",
+                                  subscription_id=val['id'])
+
 
 @celery_app.task()
 def end_finished_trial_subscriptions():

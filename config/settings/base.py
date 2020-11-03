@@ -418,6 +418,8 @@ CLOUDPAYMENTS_ACCOUNT_ID = env("CLOUDPAYMENTS_ACCOUNT_ID", default="")
 
 SITE_URL = env("SITE_URL", default="https://afi-backend.herokuapp.com")
 
+SUBSCRIPTION_LENGTH_DAYS = env("SUBSCRIPTION_LENGTH_DAYS", default=30)
+
 # Swagger settings
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
