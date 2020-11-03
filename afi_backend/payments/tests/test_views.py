@@ -1,7 +1,13 @@
 from django.test import Client
+import datetime
+from django.utils import timezone
+from django.test import override_settings
+from freezegun import freeze_time
 from rest_framework.test import (APIClient, APIRequestFactory,
-    force_authenticate)
+                                 force_authenticate)
 from unittest.mock import ANY
+from django.conf import settings
+from afi_backend.payments import tasks as payments_tasks
 
 import pytest
 from rest_framework.exceptions import ErrorDetail
@@ -342,3 +348,70 @@ class TestYandexWebhookView:
         assert subscription.is_active
         assert not subscription.is_trial
         assert subscription.external_id == test_checkout_payment_id
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_subscription_regular_payment_success(self, mocker):
+        # - create subscription
+        # - move time forward
+        # - mock Yandex Checkout call
+        # - run charge subscription task
+        # - assert user is charged
+        test_external_id = "22e18a2f-000f-5000-a000-1db6312b7767"
+        test_checkout_payment_id = "22e18a2f-000f-5000-a000-1db6312b7767"
+        test_sub_date = datetime.datetime(2021, 11, 11)
+        test_due_date = test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS)
+        mocked_adaptor = mocker.patch.object(adaptor,
+                                             'charge_recurrent',
+                                             autospec=True,
+                                             return_value=True)
+
+        with freeze_time(test_sub_date) as frozen_datetime:
+            subscription = SubscriptionFactory(external_id=test_external_id, is_active=True,
+                                               is_trial=False,
+                                               due=test_due_date)
+            frozen_datetime.move_to(test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS))
+            payments_tasks.charge_user_monthly()
+            mocked_adaptor.assert_called_with(ANY,
+                                              external_id=test_external_id,
+                                              amount=str(subscription.user_membership.membership.price.round(2).amount),
+                                              currency=str(subscription.user_membership.membership.price.currency),
+                                              description=f"Payment for subsription #{subscription.id}")
+            subscription.refresh_from_db()
+            assert subscription.is_active
+            assert subscription.due > timezone.now() + timezone.timedelta(days=29)
+
+
+
+
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_subscription_regular_payment_failure(self, mocker):
+        # - create subscription
+        # - move time forward
+        # - mock Yandex Checkout call
+        # - run charge subscription task
+        # - return error from Yandex
+        # - assert subscription is cancelled
+        test_external_id = "22e18a2f-000f-5000-a000-1db6312b7767"
+        test_checkout_payment_id = "22e18a2f-000f-5000-a000-1db6312b7767"
+        test_sub_date = datetime.datetime(2021, 11, 11)
+        test_due_date = test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS)
+        # todo: find out why it's not called
+        mocked_adaptor = mocker.patch.object(adaptor,
+                                             'charge_recurrent',
+                                             autospec=True,
+                                             return_value=False)
+
+        with freeze_time(test_sub_date) as frozen_datetime:
+            subscription = SubscriptionFactory(external_id=test_external_id, is_active=True,
+                                               is_trial=False,
+                                               due=test_due_date)
+            frozen_datetime.move_to(test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS))
+            payments_tasks.charge_user_monthly()
+            mocked_adaptor.assert_called_with(ANY,
+                                              external_id=test_external_id,
+                                              amount=str(subscription.user_membership.membership.price.round(2).amount),
+                                              currency=str(subscription.user_membership.membership.price.currency),
+                                              description=f"Payment for subsription #{subscription.id}")
+            subscription.refresh_from_db()
+            assert not subscription.is_active
+            assert not subscription.due
