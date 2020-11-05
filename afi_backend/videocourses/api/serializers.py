@@ -18,14 +18,12 @@ class CourseLectureSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if user.is_anonymous or user.user_membership.membership.membership_type == Membership.TIER.FREE:
             self.fields.pop('video_link')
-            self.fields.pop('lecture_test')
 
     class Meta:
         model = CourseLecture
         fields = [
             'course',
             'description',
-            'lecture_test',
             'lecturer',
             'name',
             'part',
