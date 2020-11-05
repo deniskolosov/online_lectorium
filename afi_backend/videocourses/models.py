@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
 from djmoney.models.fields import MoneyField
 from afi_backend.payments.models import Subscriptable
+from afi_backend.exams.models import TestAssignment
 
 
 class LectureTest(models.Model):
@@ -42,6 +43,10 @@ class VideoCoursePart(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     course = models.ForeignKey(VideoCourse, on_delete=models.CASCADE, related_name='parts')
+    tests = GenericRelation(TestAssignment,
+                            object_id_field='object_id',
+                            content_type_field='content_type',
+                            related_query_name='videocourse_part')
 
 
 class CourseLecture(models.Model):
@@ -57,9 +62,6 @@ class CourseLecture(models.Model):
                                  help_text="Set if different from course",
                                  on_delete=models.CASCADE)
     video_link = models.FileField(upload_to="videcourses_lectures/")
-    lecture_test = models.ForeignKey(LectureTest,
-                                     on_delete=models.CASCADE,
-                                     null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.lecturer is None:

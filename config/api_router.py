@@ -20,6 +20,7 @@ from afi_backend.users.api.views import UserViewSet
 from afi_backend.cart.api.views import CartViewset, OrderItemViewset
 from afi_backend.videocourses.api.views import VideoCourseViewset
 from afi_backend.blog.api.views import PostViewset
+from afi_backend.exams.api.views import ExamViewset
 
 class OptionalSlashRouter(SimpleRouter):
 
@@ -49,6 +50,7 @@ router.register("order-items", OrderItemViewset, basename='order-items')
 router.register("categories", CategoriesViewSet, basename='categories')
 router.register("lecturers", LecturersViewset, basename='lecturers')
 router.register('blogposts', PostViewset, basename='blogposts')
+router.register('exams', ExamViewset, basename='exams')
 router.register("payments/subscriptions",
                 CreateSubscriptionViewset,
                 basename="create-subscription")

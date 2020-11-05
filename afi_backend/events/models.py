@@ -13,6 +13,7 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
 from django.contrib.contenttypes.models import ContentType
 from djmoney.models.fields import MoneyField
 from afi_backend.payments.models import Subscriptable
+from afi_backend.exams.models import TestAssignment
 
 
 logger = logging.getLogger(__name__)
@@ -135,6 +136,10 @@ class VideoLecture(LectureBase, Subscriptable):
                                   object_id_field='object_id',
                                   content_type_field='content_type',
                                   related_query_name='video_lecture')
+    tests = GenericRelation(TestAssignment,
+                            object_id_field='object_id',
+                            content_type_field='content_type',
+                            related_query_name='video_lecture')
 
     def __str__(self):
         return f"{self.name}"
