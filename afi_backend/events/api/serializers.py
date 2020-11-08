@@ -6,6 +6,7 @@ from afi_backend.events.models import (Category, Event, Lecturer,
                                        VideoLectureCertificate,
                                        VideoLectureBulletPoint)
 from afi_backend.payments.api.serializers import MembershipSerializer
+from afi_backend.exams.api.serializers import TestAssignmentSerializer
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -76,6 +77,7 @@ class VideoLectureBulletPointSerializer(serializers.ModelSerializer):
 
 
 class VideoLectureSerializer(serializers.ModelSerializer):
+    tests = TestAssignmentSerializer(many=True)
     included_serializers = {
         'certificate': VideoLectureCertificateSerializer,
         'bullet_points': VideoLectureBulletPointSerializer,
@@ -87,16 +89,17 @@ class VideoLectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoLecture
         fields = [
-            'id',
-            'link',
+            'allowed_memberships',
+            'bullet_points',
+            'category',
             'certificate',
+            'description',
+            'id',
+            'lecturer',
+            'link',
             'name',
             'picture',
-            'lecturer',
-            'category',
-            'description',
             'price',
             'price_currency',
-            'bullet_points',
-            'allowed_memberships',
+            'tests',
         ]
