@@ -27,19 +27,23 @@ class QuestionSerializer(serializers.ModelSerializer):
 class ExamSerializer(serializers.ModelSerializer):
     test_assignment_id = serializers.IntegerField()
     questions = serializers.SerializerMethodField()
+    results = serializers.SerializerMethodField()
 
     class Meta:
         model = Exam
         fields = [
             'test_assignment_id',
             'user',
+            'results',
             'questions',
         ]
         read_only_fields = [
             'user',
-            'result',
             'progress'
         ]
+
+    def get_results(self, obj):
+        return obj.test_results()
 
     def get_questions(self, obj):
         # todo serialize many questions

@@ -33,7 +33,7 @@ class TestAssigmentVideoCoursePartFactory(factory.django.DjangoModelFactory):
 
 class ExamFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
-    test_assignment = factory.SubFactory(TestAssignmentFactory)
+    test_assignment = factory.SubFactory(TestAssigmentVideoCoursePartFactory)
 
     class Meta:
         model = Exam
