@@ -68,3 +68,30 @@ class TestExamViewset:
                                     'attributes': {},
                                     'relationships':
                                     {'chosen_answers': {'data': [{'type': 'Answer', 'id': str(test_answer.id)}]}}}}
+
+    def test_update_progress(self):
+        client = APIClient()
+        test_user = UserFactory()
+        test_assignment = TestAssignmentVideoLectureFactory()
+        test_answer = AnswerFactory(correct=True)
+        test_exam = ExamFactory(user=test_user, test_assignment=test_assignment)
+
+        client.force_authenticate(user=test_user)
+        test_data = {
+            "data": {
+                "type": "Exam",
+                'id': str(test_exam.id),
+                "attributes": {
+                    "answer_id": test_answer.id,
+                }
+            }
+        }
+
+        response = client.put(f'/api/exams/{test_exam.id}/progress/', test_data)
+
+        assert response.json() == {'data':
+                                   {'type': 'Progress',
+                                    'id': str(test_exam.progress.id),
+                                    'attributes': {},
+                                    'relationships': {'chosen_answers':
+                                                      {'data': [{'type': 'Answer', 'id': str(test_answer.id)}]}}}}
