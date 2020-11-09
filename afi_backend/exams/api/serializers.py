@@ -1,6 +1,7 @@
-from rest_framework_json_api import serializers
 from rest_framework.fields import CurrentUserDefault
-from afi_backend.exams.models import Exam, Question, Answer, TestAssignment
+from rest_framework_json_api import serializers
+
+from afi_backend.exams.models import Answer, Exam, Question, TestAssignment, Progress
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -19,21 +20,20 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = [
             'text',
-            'answer',
+            'answers',
         ]
 
 
 class ExamSerializer(serializers.ModelSerializer):
     test_assignment_id = serializers.IntegerField()
-    included_serializers = {
-        'questions': QuestionSerializer
-    }
+    questions = serializers.SerializerMethodField()
 
     class Meta:
         model = Exam
         fields = [
             'test_assignment_id',
             'user',
+            'questions',
         ]
         read_only_fields = [
             'user',
@@ -41,9 +41,37 @@ class ExamSerializer(serializers.ModelSerializer):
             'progress'
         ]
 
+    def get_questions(self, obj):
+        # todo serialize many questions
+        serializer = QuestionSerializer(obj.test_assignment.questions.all(), many=True)
+
+        return serializer.data
+
     def create(self, validated_data):
+        from afi_backend.exams.api.serializers import QuestionSerializer
         # Create Exam using test_assignment_id
         test_assignment = TestAssignment.objects.get(id=validated_data['test_assignment_id'])
         exam = Exam.objects.create(user=self.context['request'].user, test_assignment=test_assignment)
 
         return exam
+
+
+class TestAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestAssignment
+        fields = [
+            'id'
+        ]
+
+
+class ExamProgressSerializer(serializers.Serializer):
+    answer_id = serializers.IntegerField(source='chosen_aswers.id', read_only=True)
+    chosen_answers = AnswerSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Progress
+        fields = [
+            'answer_id',
+            'chosen_answers',
+
+        ]
