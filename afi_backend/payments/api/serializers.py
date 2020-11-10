@@ -49,7 +49,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         membership = validated_data.get('user_membership')
         membership_type = membership.get('membership').get('membership_type')
-        user = self.context.get('user')
+        user = self.context['user']
 
         payment_type = validated_data.get('payment_method').get('payment_type')
         payment_method = PaymentMethod.objects.get(payment_type=payment_type)
