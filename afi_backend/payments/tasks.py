@@ -23,9 +23,9 @@ def charge_user_due(
         description: str,
         subscription_id: int
 ) -> None:
-    # Sleep random time from 1 to 10 sec. Then do request to provider.
-    # This should be enough for up to 10 sub payments per day.
-    sleep(randrange(10))
+    # Sleep random time from 1 to 20 sec. Then do request to provider.
+    # (not running all tasks in the same time).
+    sleep(randrange(20))
     adaptor = get_adaptor_from_payment_type(payment_type=provider_id)
     success = adaptor.charge_recurrent(external_id=external_id,
                                        amount=amount,

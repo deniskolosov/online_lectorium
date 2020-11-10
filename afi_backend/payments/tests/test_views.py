@@ -21,6 +21,7 @@ from afi_backend.payments.tests.factories import (MembershipFactory,
     OrderItemVideoLectureFactory, PaymentFactory, PaymentMethodFactory,
                                                   VideoLectureOrderItemFactory, SubscriptionFactory)
 from afi_backend.users.tests.factories import UserFactory
+from afi_backend.payments.tests.factories import SubscriptionFactory
 
 
 pytestmark = pytest.mark.django_db
@@ -140,9 +141,43 @@ class TestPaymentViewSet:
                                           description=f"Payment #{payment.id}")
 
 class TestSubscriptionViewset():
-    def test_charge_user_due(self, mocker):
-        # look up how to mock sleep?
-        pass
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    def test_charge_user_due_success(self, mocker):
+        mocker.patch('afi_backend.payments.tasks.sleep', return_value=None)
+        test_payment_method = PaymentMethodFactory()
+        test_due = timezone.now()
+        test_subscription = SubscriptionFactory(payment_method=test_payment_method, due=test_due)
+
+        test_external_id = '123'
+        test_amount = '1000'
+        test_currency = 'RUB'
+        test_description = 'foobar'
+
+        mocked_adaptor = mocker.patch.object(adaptor,
+                                             'charge_recurrent',
+                                             autospec=True,
+                                             return_value=True)
+
+        payments_tasks.charge_user_due(
+            test_payment_method.payment_type,
+            test_external_id,
+            test_amount,
+            test_currency,
+            test_description,
+            test_subscription.id
+        )
+        mocked_adaptor.assert_called_with(ANY,
+                                          test_external_id,
+                                          test_amount,
+                                          test_currency,
+                                          description=test_description)
+        # assert Subscription is updated
+        test_subscription.refresh_from_db()
+        assert test_subscription.is_active
+        assert test_subscription.due
+        assert (test_subscription.due - test_due).days == settings.SUBSCRIPTION_LENGTH_DAYS
+
+
 
     def test_create_subscription(self, mocker):
         payment_method = PaymentMethodFactory(
