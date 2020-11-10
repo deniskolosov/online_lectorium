@@ -150,6 +150,7 @@ class TestUserViewSet:
                         'price_currency': 'RUB',
                         'bullet_points': [],
                         'allowed_memberships': [],
+                        'tests': [],
                         'type': 'VideoLecture',
                     }
                 }

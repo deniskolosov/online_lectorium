@@ -23,13 +23,13 @@ class ExamViewset(viewsets.ModelViewSet):
     search_fields = []
 
     @action(detail=True,
-            serializer_class=ExamProgressSerializer,
             url_path='progress',
             permission_classes=[IsAuthenticated])
     def progress(self, request, pk=None):
         # get progress for exam
         exam = self.get_object()
-        serializer = self.serializer_class(exam.progress)
+        serializer = ExamProgressSerializer(exam.progress)
+        self.resource_name = 'Progress'
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -44,10 +44,8 @@ class ExamViewset(viewsets.ModelViewSet):
         exam.progress.chosen_answers.add(answer)
         exam.progress.save()
 
-        serializer = self.serializer_class(exam.progress)
+        self.resource_name = 'Progress'
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = ExamProgressSerializer(exam.progress)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
