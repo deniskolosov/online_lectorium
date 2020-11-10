@@ -54,7 +54,7 @@ services:
     depends_on:
       - django
     ports:
-      -  "4000:4000"
+      - "8080"
 
   redis:
     image: redis:5.0
