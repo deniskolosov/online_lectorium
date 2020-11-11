@@ -7,6 +7,7 @@ from afi_backend.events.models import (Category, Event, Lecturer,
                                        VideoLectureBulletPoint)
 from afi_backend.payments.api.serializers import MembershipSerializer
 from afi_backend.exams.api.serializers import TestAssignmentSerializer
+from afi_backend.payments.models import Membership
 
 
 class EventTypeSerializer(serializers.ModelSerializer):

@@ -108,7 +108,8 @@ class TestExamViewset:
         client.force_authenticate(user=test_user)
         response = client.get(f'/api/exams/{test_exam.id}/')
         assert response.json() == {'data':
-                                   {'test_assignment_id': test_assignment.id,
+                                   {'id': test_exam.id,
+                                    'test_assignment_id': test_assignment.id,
                                     'user': {'type': 'User',
                                              'id': str(test_user.id)},
                                     'results': {'correct_answers': 1,

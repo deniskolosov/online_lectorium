@@ -167,11 +167,18 @@ class Subscription(models.Model):
         # todo if is_active is changed to False, update user_membership status to Free
         super().save(*args, **kwargs)
         # If payment is completed for item, do afterpayment logic
+
+        # Subscription was cancelled
         if self.tracker.has_changed('is_active') and self.tracker.previous(
                 'is_active'):
             self.user_membership.membership.membership_type = Membership.TIER.FREE
             self.user_membership.membership.save()
             logger.info(f"Setting membership for subscription {self.user_membership.id}")
+        elif self.tracker.has_changed('is_active') and not self.tracker.previous('is_active'):
+            self.user_membership.membership.membership_type = Membership.TIER.PAID
+            self.user_membership.membership.save()
+            logger.info(f"Subscription is activated for user_membership {self.user_membership.id}")
+
 
     def get_payment_url(self):
         adaptor = self.payment_method.get_adaptor()

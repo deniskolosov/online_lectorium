@@ -12,13 +12,6 @@ class CourseLectureSerializer(serializers.ModelSerializer):
     part = serializers.CharField(source='part.name')
     part_id = serializers.IntegerField(source='part.id')
 
-    def __init__(self, *args, **kwargs):
-        # Exclude video_link, lecture_test fields for nonauthenticated users
-        super().__init__(self, *args, **kwargs)
-        user = self.context['request'].user
-        if user.is_anonymous or user.user_membership.membership.membership_type == Membership.TIER.FREE:
-            self.fields.pop('video_link')
-
     class Meta:
         model = CourseLecture
         fields = [

@@ -1,27 +1,27 @@
-from django.test import Client
 import datetime
-from django.utils import timezone
-from django.test import override_settings
-from freezegun import freeze_time
+from django.test import Client, override_settings
 from rest_framework.test import (APIClient, APIRequestFactory,
-                                 force_authenticate)
+    force_authenticate)
 from unittest.mock import ANY
-from django.conf import settings
-from afi_backend.payments import tasks as payments_tasks
 
 import pytest
+from django.conf import settings
+from freezegun import freeze_time
 from rest_framework.exceptions import ErrorDetail
 
 import afi_backend.cart.tests.factories as cart_factories
 from afi_backend.events.tests.factories import OfflineLectureFactory
+from afi_backend.payments import tasks as payments_tasks
 from afi_backend.payments.adaptors.yandex import YandexCheckoutAdaptor as adaptor
 from afi_backend.payments.api.views import PaymentCreateView, YandexWebhook
-from afi_backend.payments.models import Membership, Payment, PaymentMethod, Subscription
+from afi_backend.payments.models import (Membership, Payment, PaymentMethod,
+    Subscription)
 from afi_backend.payments.tests.factories import (MembershipFactory,
     OrderItemVideoLectureFactory, PaymentFactory, PaymentMethodFactory,
-                                                  VideoLectureOrderItemFactory, SubscriptionFactory)
+    SubscriptionFactory, VideoLectureOrderItemFactory)
 from afi_backend.users.tests.factories import UserFactory
-from afi_backend.payments.tests.factories import SubscriptionFactory
+from django.utils import timezone
+from afi_backend.payments.tests.factories import UserMembershipFactory
 
 
 pytestmark = pytest.mark.django_db
@@ -324,7 +324,11 @@ class TestYandexWebhookView:
         view = YandexWebhook.as_view()
         test_external_id = "22e18a2f-000f-5000-a000-1db6312b7767"
         test_checkout_payment_id = "22e18a2f-000f-5000-a000-1db6312b7767"
-        subscription = SubscriptionFactory(external_id=test_external_id, is_active=False, is_trial=True)
+        test_user_membership = UserMembershipFactory(membership=MembershipFactory(membership_type=Membership.TIER.FREE))
+        subscription = SubscriptionFactory(user_membership=test_user_membership,
+                                           external_id=test_external_id,
+                                           is_active=False,
+                                           is_trial=True)
         test_data = {
             'type': 'notification',
             'event': 'payment.succeeded',
@@ -382,6 +386,7 @@ class TestYandexWebhookView:
 
         assert subscription.is_active
         assert not subscription.is_trial
+        assert subscription.user_membership.membership.membership_type == Membership.TIER.PAID
         assert subscription.external_id == test_checkout_payment_id
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
