@@ -32,6 +32,7 @@ class ExamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exam
         fields = [
+            'id',
             'test_assignment_id',
             'user',
             'results',
