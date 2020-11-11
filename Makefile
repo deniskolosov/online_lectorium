@@ -10,6 +10,12 @@ django_shell:
 django_logs:
 	sudo docker-compose -f production.yml logs -f django
 
+front_logs:
+	sudo docker-compose -f production.yml logs -f frontend
+
+logs:
+	sudo docker-compose -f production.yml logs -f
+
 migrate:
 	sudo docker-compose -f production.yml run --rm django python manage.py migrate
 
