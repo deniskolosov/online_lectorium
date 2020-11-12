@@ -13,7 +13,6 @@ class UserHasSubscription(permissions.IsAuthenticatedOrReadOnly):
     """
     Object-level permission to allow access only to subscribed users.
     """
-
     def has_permission(self, request, view):
         return request.user.user_membership.membership.membership_type != Membership.TIER.FREE
 
@@ -32,5 +31,6 @@ class VideoCourseViewset(viewsets.ModelViewSet):
         'lecturer__name': ('exact', ),
         'category__name': ('icontains', ),
         'category__id': ('exact', ),
+        'course_type__id': ('exact', ),
     }
     search_fields = ['name', 'description']

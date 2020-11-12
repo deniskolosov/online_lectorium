@@ -8,8 +8,9 @@ from afi_backend.payments.models import Subscriptable
 from afi_backend.exams.models import TestAssignment
 
 
-class LectureTest(models.Model):
-    pass
+class VideoCourseType(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
 
 
 class VideoCourse(Subscriptable):
@@ -25,6 +26,9 @@ class VideoCourse(Subscriptable):
                        default_currency='RUB')
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    course_type = models.ForeignKey(VideoCourseType,
+                                    on_delete=models.CASCADE,
+                                    null=True)
 
     order_items = GenericRelation('cart.OrderItem',
                                   object_id_field='object_id',
@@ -42,7 +46,9 @@ class VideoCourse(Subscriptable):
 class VideoCoursePart(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
-    course = models.ForeignKey(VideoCourse, on_delete=models.CASCADE, related_name='parts')
+    course = models.ForeignKey(VideoCourse,
+                               on_delete=models.CASCADE,
+                               related_name='parts')
     tests = GenericRelation(TestAssignment,
                             object_id_field='object_id',
                             content_type_field='content_type',
@@ -55,7 +61,10 @@ class CourseLecture(models.Model):
     course = models.ForeignKey(VideoCourse,
                                on_delete=models.CASCADE,
                                related_name='lectures')
-    part = models.ForeignKey(VideoCoursePart, on_delete=models.CASCADE, related_name='lectures', null=True)
+    part = models.ForeignKey(VideoCoursePart,
+                             on_delete=models.CASCADE,
+                             related_name='lectures',
+                             null=True)
     lecturer = models.ForeignKey(Lecturer,
                                  blank=True,
                                  null=True,
