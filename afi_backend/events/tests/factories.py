@@ -73,7 +73,7 @@ class OfflineLectureFactory(BaseLectureFactory):
 
 class VideoLectureFactory(BaseLectureFactory):
     name = factory.Sequence(lambda n: f"Video lecture {n}")
-    link = "http://video.com"
+    vimeo_video_id = "123456"
     certificate = factory.SubFactory(VideoLectureCertificateFactory)
     price = 800
 

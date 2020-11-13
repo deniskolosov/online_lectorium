@@ -48,7 +48,7 @@ class VideoLectureAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'description',
-        'link',
+        'vimeo_video_id',
     ]
     inlines = [BulletPointsInline]
 

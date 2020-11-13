@@ -12,6 +12,7 @@ class CourseLectureSerializer(serializers.ModelSerializer):
     }
     part = serializers.CharField(source='part.name')
     part_id = serializers.IntegerField(source='part.id')
+    tests = TestAssignmentSerializer(many=True)
 
     class Meta:
         model = CourseLecture
@@ -22,7 +23,8 @@ class CourseLectureSerializer(serializers.ModelSerializer):
             'name',
             'part',
             'part_id',
-            'video_link',
+            'vimeo_video_id',
+            'tests',
         ]
 
 
@@ -54,6 +56,7 @@ class VideoCourseSerializer(serializers.ModelSerializer):
     course_parts = serializers.ResourceRelatedField(source='parts',
                                                     many=True,
                                                     read_only=True)
+    lectures = serializers.ResourceRelatedField(many=True, read_only=True)
     included_serializers = {
         'lecturer': events_serializers.LecturerSerializer,
         'category': events_serializers.CategorySerializer,

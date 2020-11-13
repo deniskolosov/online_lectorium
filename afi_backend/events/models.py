@@ -9,12 +9,11 @@ from afi_backend.cart.models import OrderItem
 from afi_backend.payments import models as payment_models
 from afi_backend.users.models import User
 from django.contrib.contenttypes.fields import (GenericForeignKey,
-    GenericRelation)
+                                                GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from djmoney.models.fields import MoneyField
 from afi_backend.payments.models import Subscriptable
 from afi_backend.exams.models import TestAssignment
-
 
 logger = logging.getLogger(__name__)
 
@@ -129,7 +128,7 @@ class UsersVideoLectureCertificates(models.Model):
 
 
 class VideoLecture(LectureBase, Subscriptable):
-    link = models.URLField()
+    vimeo_video_id = models.CharField(max_length=256, null=True)
     certificate = models.ForeignKey(VideoLectureCertificate,
                                     on_delete=models.CASCADE)
     order_items = GenericRelation(OrderItem,

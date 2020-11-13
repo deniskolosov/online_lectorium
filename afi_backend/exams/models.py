@@ -8,7 +8,6 @@ from model_utils.models import post_save
 from django.db.models import Count, Case, When
 
 
-
 class Question(models.Model):
     text = models.TextField()
 
@@ -19,12 +18,16 @@ class Question(models.Model):
 class Answer(models.Model):
     text = models.TextField()
     correct = models.BooleanField()
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question,
+                                 on_delete=models.CASCADE,
+                                 related_name='answers')
 
 
 class TestAssignment(models.Model):
     questions = models.ManyToManyField(Question)
-    limit = models.Q(app_label='events', model='videolecture') | models.Q(app_label='videocourses', model='videocoursepart')
+    limit = models.Q(app_label='events', model='videolecture') | models.Q(
+        app_label='videocourses', model='videocoursepart') | models.Q(
+            app_label='videocourses', model='courselecture')
     content_type = models.ForeignKey(ContentType,
                                      on_delete=models.CASCADE,
                                      null=True,
@@ -44,16 +47,18 @@ class Progress(models.Model):
 
 class Exam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    test_assignment = models.ForeignKey(TestAssignment, on_delete=models.CASCADE)
-    progress = models.OneToOneField(Progress, on_delete=models.CASCADE, blank=True, null=True, related_name='progress')
+    test_assignment = models.ForeignKey(TestAssignment,
+                                        on_delete=models.CASCADE)
+    progress = models.OneToOneField(Progress,
+                                    on_delete=models.CASCADE,
+                                    blank=True,
+                                    null=True,
+                                    related_name='progress')
 
     def test_results(self) -> dict:
         return self.progress.chosen_answers.aggregate(
             correct_answers=Count(Case(When(correct=True, then=1))),
             total_answers=Count('id'))
-
-
-
 
 
 @receiver(post_save, sender=Exam)

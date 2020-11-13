@@ -129,7 +129,7 @@ class TestUserViewSet:
                 'content_object': {
                     'data': {
                         'id': test_vl.id,
-                        'link': test_vl.link,
+                        'vimeo_video_id': test_vl.vimeo_video_id,
                         'certificate': {
                             'type': 'VideoLectureCertificate',
                             'id': str(test_vl.certificate.id)

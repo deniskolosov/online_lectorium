@@ -70,7 +70,11 @@ class CourseLecture(models.Model):
                                  null=True,
                                  help_text="Set if different from course",
                                  on_delete=models.CASCADE)
-    video_link = models.FileField(upload_to="videcourses_lectures/")
+    vimeo_video_id = models.CharField(max_length=256, null=True)
+    tests = GenericRelation(TestAssignment,
+                            object_id_field='object_id',
+                            content_type_field='content_type',
+                            related_query_name='videocourse_lecture')
 
     def save(self, *args, **kwargs):
         if self.lecturer is None:

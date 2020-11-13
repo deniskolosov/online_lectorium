@@ -97,7 +97,7 @@ class VideoLectureSerializer(serializers.ModelSerializer):
             'description',
             'id',
             'lecturer',
-            'link',
+            'vimeo_video_id',
             'name',
             'picture',
             'price',
