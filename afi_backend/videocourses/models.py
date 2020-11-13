@@ -49,6 +49,8 @@ class VideoCoursePart(models.Model):
     course = models.ForeignKey(VideoCourse,
                                on_delete=models.CASCADE,
                                related_name='parts')
+    picture = models.ImageField(upload_to='videocourse_part_pictures/',
+                                null=True)
     tests = GenericRelation(TestAssignment,
                             object_id_field='object_id',
                             content_type_field='content_type',

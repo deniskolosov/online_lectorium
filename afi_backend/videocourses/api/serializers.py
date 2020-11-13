@@ -36,6 +36,7 @@ class VideoCoursePartSerializer(serializers.ModelSerializer):
         fields = [
             'name',
             'description',
+            'picture',
             'course',
             'lectures',
             'tests',
