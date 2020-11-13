@@ -3,6 +3,7 @@ from afi_backend.videocourses.models import VideoCourse, CourseLecture, VideoCou
 from afi_backend.events.api import serializers as events_serializers
 from afi_backend.payments.api.serializers import MembershipSerializer
 from afi_backend.payments.models import Membership
+from afi_backend.exams.api.serializers import TestAssignmentSerializer
 
 
 class CourseLectureSerializer(serializers.ModelSerializer):
@@ -26,6 +27,8 @@ class CourseLectureSerializer(serializers.ModelSerializer):
 
 
 class VideoCoursePartSerializer(serializers.ModelSerializer):
+    tests = TestAssignmentSerializer(many=True)
+
     class Meta:
         model = VideoCoursePart
         fields = [
@@ -33,6 +36,7 @@ class VideoCoursePartSerializer(serializers.ModelSerializer):
             'description',
             'course',
             'lectures',
+            'tests',
         ]
 
 
@@ -47,12 +51,16 @@ class VideoCourseTypeSerializer(serializers.ModelSerializer):
 
 class VideoCourseSerializer(serializers.ModelSerializer):
     is_released = serializers.SerializerMethodField()
+    course_parts = serializers.ResourceRelatedField(source='parts',
+                                                    many=True,
+                                                    read_only=True)
     included_serializers = {
         'lecturer': events_serializers.LecturerSerializer,
         'category': events_serializers.CategorySerializer,
         'course_type': VideoCourseTypeSerializer,
         'lectures': CourseLectureSerializer,
-        'allowed_memberships': MembershipSerializer
+        'allowed_memberships': MembershipSerializer,
+        'course_parts': VideoCoursePartSerializer,
     }
 
     class Meta:
@@ -61,6 +69,7 @@ class VideoCourseSerializer(serializers.ModelSerializer):
             'allowed_memberships',
             'category',
             'course_type',
+            'course_parts',
             'description',
             'id',
             'is_released',
