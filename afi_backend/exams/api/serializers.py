@@ -22,7 +22,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = [
             'text',
             'answers',
-            'picture',
+            'question_picture',
         ]
 
 
