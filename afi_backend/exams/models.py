@@ -10,6 +10,9 @@ from django.db.models import Count, Case, When
 
 class Question(models.Model):
     text = models.TextField()
+    question_picture = models.ImageField(upload_to="test_pictures/",
+                                         null=True,
+                                         blank=True)
 
     def __str__(self):
         return f"{self.text[:15]}"
