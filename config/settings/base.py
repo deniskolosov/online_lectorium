@@ -107,6 +107,7 @@ LOCAL_APPS = [
     "afi_backend.videocourses.apps.VideocoursesConfig",
     "afi_backend.blog.apps.BlogConfig",
     "afi_backend.exams.apps.ExamsConfig",
+    "afi_backend.packages.apps.PackagesConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

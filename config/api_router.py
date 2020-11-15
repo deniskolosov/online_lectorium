@@ -21,12 +21,14 @@ from afi_backend.cart.api.views import CartViewset, OrderItemViewset
 from afi_backend.videocourses.api.views import VideoCourseViewset
 from afi_backend.blog.api.views import PostViewset
 from afi_backend.exams.api.views import ExamViewset
+from afi_backend.packages.api.views import VideoLecturePackageViewset, VideoCoursePackageViewset
+
 
 class OptionalSlashRouter(SimpleRouter):
-
     def __init__(self):
         super().__init__()
         self.trailing_slash = '/?'
+
 
 if settings.DEBUG:
     router = OptionalSlashRouter()
@@ -51,6 +53,12 @@ router.register("categories", CategoriesViewSet, basename='categories')
 router.register("lecturers", LecturersViewset, basename='lecturers')
 router.register('blogposts', PostViewset, basename='blogposts')
 router.register('exams', ExamViewset, basename='exams')
+router.register('packages/videocourses',
+                VideoCoursePackageViewset,
+                basename='videocoursepackages')
+router.register('packages/videolectures',
+                VideoLecturePackageViewset,
+                basename='videolecturepackages')
 router.register("payments/subscriptions",
                 CreateSubscriptionViewset,
                 basename="create-subscription")
