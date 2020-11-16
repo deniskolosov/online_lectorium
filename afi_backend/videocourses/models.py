@@ -37,7 +37,7 @@ class VideoCourse(Subscriptable):
 
     @property
     def is_released(self):
-        return self.release_date < timezone.now()
+        return self.release_date <= timezone.now()
 
     class Meta:
         ordering = ['id']

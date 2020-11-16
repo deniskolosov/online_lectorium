@@ -11,12 +11,15 @@ from afi_backend.tickets.api.serializers import TicketSerializer
 from afi_backend.videocourses.api.serializers import VideoCourseSerializer
 from afi_backend.videocourses.models import VideoCourse
 from afi_backend.users.models import User
+from afi_backend.packages.models import VideoCoursePackage, VideoLecturePackage
+from afi_backend.packages.api.serializers import VideoCoursePackageSerializer, VideoLecturePackageSerializer
 
 
 class OrderItemRelatedField(ResourceRelatedField):
     def to_representation(self, value):
         """
         Serialize order_items by their type.
+        # TODO: DRY! refactor
         """
         if isinstance(value, VideoLecture):
             data = VideoLectureSerializer(value).data
@@ -36,6 +39,20 @@ class OrderItemRelatedField(ResourceRelatedField):
         if isinstance(value, VideoCourse):
             data = VideoCourseSerializer(value).data
             data["type"] = "VideoCourse"
+            return data
+
+        if isinstance(value, VideoCoursePackage):
+            video_courses = value.videocourses
+            data = VideoCourseSerializer(video_courses, many=True).data
+            for val in data:
+                val['type'] = 'VideoCourse'
+            return data
+
+        if isinstance(value, VideoLecturePackage):
+            video_lectures = value.videolectures
+            data = VideoLectureSerializer(video_lectures, many=True).data
+            for val in data:
+                val['type'] = 'VideoLecture'
             return data
 
         raise Exception('Unexpected type of order_item')
