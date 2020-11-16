@@ -425,10 +425,10 @@ SUBSCRIPTION_LENGTH_DAYS = env("SUBSCRIPTION_LENGTH_DAYS", default=30)
 # Swagger settings
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
-        'Token': {
+        'api_key': {
             'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
+            'in': 'header',
+            'name': 'Authorization'
         }
     }
 }

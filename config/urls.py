@@ -64,7 +64,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="developer@artforintrovert.ru"),
     ),
     public=False,
-    permission_classes=(permissions.IsAdminUser, ),
+    permission_classes=(permissions.AllowAny, ),
 )
 
 

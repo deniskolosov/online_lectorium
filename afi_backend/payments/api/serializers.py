@@ -1,10 +1,7 @@
 from rest_framework_json_api import serializers
-from afi_backend.payments.models import (Payment,
-                                         PaymentMethod,
-                                         VideoLectureOrderItem,
-                                         Subscription,
-                                         Membership,
-                                         UserMembership)
+from afi_backend.payments.models import (Payment, PaymentMethod,
+                                         VideoLectureOrderItem, Subscription,
+                                         Membership, UserMembership)
 from afi_backend.users.models import User
 
 
@@ -42,9 +39,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = ['membership_type',
-                  'payment_method',
-                  'payment_url',]
+        fields = [
+            'membership_type',
+            'payment_method',
+            'payment_url',
+        ]
 
     def create(self, validated_data):
         membership = validated_data.get('user_membership')
@@ -58,12 +57,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             membership_type=membership_type)
         user_membership = UserMembership.objects.create(
             membership=membership_type, user=user)
-        return Subscription.objects.create(user_membership=user_membership, payment_method=payment_method)
+        return Subscription.objects.create(user_membership=user_membership,
+                                           payment_method=payment_method)
 
     def get_payment_url(self, obj):
         return obj.get_payment_url()
-
-
 
 
 class MembershipSerializer(serializers.ModelSerializer):
@@ -82,4 +80,4 @@ class UserMembershipSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserMembership
-        fields = ['membership_type']
+        fields = ['membership']
