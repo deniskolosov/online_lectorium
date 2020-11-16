@@ -63,6 +63,23 @@ http:
         # https://docs.traefik.io/master/routing/routers/#certresolver
         certResolver: letsencrypt
 
+    swagger:
+      rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/swagger`)"
+      service: django
+      entryPoints:
+        - web
+      middlewares:
+        - redirect
+
+    swagger-secure:
+      rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/swagger`)"
+      service: django
+      entryPoints:
+        - web-secure
+      tls:
+        # https://docs.traefik.io/master/routing/routers/#certresolver
+        certResolver: letsencrypt
+
     django-admin:
       rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/oPL63AzL5RWzskE2BQKk4bvxVYVFmqSg/`)"
       service: django

@@ -13,6 +13,9 @@ django_logs:
 front_logs:
 	sudo docker-compose -f production.yml logs -f frontend
 
+db_logs:
+	sudo docker-compose -f production.yml logs -f postgres
+
 logs:
 	sudo docker-compose -f production.yml logs -f
 
