@@ -6,6 +6,7 @@ from afi_backend.videocourses.api.serializers import VideoCourseSerializer
 
 class VideoLecturePackageSerializer(serializers.ModelSerializer):
     videolectures = VideoLectureSerializer(read_only=True, many=True)
+    included_serializers = {'videolectures': VideoLectureSerializer}
 
     class Meta:
         model = VideoLecturePackage
@@ -14,6 +15,9 @@ class VideoLecturePackageSerializer(serializers.ModelSerializer):
 
 class VideoCoursePackageSerializer(serializers.ModelSerializer):
     videocourses = VideoCourseSerializer(read_only=True, many=True)
+    included_serializers = {
+        'videocourses': VideoCourseSerializer,
+    }
 
     class Meta:
         model = VideoCoursePackage

@@ -15,6 +15,9 @@ class VideoLecturePackageViewset(viewsets.ModelViewSet):
         django_filters.DjangoFilterBackend,
         drf_filters.SearchFilter,
     )
+    filterset_fields = {
+        'videolectures__category__id': ('exact', ),
+    }
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
@@ -26,4 +29,8 @@ class VideoCoursePackageViewset(viewsets.ModelViewSet):
         django_filters.DjangoFilterBackend,
         drf_filters.SearchFilter,
     )
+    filterset_fields = {
+        'videocourses__category__id': ('exact', ),
+        'videocourses__course_type__id': ('exact', ),
+    }
     permission_classes = [IsAuthenticatedOrReadOnly]
