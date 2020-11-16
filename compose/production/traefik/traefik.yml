@@ -135,6 +135,7 @@ http:
       basicAuth:
         users:
           - "test:$apr1$pwy2cslb$2pXFRaZtsXW/CKgBzqq9L1"
+          - "swagger:$apr1$k1b9uape$XfstID.Sw2voS327q3RzW/"
 
   services:
     frontend:
