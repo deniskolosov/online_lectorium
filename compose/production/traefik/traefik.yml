@@ -66,6 +66,8 @@ http:
     swagger:
       rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/swagger`)"
       service: django
+      middlewares:
+        - redirect
       entryPoints:
         - web
       middlewares:
@@ -74,6 +76,8 @@ http:
     swagger-secure:
       rule: "Host(`dev.artforintrovert.ru`) && PathPrefix(`/swagger`)"
       service: django
+      middlewares:
+        - auth
       entryPoints:
         - web-secure
       tls:
