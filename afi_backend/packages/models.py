@@ -11,6 +11,11 @@ class VideoCoursePackage(models.Model):
                        default=1,
                        default_currency='RUB')
     videocourses = models.ManyToManyField(VideoCourse)
+    description = models.TextField(null=True)
+    release_date = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f"Videocourse package #{self.id}"
 
 
 class VideoLecturePackage(models.Model):
@@ -20,3 +25,8 @@ class VideoLecturePackage(models.Model):
                        default=1,
                        default_currency='RUB')
     videolectures = models.ManyToManyField(VideoLecture)
+    description = models.TextField(null=True)
+    release_date = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f"Videolecture package #{self.id}"

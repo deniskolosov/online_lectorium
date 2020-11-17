@@ -1,7 +1,7 @@
 from rest_framework_json_api import serializers
 from afi_backend.videocourses.models import VideoCourse, CourseLecture, VideoCoursePart, VideoCourseType
 from afi_backend.events.api import serializers as events_serializers
-from afi_backend.payments.api.serializers import MembershipSerializer
+from afi_backend.payments.api.serializers import MembershipField
 from afi_backend.payments.models import Membership
 from afi_backend.exams.api.serializers import TestAssignmentSerializer
 
@@ -12,7 +12,7 @@ class CourseLectureSerializer(serializers.ModelSerializer):
     }
     part = serializers.CharField(source='part.name')
     part_id = serializers.IntegerField(source='part.id')
-    tests = TestAssignmentSerializer(many=True)
+    tests = TestAssignmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = CourseLecture
@@ -29,7 +29,7 @@ class CourseLectureSerializer(serializers.ModelSerializer):
 
 
 class VideoCoursePartSerializer(serializers.ModelSerializer):
-    tests = TestAssignmentSerializer(many=True)
+    tests = TestAssignmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = VideoCoursePart
@@ -63,7 +63,7 @@ class VideoCourseSerializer(serializers.ModelSerializer):
         'category': events_serializers.CategorySerializer,
         'course_type': VideoCourseTypeSerializer,
         'lectures': CourseLectureSerializer,
-        'allowed_memberships': MembershipSerializer,
+        'allowed_memberships': MembershipField,
         'course_parts': VideoCoursePartSerializer,
     }
 

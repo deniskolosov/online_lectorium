@@ -17,7 +17,6 @@ from djmoney.models.fields import MoneyField
 logger = logging.getLogger(__name__)
 
 
-
 class Payable(models.Model):
     """
     Inherit from this if you want the model to be 'buyable'.
@@ -86,6 +85,9 @@ class Payment(models.Model):
 
     tracker = FieldTracker()
 
+    def __str__(self):
+        return f"Payment #{self.id} for cart #{self.cart.id}"
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # If payment is completed for item, do afterpayment logic
@@ -141,11 +143,18 @@ class Subscriptable(models.Model):
 
 class UserMembership(models.Model):
     membership = models.OneToOneField(Membership, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_membership')
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                related_name='user_membership')
+
+    def __str__(self):
+        return f"User membership #{self.id} for user #{self.user.id}"
 
     class Meta:
-        unique_together = ("user", "membership",)
-
+        unique_together = (
+            "user",
+            "membership",
+        )
 
 
 class Subscription(models.Model):
@@ -163,6 +172,9 @@ class Subscription(models.Model):
 
     tracker = FieldTracker()
 
+    def __str__(self):
+        return f"Subscription #{self.id} for user #{self.user_membership.user.id}"
+
     def save(self, *args, **kwargs):
         # todo if is_active is changed to False, update user_membership status to Free
         super().save(*args, **kwargs)
@@ -173,12 +185,16 @@ class Subscription(models.Model):
                 'is_active'):
             self.user_membership.membership.membership_type = Membership.TIER.FREE
             self.user_membership.membership.save()
-            logger.info(f"Setting membership for subscription {self.user_membership.id}")
-        elif self.tracker.has_changed('is_active') and not self.tracker.previous('is_active'):
+            logger.info(
+                f"Setting membership for subscription {self.user_membership.id}"
+            )
+        elif self.tracker.has_changed(
+                'is_active') and not self.tracker.previous('is_active'):
             self.user_membership.membership.membership_type = Membership.TIER.PAID
             self.user_membership.membership.save()
-            logger.info(f"Subscription is activated for user_membership {self.user_membership.id}")
-
+            logger.info(
+                f"Subscription is activated for user_membership {self.user_membership.id}"
+            )
 
     def get_payment_url(self):
         adaptor = self.payment_method.get_adaptor()

@@ -12,3 +12,6 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=256, null=True)
     description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Post by {self.author}: {description[10:]}"

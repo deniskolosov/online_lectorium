@@ -1,10 +1,10 @@
 from rest_framework.fields import CurrentUserDefault
-from rest_framework_json_api import serializers
+from rest_framework_json_api import serializers, relations
 
 from afi_backend.exams.models import Answer, Exam, Question, TestAssignment, Progress
 
 
-class AnswerSerializer(serializers.ModelSerializer):
+class AnswerSerializer(relations.ResourceRelatedField):
     class Meta:
         model = Answer
         fields = [
@@ -63,7 +63,7 @@ class ExamSerializer(serializers.ModelSerializer):
         return exam
 
 
-class TestAssignmentSerializer(serializers.ModelSerializer):
+class TestAssignmentSerializer(relations.ResourceRelatedField):
     class Meta:
         model = TestAssignment
         fields = [

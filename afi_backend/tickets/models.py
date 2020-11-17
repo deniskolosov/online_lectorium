@@ -25,6 +25,9 @@ class Ticket(Payable):
                                   object_id_field='object_id',
                                   related_query_name='ticket')
 
+    def __str__(self):
+        return f"Ticket #{self.id} for offline_lecture #{self.offline_lecture.id}"
+
     def generate_qr_code(self):
         logger.info("Generating qr code for {self}")
         return QRCode.objects.create(ticket=self, scanned=False)
@@ -67,6 +70,9 @@ class QRCode(models.Model):
                             primary_key=True)
     scanned = models.BooleanField(default=False)
     ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE, blank=True)
+
+    def __str__(self):
+        return f"QRCode #{self.id} for ticket #{self.ticket.id}"
 
     def is_valid(self):
         return not self.scanned

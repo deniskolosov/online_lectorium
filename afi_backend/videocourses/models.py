@@ -35,6 +35,9 @@ class VideoCourse(Subscriptable):
                                   content_type_field='content_type',
                                   related_query_name='video_course')
 
+    def __str__(self):
+        return f"Videocourse #{self.name}"
+
     @property
     def is_released(self):
         return self.release_date <= timezone.now()
@@ -55,6 +58,9 @@ class VideoCoursePart(models.Model):
                             object_id_field='object_id',
                             content_type_field='content_type',
                             related_query_name='videocourse_part')
+
+    def __str___(self):
+        return f"Videocourse part #{self.name}"
 
 
 class CourseLecture(models.Model):
@@ -77,6 +83,9 @@ class CourseLecture(models.Model):
                             object_id_field='object_id',
                             content_type_field='content_type',
                             related_query_name='videocourse_lecture')
+
+    def __str___(self):
+        return f"Courselecture #{self.name}"
 
     def save(self, *args, **kwargs):
         if self.lecturer is None:

@@ -6,7 +6,7 @@ from afi_backend.events.tests.factories import VideoLectureFactory
 from afi_backend.videocourses.tests.factories import VideoCoursePartFactory
 
 
-class TestAssignmentFactory(factory.django.DjangoModelFactory):
+class MyTestAssignmentFactory(factory.django.DjangoModelFactory):
     object_id = factory.SelfAttribute('content_object.id')
     content_type = factory.LazyAttribute(
         lambda o: ContentType.objects.get_for_model(o.content_object))
@@ -16,24 +16,23 @@ class TestAssignmentFactory(factory.django.DjangoModelFactory):
         abstract = True
 
 
-class TestAssignmentVideoLectureFactory(factory.django.DjangoModelFactory):
+class MyTestAssignmentVideoLectureFactory(MyTestAssignmentFactory):
     content_object = factory.SubFactory(VideoLectureFactory)
 
     class Meta:
         model = TestAssignment
 
 
-class TestAssigmentVideoCoursePartFactory(factory.django.DjangoModelFactory):
+class MyTestAssigmentVideoCoursePartFactory(MyTestAssignmentFactory):
     content_object = factory.SubFactory(VideoCoursePartFactory)
 
     class Meta:
         model = TestAssignment
 
 
-
 class ExamFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
-    test_assignment = factory.SubFactory(TestAssigmentVideoCoursePartFactory)
+    test_assignment = factory.SubFactory(MyTestAssigmentVideoCoursePartFactory)
 
     class Meta:
         model = Exam

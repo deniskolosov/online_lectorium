@@ -24,6 +24,9 @@ class OrderItem(models.Model):
                                  related_name='order_items')
     is_paid = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Order item with {self.content_object}"
+
     class Meta:
         ordering = ['id']
 
@@ -50,6 +53,9 @@ class Cart(Payable):
         self.is_paid = True
         self.order_items.update(is_paid=True)
         self.save()
+
+    def __str__(self):
+        return f"Cart #{self.id}"
 
     class Meta:
         ordering = ['-created_at']

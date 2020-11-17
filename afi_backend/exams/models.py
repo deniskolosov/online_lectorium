@@ -25,6 +25,9 @@ class Answer(models.Model):
                                  on_delete=models.CASCADE,
                                  related_name='answers')
 
+    def __str__(self):
+        return f"Answer #{self.id}: {self.text[10:]}"
+
 
 class TestAssignment(models.Model):
     questions = models.ManyToManyField(Question)
@@ -47,6 +50,9 @@ class TestAssignment(models.Model):
 class Progress(models.Model):
     chosen_answers = models.ManyToManyField(Answer)
 
+    def __str__(self):
+        return f"Progress record #{self.id}"
+
 
 class Exam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -57,6 +63,9 @@ class Exam(models.Model):
                                     blank=True,
                                     null=True,
                                     related_name='progress')
+
+    def __str__(self):
+        return f"Exam #{self.id} taken by {self.user}"
 
     def test_results(self) -> dict:
         return self.progress.chosen_answers.aggregate(

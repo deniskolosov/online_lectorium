@@ -1,4 +1,4 @@
-from rest_framework_json_api import serializers
+from rest_framework_json_api import serializers, relations
 from afi_backend.payments.models import (Payment, PaymentMethod,
                                          VideoLectureOrderItem, Subscription,
                                          Membership, UserMembership)
@@ -64,7 +64,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return obj.get_payment_url()
 
 
-class MembershipSerializer(serializers.ModelSerializer):
+class MembershipField(relations.ResourceRelatedField):
     membership_type = serializers.SerializerMethodField()
 
     class Meta:
@@ -76,7 +76,7 @@ class MembershipSerializer(serializers.ModelSerializer):
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):
-    membership = MembershipSerializer()
+    membership = MembershipField(read_only=True)
 
     class Meta:
         model = UserMembership

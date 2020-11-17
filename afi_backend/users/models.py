@@ -19,6 +19,9 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def __str__(self):
+        return f"User #{self.id}: {self.name}"
+
     def get_absolute_url(self):
         """Get url for user's detail view.
 

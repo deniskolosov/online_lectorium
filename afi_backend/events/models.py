@@ -88,6 +88,9 @@ class OfflineLecture(LectureBase):
     lecture_date = models.DateTimeField()
     capacity = models.PositiveSmallIntegerField(null=True)
 
+    def __str__(self):
+        return f"Offline Lecture #{self.id}: {self.description[10:]}"
+
     def lecture_date_ts(self):
         # Return lecture date as timestamp.
         ts = int(time.mktime(self.lecture_date.timetuple()))
