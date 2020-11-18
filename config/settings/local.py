@@ -84,3 +84,6 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM':
     'user_email',  # actual keyword in token data
 }
+
+REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] += (
+    'rest_framework.authentication.SessionAuthentication', )

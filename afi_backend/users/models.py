@@ -20,7 +20,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return f"User #{self.id}: {self.name}"
+        return f"User #{self.id}: {self.email}"
 
     def get_absolute_url(self):
         """Get url for user's detail view.
