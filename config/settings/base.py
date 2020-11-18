@@ -88,6 +88,7 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
+    "djoser",
     "rest_auth",
     "corsheaders",
     "drf_yasg",
@@ -258,6 +259,18 @@ EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND",
                     default="django.core.mail.backends.smtp.EmailBackend")
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
+
+DJOSER = {
+    # 'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    # 'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'USER_ID_FIELD': 'email',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {
+        'user': 'afi_backend.users.api.serializers.UserSerializer',
+        'user_create': 'afi_backend.users.api.serializers.UserSerializer',
+    },
+}
 
 # ADMIN
 # ------------------------------------------------------------------------------

@@ -13,6 +13,7 @@ from rest_framework_json_api import filters
 from afi_backend.users.api.serializers import UserSerializer, UserpicSerializer
 from django_filters import rest_framework as django_filters_filters
 from afi_backend.cart.models import OrderItem
+from djoser import views as djoser_views
 
 User = get_user_model()
 
@@ -26,7 +27,7 @@ class ItemTypeFilter(django_filters_filters.FilterSet):
         fields = ['item_type']
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(djoser_views.UserViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "email"
@@ -37,21 +38,6 @@ class UserViewSet(ModelViewSet):
         drf_filters.SearchFilter,
     )
     filterset_class = ItemTypeFilter
-
-    @action(detail=False, methods=["GET"])
-    def me(self, request):
-        serializer = UserSerializer(request.user, context={"request": request})
-        return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'create':
-            permission_classes = []
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
 
     @action(detail=True,
             methods=["PUT"],

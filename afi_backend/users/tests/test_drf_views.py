@@ -42,6 +42,7 @@ class TestUserViewSet:
         request.user = user
 
         view.request = request
+        view.action = 'list'
 
         assert user in view.get_queryset()
 
@@ -54,6 +55,9 @@ class TestUserViewSet:
         email = user.email
 
         view.request = request
+
+        view.action = 'get'
+        view.format_kwarg = None
 
         response = view.me(request)
 
@@ -78,7 +82,6 @@ class TestUserViewSet:
         return response.data
 
     def test_create_user_upload_picture(self):
-        # TODO: test for uploading a userpic
         user_data = self._post_create_user()
         assert self.test_email == user_data['email']
         assert f'http://testserver/api/users/{self.test_email}' == user_data[

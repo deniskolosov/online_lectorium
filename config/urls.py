@@ -1,5 +1,6 @@
 from allauth.account.views import PasswordResetFromKeyView
 from allauth.account import urls
+from djoser import urls
 from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
