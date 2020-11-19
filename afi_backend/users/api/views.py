@@ -1,19 +1,27 @@
+import requests
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db.models import Q
-from rest_framework import status, parsers, response
+from django_filters import rest_framework as django_filters_filters
+from djoser import views as djoser_views
+from rest_framework import filters as drf_filters, parsers, response, status
 from rest_framework.decorators import action, parser_classes
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
+    RetrieveModelMixin, UpdateModelMixin)
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework_json_api import django_filters as dj_filters, filters
+
+from djoser import signals, utils
+from djoser.compat import get_user_email
+
 from afi_backend.cart.api.serializers import OrderItemSerializer
-from rest_framework import filters as drf_filters
-from rest_framework_json_api import django_filters as dj_filters
-from rest_framework_json_api import filters
-from afi_backend.users.api.serializers import UserSerializer, UserpicSerializer
-from django_filters import rest_framework as django_filters_filters
 from afi_backend.cart.models import OrderItem
-from djoser import views as djoser_views
+from afi_backend.users.api.serializers import (UserSerializer,
+    UserpicSerializer)
+
 
 User = get_user_model()
 
@@ -38,6 +46,26 @@ class UserViewSet(djoser_views.UserViewSet):
         drf_filters.SearchFilter,
     )
     filterset_class = ItemTypeFilter
+
+    @action(["get"], detail=False)
+    def activation(self, request, *args, **kwargs):
+        breakpoint()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.user
+        user.is_active = True
+        user.save()
+
+        signals.user_activated.send(
+            sender=self.__class__, user=user, request=self.request
+        )
+
+        if settings.SEND_CONFIRMATION_EMAIL:
+            context = {"user": user}
+            to = [get_user_email(user)]
+            settings.EMAIL.confirmation(self.request, context).send(to)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True,
             methods=["PUT"],
@@ -98,3 +126,19 @@ class UserViewSet(djoser_views.UserViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return response.Response(serializer.data)
+
+
+# Reroute activation link request to djoser api
+class ActivateUser(GenericAPIView):
+
+    def get(self, request, uid, token, format=None):
+        breakpoint()
+        payload = {'uid': uid, 'token': token}
+
+        url = "/api/users/activation/"
+        response = requests.post(url, data=payload)
+
+        if response.status_code == 204:
+            return Response({}, response.status_code)
+        else:
+            return Response(response.json())

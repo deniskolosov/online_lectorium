@@ -1,9 +1,15 @@
+from djoser.email import ActivationEmail
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from afi_backend.payments.api.serializers import VideoLectureOrderItemSerializer, UserMembershipSerializer
+
+from afi_backend.events.api.serializers import (OfflineLectureSerializer,
+    VideoLectureSerializer)
+from afi_backend.payments.api.serializers import (UserMembershipSerializer,
+    VideoLectureOrderItemSerializer)
 from afi_backend.tickets.api.serializers import TicketSerializer
-from afi_backend.events.api.serializers import VideoLectureSerializer, OfflineLectureSerializer
-from afi_backend.tickets.api.serializers import TicketSerializer
+from django.conf import settings
+
 
 User = get_user_model()
 

@@ -264,7 +264,7 @@ DJOSER = {
     # 'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     # 'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
     'USER_ID_FIELD': 'email',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'ACTIVATION_URL': 'api/users/activation/{uid}/{token}/',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user': 'afi_backend.users.api.serializers.UserSerializer',
