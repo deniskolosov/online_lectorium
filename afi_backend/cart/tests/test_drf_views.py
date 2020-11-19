@@ -1,18 +1,21 @@
-from rest_framework.test import APIClient, force_authenticate
+import pytest
 from django.utils import timezone
 from freezegun import freeze_time
+from rest_framework.test import APIClient, force_authenticate
 
-import pytest
-
-from afi_backend.cart.tests.factories import (CartFactory,
-                                              OrderItemTicketFactory,
-                                              OrderItemVideoLectureFactory)
-from afi_backend.users.tests.factories import UserFactory
+from afi_backend.cart.tests.factories import (
+    CartFactory,
+    OrderItemTicketFactory,
+    OrderItemVideoLectureFactory,
+)
 from afi_backend.events.tests.factories import VideoLectureFactory
-from afi_backend.videocourses.tests.factories import VideoCourseFactory
-from afi_backend.packages.tests.factories import VideoCoursePackageFactory
+from afi_backend.packages.tests.factories import (
+    VideoCoursePackageFactory,
+    VideoLecturePackageFactory,
+)
 from afi_backend.tickets.tests.factories import TicketFactory
-from afi_backend.packages.tests.factories import VideoLecturePackageFactory
+from afi_backend.users.tests.factories import UserFactory
+from afi_backend.videocourses.tests.factories import VideoCourseFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -35,6 +38,25 @@ class TestCartViewSet:
         cart_total = response.json()['data'][0]['attributes']['total']
         assert cart_total == int(
             (test_ticket.price + test_video_lecture.price).round(1).amount)
+
+    def test_create_cart(self):
+        client = APIClient()
+        test_user = UserFactory()
+        client.force_authenticate(user=test_user)
+        test_order_item = OrderItemVideoLectureFactory()
+        test_order_item1 = OrderItemVideoLectureFactory()
+        test_data = {"data": {"type": "Cart",
+                              "attributes": {"order_items": [{"type": "OrderItem", "id": f"{test_order_item.id}"},
+                                                             {"type": "OrderItem", "id": f"{test_order_item1.id}"}],
+                                             }
+                              }}
+
+        response = client.post('/api/cart/', test_data)
+        assert response.status_code == 201
+        assert response.json()['data']['relationships']['order_items']['meta']['count'] == 2
+        assert response.json()['data']['relationships']['order_items']['data'][0]['id'] == f"{test_order_item.id}"
+        assert response.json()['data']['relationships']['order_items']['data'][1]['id'] == f"{test_order_item1.id}"
+
 
     def test_cart_total_vlecture_only(self):
         client = APIClient()

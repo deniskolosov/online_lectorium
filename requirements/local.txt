@@ -36,5 +36,6 @@ django-coverage-plugin==1.8.0  # https://github.com/nedbat/django_coverage_plugi
 pytest-django==3.9.0  # https://github.com/pytest-dev/pytest-django
 pytest-mock==3.3.1 # https://github.com/pytest-dev/pytest-mock
 
+autoflake==1.4
 importmagic
 epc

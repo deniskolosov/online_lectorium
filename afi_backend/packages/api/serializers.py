@@ -1,3 +1,4 @@
+
 from rest_framework_json_api import serializers
 from afi_backend.packages.models import VideoLecturePackage, VideoCoursePackage
 from afi_backend.events.api.serializers import VideoLectureSerializer
@@ -10,7 +11,7 @@ class VideoLecturePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VideoLecturePackage
-        fields = ['videolectures']
+        fields = ['videolectures', 'price', 'image', 'description', 'release_date']
 
 
 class VideoCoursePackageSerializer(serializers.ModelSerializer):
@@ -21,4 +22,4 @@ class VideoCoursePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VideoCoursePackage
-        fields = ['videocourses']
+        fields = ['videocourses', 'price', 'image', 'description', 'release_date']
