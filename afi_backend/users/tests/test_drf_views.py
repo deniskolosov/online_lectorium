@@ -69,6 +69,16 @@ class TestUserViewSet:
             "name": user.name,
         }
 
+    def test_user_activation_view(self):
+        # create test user
+        # generate activation token
+        # send uid + token using activation link
+        test_user = UserFactory()
+        # TODO: generate token
+        resp = self.client.get(
+            f'/api/users/activation/{test_user.id}/test_token/')
+
+
     def _generate_photo_file(self) -> BinaryIO:
         file = io.BytesIO()
         image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))

@@ -7,6 +7,7 @@ from djoser import views as djoser_views
 from rest_framework import filters as drf_filters, parsers, response, status
 from rest_framework.decorators import action, parser_classes
 from rest_framework.generics import GenericAPIView
+from rest_framework.request import Request
 from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
     RetrieveModelMixin, UpdateModelMixin)
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
@@ -47,10 +48,11 @@ class UserViewSet(djoser_views.UserViewSet):
     )
     filterset_class = ItemTypeFilter
 
-    @action(["get"], detail=False)
-    def activation(self, request, *args, **kwargs):
-        breakpoint()
-        serializer = self.get_serializer(data=request.data)
+    @action(["get"],
+            detail=False,
+            url_path=('activation/(?P<uid>[^/.]+)/(?P<token>[^/.]+)/'))
+    def activation(self, request: Request, uid: str, token: str, *args, **kwargs) -> Response:
+        serializer = self.get_serializer(data={"uid": uid, "token": token})
         serializer.is_valid(raise_exception=True)
         user = serializer.user
         user.is_active = True
