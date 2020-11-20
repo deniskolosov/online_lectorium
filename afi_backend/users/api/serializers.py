@@ -1,15 +1,19 @@
 from djoser.email import ActivationEmail
+from djoser.serializers import ActivationSerializer
+
+from djoser import utils
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from afi_backend.events.api.serializers import (OfflineLectureSerializer,
-    VideoLectureSerializer)
-from afi_backend.payments.api.serializers import (UserMembershipSerializer,
-    VideoLectureOrderItemSerializer)
+                                                VideoLectureSerializer)
+from afi_backend.payments.api.serializers import (
+    UserMembershipSerializer, VideoLectureOrderItemSerializer)
 from afi_backend.tickets.api.serializers import TicketSerializer
 from django.conf import settings
 
+from rest_framework.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -56,3 +60,30 @@ class UserpicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["userpic"]
+
+
+class UserActivationSerializer(ActivationSerializer):
+    uid = serializers.IntegerField()
+
+    def validate(self, attrs):
+        validated_data = {
+            'uid': str(self.initial_data.get('uid')),
+            'token': self.initial_data.get("token", "")
+        }
+
+        try:
+            self.user = User.objects.get(
+                pk=str(self.initial_data.get('uid', "")))
+        except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+            key_error = "invalid_uid"
+            raise ValidationError({"uid": [self.error_messages[key_error]]},
+                                  code=key_error)
+
+        is_token_valid = self.context["view"].token_generator.check_token(
+            self.user, self.initial_data.get("token", ""))
+        if is_token_valid:
+            return validated_data
+        else:
+            key_error = "invalid_token"
+            raise ValidationError({"token": [self.error_messages[key_error]]},
+                                  code=key_error)

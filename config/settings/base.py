@@ -266,9 +266,12 @@ DJOSER = {
     'USER_ID_FIELD': 'email',
     'ACTIVATION_URL': 'api/users/activation/{uid}/{token}/',
     'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
     'SERIALIZERS': {
         'user': 'afi_backend.users.api.serializers.UserSerializer',
         'user_create': 'afi_backend.users.api.serializers.UserSerializer',
+        'activation':
+        'afi_backend.users.api.serializers.UserActivationSerializer',
     },
 }
 

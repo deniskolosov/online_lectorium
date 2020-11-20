@@ -1,15 +1,17 @@
 import requests
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from djoser.conf import settings as djoser_settings
 from django.db.models import Q
 from django_filters import rest_framework as django_filters_filters
 from djoser import views as djoser_views
+from djoser import utils
 from rest_framework import filters as drf_filters, parsers, response, status
 from rest_framework.decorators import action, parser_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
-    RetrieveModelMixin, UpdateModelMixin)
+                                   RetrieveModelMixin, UpdateModelMixin)
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -21,8 +23,7 @@ from djoser.compat import get_user_email
 from afi_backend.cart.api.serializers import OrderItemSerializer
 from afi_backend.cart.models import OrderItem
 from afi_backend.users.api.serializers import (UserSerializer,
-    UserpicSerializer)
-
+                                               UserpicSerializer)
 
 User = get_user_model()
 
@@ -50,22 +51,23 @@ class UserViewSet(djoser_views.UserViewSet):
 
     @action(["get"],
             detail=False,
-            url_path=('activation/(?P<uid>[^/.]+)/(?P<token>[^/.]+)/'))
-    def activation(self, request: Request, uid: str, token: str, *args, **kwargs) -> Response:
+            url_path=('activation/(?P<uid>\d+)/(?P<token>[^/.]+)/'))
+    def activation(self, request: Request, uid: str, token: str, *args,
+                   **kwargs) -> Response:
         serializer = self.get_serializer(data={"uid": uid, "token": token})
         serializer.is_valid(raise_exception=True)
         user = serializer.user
         user.is_active = True
         user.save()
 
-        signals.user_activated.send(
-            sender=self.__class__, user=user, request=self.request
-        )
+        signals.user_activated.send(sender=self.__class__,
+                                    user=user,
+                                    request=self.request)
 
-        if settings.SEND_CONFIRMATION_EMAIL:
+        if djoser_settings.SEND_CONFIRMATION_EMAIL:
             context = {"user": user}
             to = [get_user_email(user)]
-            settings.EMAIL.confirmation(self.request, context).send(to)
+            djoser_settings.EMAIL.confirmation(self.request, context).send(to)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -132,9 +134,7 @@ class UserViewSet(djoser_views.UserViewSet):
 
 # Reroute activation link request to djoser api
 class ActivateUser(GenericAPIView):
-
     def get(self, request, uid, token, format=None):
-        breakpoint()
         payload = {'uid': uid, 'token': token}
 
         url = "/api/users/activation/"

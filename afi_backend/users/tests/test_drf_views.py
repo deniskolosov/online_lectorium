@@ -1,6 +1,7 @@
 import datetime
 from freezegun import freeze_time
 import io
+from django.contrib.auth.tokens import default_token_generator
 from django.test import RequestFactory, modify_settings
 from rest_framework.test import APIClient, force_authenticate
 from typing import BinaryIO, Dict
@@ -69,15 +70,18 @@ class TestUserViewSet:
             "name": user.name,
         }
 
-    def test_user_activation_view(self):
+    def test_user_activation_view(self, mocker):
         # create test user
         # generate activation token
         # send uid + token using activation link
         test_user = UserFactory()
-        # TODO: generate token
-        resp = self.client.get(
-            f'/api/users/activation/{test_user.id}/test_token/')
+        test_token = default_token_generator.make_token(test_user)
 
+        resp = self.client.get(
+            f'/api/users/activation/{test_user.id}/{test_token}/')
+        assert resp.status_code == 204
+        test_user.refresh_from_db()
+        assert test_user.is_active
 
     def _generate_photo_file(self) -> BinaryIO:
         file = io.BytesIO()
