@@ -10,13 +10,14 @@ from afi_backend.events.models import OfflineLecture
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    id = serializers.CharField()
     activation_link = serializers.SerializerMethodField()
     scanned = serializers.BooleanField(read_only=True)
     included_serializers = {
         'offline_lecture': OfflineLectureSerializer,
     }
     customer_email = serializers.EmailField(source='customer.email')
-    offline_lecture_id = serializers.IntegerField(source='offline_lecture.id')
+    offline_lecture_id = serializers.CharField(source='offline_lecture.id')
     offline_lecture = serializers.ResourceRelatedField(read_only=True)
 
     class Meta:

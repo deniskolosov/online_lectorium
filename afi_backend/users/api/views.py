@@ -16,6 +16,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework_json_api import django_filters as dj_filters, filters
+from rest_framework_json_api import renderers
 
 from djoser import signals, utils
 from djoser.compat import get_user_email

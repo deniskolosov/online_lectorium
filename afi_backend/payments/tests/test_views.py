@@ -1,7 +1,7 @@
 import datetime
 from django.test import Client, override_settings
 from rest_framework.test import (APIClient, APIRequestFactory,
-    force_authenticate)
+                                 force_authenticate)
 from unittest.mock import ANY
 
 import pytest
@@ -15,14 +15,13 @@ from afi_backend.payments import tasks as payments_tasks
 from afi_backend.payments.adaptors.yandex import YandexCheckoutAdaptor as adaptor
 from afi_backend.payments.api.views import PaymentCreateView, YandexWebhook
 from afi_backend.payments.models import (Membership, Payment, PaymentMethod,
-    Subscription)
-from afi_backend.payments.tests.factories import (MembershipFactory,
-    OrderItemVideoLectureFactory, PaymentFactory, PaymentMethodFactory,
-    SubscriptionFactory, VideoLectureOrderItemFactory)
+                                         Subscription)
+from afi_backend.payments.tests.factories import (
+    MembershipFactory, OrderItemVideoLectureFactory, PaymentFactory,
+    PaymentMethodFactory, SubscriptionFactory, VideoLectureOrderItemFactory)
 from afi_backend.users.tests.factories import UserFactory
 from django.utils import timezone
 from afi_backend.payments.tests.factories import UserMembershipFactory
-
 
 pytestmark = pytest.mark.django_db
 
@@ -140,13 +139,15 @@ class TestPaymentViewSet:
                                           currency=test_currency,
                                           description=f"Payment #{payment.id}")
 
+
 class TestSubscriptionViewset():
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_charge_user_due_success(self, mocker):
         mocker.patch('afi_backend.payments.tasks.sleep', return_value=None)
         test_payment_method = PaymentMethodFactory()
         test_due = timezone.now()
-        test_subscription = SubscriptionFactory(payment_method=test_payment_method, due=test_due)
+        test_subscription = SubscriptionFactory(
+            payment_method=test_payment_method, due=test_due)
 
         test_external_id = '123'
         test_amount = '1000'
@@ -158,14 +159,10 @@ class TestSubscriptionViewset():
                                              autospec=True,
                                              return_value=True)
 
-        payments_tasks.charge_user_due(
-            test_payment_method.payment_type,
-            test_external_id,
-            test_amount,
-            test_currency,
-            test_description,
-            test_subscription.id
-        )
+        payments_tasks.charge_user_due(test_payment_method.payment_type,
+                                       test_external_id, test_amount,
+                                       test_currency, test_description,
+                                       test_subscription.id)
         mocked_adaptor.assert_called_with(ANY,
                                           test_external_id,
                                           test_amount,
@@ -175,9 +172,8 @@ class TestSubscriptionViewset():
         test_subscription.refresh_from_db()
         assert test_subscription.is_active
         assert test_subscription.due
-        assert (test_subscription.due - test_due).days == settings.SUBSCRIPTION_LENGTH_DAYS
-
-
+        assert (test_subscription.due -
+                test_due).days == settings.SUBSCRIPTION_LENGTH_DAYS
 
     def test_create_subscription(self, mocker):
         payment_method = PaymentMethodFactory(
@@ -192,7 +188,8 @@ class TestSubscriptionViewset():
 
         test_payment_type_value = payment_method.payment_type
         test_membership_type = Membership.TIER.PAID
-        test_membership = MembershipFactory(membership_type=test_membership_type)
+        test_membership = MembershipFactory(
+            membership_type=test_membership_type)
         test_amount = "100.00"
         test_currency = "RUB"
         client = APIClient()
@@ -207,22 +204,27 @@ class TestSubscriptionViewset():
             }
         }
 
-        response = client.post('/api/payments/subscriptions/get-payment-link/', data=test_data)
+        response = client.post('/api/payments/subscriptions/get-payment-link/',
+                               data=test_data)
         subscription = Subscription.objects.first()
         assert subscription.user_membership.membership == test_membership
-        assert response.json() == {'data':
-                                   {'type': 'Subscription',
-                                    'id': f'{subscription.id}',
-                                    'attributes':
-                                    {'membership_type': test_membership_type,
-                                     'payment_method': test_payment_type_value,
-                                     'payment_url': test_url}}}
+        assert response.json() == {
+            'data': {
+                'type': 'Subscription',
+                'id': f'{subscription.id}',
+                'attributes': {
+                    'membership_type': test_membership_type,
+                    'payment_method': test_payment_type_value,
+                    'payment_url': test_url
+                }
+            }
+        }
 
-        mocked_adaptor.assert_called_with(ANY,
-                                          value=str(test_membership.price.round(2).amount),
-                                          currency=test_currency,
-                                          description=f"Subscription #{subscription.id}")
-
+        mocked_adaptor.assert_called_with(
+            ANY,
+            value=str(test_membership.price.round(2).amount),
+            currency=test_currency,
+            description=f"Subscription #{subscription.id}")
 
 
 class TestYandexWebhookView:
@@ -320,15 +322,18 @@ class TestYandexWebhookView:
             is_paid=True)
 
     def test_subscription_payment_success(self):
+        # TODO: takes too long, debug
         factory = APIRequestFactory()
         view = YandexWebhook.as_view()
         test_external_id = "22e18a2f-000f-5000-a000-1db6312b7767"
         test_checkout_payment_id = "22e18a2f-000f-5000-a000-1db6312b7767"
-        test_user_membership = UserMembershipFactory(membership=MembershipFactory(membership_type=Membership.TIER.FREE))
-        subscription = SubscriptionFactory(user_membership=test_user_membership,
-                                           external_id=test_external_id,
-                                           is_active=False,
-                                           is_trial=True)
+        test_user_membership = UserMembershipFactory(
+            membership=MembershipFactory(membership_type=Membership.TIER.FREE))
+        subscription = SubscriptionFactory(
+            user_membership=test_user_membership,
+            external_id=test_external_id,
+            is_active=False,
+            is_trial=True)
         test_data = {
             'type': 'notification',
             'event': 'payment.succeeded',
@@ -399,29 +404,34 @@ class TestYandexWebhookView:
         test_external_id = "22e18a2f-000f-5000-a000-1db6312b7767"
         test_checkout_payment_id = "22e18a2f-000f-5000-a000-1db6312b7767"
         test_sub_date = datetime.datetime(2021, 11, 11)
-        test_due_date = test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS)
+        test_due_date = test_sub_date + timezone.timedelta(
+            days=settings.SUBSCRIPTION_LENGTH_DAYS)
         mocked_adaptor = mocker.patch.object(adaptor,
                                              'charge_recurrent',
                                              autospec=True,
                                              return_value=True)
 
         with freeze_time(test_sub_date) as frozen_datetime:
-            subscription = SubscriptionFactory(external_id=test_external_id, is_active=True,
+            subscription = SubscriptionFactory(external_id=test_external_id,
+                                               is_active=True,
                                                is_trial=False,
                                                due=test_due_date)
-            frozen_datetime.move_to(test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS))
+            frozen_datetime.move_to(test_sub_date + timezone.timedelta(
+                days=settings.SUBSCRIPTION_LENGTH_DAYS))
             payments_tasks.charge_user_monthly()
-            mocked_adaptor.assert_called_with(ANY,
-                                              external_id=test_external_id,
-                                              amount=str(subscription.user_membership.membership.price.round(2).amount),
-                                              currency=str(subscription.user_membership.membership.price.currency),
-                                              description=f"Payment for subsription #{subscription.id}")
+            mocked_adaptor.assert_called_with(
+                ANY,
+                external_id=test_external_id,
+                amount=str(
+                    subscription.user_membership.membership.price.round(
+                        2).amount),
+                currency=str(
+                    subscription.user_membership.membership.price.currency),
+                description=f"Payment for subsription #{subscription.id}")
             subscription.refresh_from_db()
             assert subscription.is_active
-            assert subscription.due > timezone.now() + timezone.timedelta(days=29)
-
-
-
+            assert subscription.due > timezone.now() + timezone.timedelta(
+                days=29)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_subscription_regular_payment_failure(self, mocker):
@@ -434,7 +444,8 @@ class TestYandexWebhookView:
         test_external_id = "22e18a2f-000f-5000-a000-1db6312b7767"
         test_checkout_payment_id = "22e18a2f-000f-5000-a000-1db6312b7767"
         test_sub_date = datetime.datetime(2021, 11, 11)
-        test_due_date = test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS)
+        test_due_date = test_sub_date + timezone.timedelta(
+            days=settings.SUBSCRIPTION_LENGTH_DAYS)
         # todo: find out why it's not called
         mocked_adaptor = mocker.patch.object(adaptor,
                                              'charge_recurrent',
@@ -442,16 +453,22 @@ class TestYandexWebhookView:
                                              return_value=False)
 
         with freeze_time(test_sub_date) as frozen_datetime:
-            subscription = SubscriptionFactory(external_id=test_external_id, is_active=True,
+            subscription = SubscriptionFactory(external_id=test_external_id,
+                                               is_active=True,
                                                is_trial=False,
                                                due=test_due_date)
-            frozen_datetime.move_to(test_sub_date + timezone.timedelta(days=settings.SUBSCRIPTION_LENGTH_DAYS))
+            frozen_datetime.move_to(test_sub_date + timezone.timedelta(
+                days=settings.SUBSCRIPTION_LENGTH_DAYS))
             payments_tasks.charge_user_monthly()
-            mocked_adaptor.assert_called_with(ANY,
-                                              external_id=test_external_id,
-                                              amount=str(subscription.user_membership.membership.price.round(2).amount),
-                                              currency=str(subscription.user_membership.membership.price.currency),
-                                              description=f"Payment for subsription #{subscription.id}")
+            mocked_adaptor.assert_called_with(
+                ANY,
+                external_id=test_external_id,
+                amount=str(
+                    subscription.user_membership.membership.price.round(
+                        2).amount),
+                currency=str(
+                    subscription.user_membership.membership.price.currency),
+                description=f"Payment for subsription #{subscription.id}")
             subscription.refresh_from_db()
             assert not subscription.is_active
             assert not subscription.due

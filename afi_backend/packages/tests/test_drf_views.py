@@ -27,7 +27,12 @@ def test_get_video_course_packages():
         'data': {
             'type': 'VideoCoursePackage',
             'id': str(test_videocourse_package.id),
-            'attributes': {},
+            'attributes': {
+                'description': None,
+                'image': None,
+                'price': '1000.00',
+                'release_date': None
+            },
             'relationships': {
                 'videocourses': {
                     'data': [{
@@ -62,7 +67,12 @@ def test_get_video_lecture_packages():
         'data': {
             'type': 'VideoLecturePackage',
             'id': str(test_videolecture_package.id),
-            'attributes': {},
+            'attributes': {
+                'description': None,
+                'image': None,
+                'price': '1000.00',
+                'release_date': None
+            },
             'relationships': {
                 'videolectures': {
                     'data': [{
