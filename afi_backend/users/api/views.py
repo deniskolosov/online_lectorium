@@ -1,5 +1,6 @@
 import requests
 from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
 from django.conf import settings
 from djoser.conf import settings as djoser_settings
 from django.db.models import Q
@@ -70,7 +71,7 @@ class UserViewSet(djoser_views.UserViewSet):
             to = [get_user_email(user)]
             djoser_settings.EMAIL.confirmation(self.request, context).send(to)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return redirect("/account/profile/")
 
     @action(detail=True,
             methods=["PUT"],

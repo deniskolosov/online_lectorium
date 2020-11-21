@@ -79,7 +79,7 @@ class TestUserViewSet:
 
         resp = self.client.get(
             f'/api/users/activation/{test_user.id}/{test_token}/')
-        assert resp.status_code == 204
+        assert resp.status_code == 302
         test_user.refresh_from_db()
         assert test_user.is_active
 
