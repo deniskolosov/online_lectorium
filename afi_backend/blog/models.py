@@ -14,4 +14,4 @@ class Post(models.Model):
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return f"Post by {self.author}: {description[10:]}"
+        return f"Post by {self.author}: {self.description[10:]}"
