@@ -48,7 +48,7 @@ urlpatterns = [
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if not settings.DEBUG:
+if settings.DEBUG:
     urlpatterns += [
         path('favicon.ico',
              RedirectView.as_view(url='images/favicons/favicon.ico'))

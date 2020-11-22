@@ -1,11 +1,19 @@
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 from afi_backend.videocourses.models import (CourseLecture, VideoCourse,
                                              VideoCoursePart)
 from django.contrib import admin
 from afi_backend.videocourses.models import VideoCourseType
 
 
+class VideoCoursesResource(resources.ModelResource):
+    class Meta:
+        model = VideoCourse
+
+
 @admin.register(VideoCourse)
-class VideoCourseAdmin(admin.ModelAdmin):
+class VideoCourseAdmin(ImportExportModelAdmin):
+    resource_class = VideoCoursesResource
     list_display = [
         'name',
         'description',

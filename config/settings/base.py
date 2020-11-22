@@ -94,6 +94,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "django_filters",
     'djmoney',
+    'import_export',
     'ckeditor',
     'ckeditor_uploader',
 ]
